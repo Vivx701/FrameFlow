@@ -29,7 +29,6 @@ void MainWindow::setupUI()
     ui->listView->setModel(&m_model);
 
 
-
     // Connect the clicked signal to a slot
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
 
@@ -41,14 +40,12 @@ void MainWindow::setupUI()
             m_model.addImage(name);
         }
 
-        saveFile("Output.pdf", OutputType::PDF);
+        saveFile("Output.png", OutputType::SPRITE);
 
      });
 
     // Add the button to the toolbar
     ui->toolBar->addWidget(fileBrowseButton);
-
-
 }
 
 void MainWindow::saveFile(QString filePath, OutputType type)
@@ -56,6 +53,20 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
     ImageList images = m_model.getImageList();
     output->addImages(images);
-    output->save(filePath);
+//    PDFAttributes attr;
+//    attr.filePath = filePath;
+//    attr.specificSettings["Title"] = "SampleTitle";
+//    attr.specificSettings["Orientation"] = QPageLayout::Landscape;
+//    attr.background = QColor::fromRgb(133, 193, 233);
+
+    ImageSpriteAttributes attr;
+    attr.filePath = filePath;
+    attr.specificSettings["Orientation"] = Qt::Horizontal;
+    attr.specificSettings["Format"] = "PNG";
+    attr.specificSettings["Author"] = "Vivek P";
+
+
+    output->setAttrib(attr);
+    output->save();
 }
 

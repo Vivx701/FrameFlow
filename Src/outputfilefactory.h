@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <pdffile.h>
+#include <imagesprite.h>
 
-enum OutputType{PDF, VIDEO, GIF};
+enum OutputType{PDF, VIDEO, GIF, SPRITE};
 class OutputFileFactory : public QObject
 {
     Q_OBJECT

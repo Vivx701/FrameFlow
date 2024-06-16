@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     imagemodel.cpp \
+    imagesprite.cpp \
     main.cpp \
     mainwindow.cpp \
     outputfilefactory.cpp \
@@ -17,7 +18,9 @@ SOURCES += \
 
 HEADERS += \
     IOutputFile.h \
+    Types.h \
     imagemodel.h \
+    imagesprite.h \
     mainwindow.h \
     outputfilefactory.h \
     pdffile.h
