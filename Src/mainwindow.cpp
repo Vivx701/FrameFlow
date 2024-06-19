@@ -33,7 +33,7 @@ void MainWindow::setupUI()
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
 
         QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Image"), QDir::homePath(),
-                                                            tr("Image Files (*.png *.jpg *.bmp)"));
+                                                              tr("Image Files (*.png *.jpg *.bmp)"));
 
         for(QString name: fileNames)
         {
@@ -41,8 +41,10 @@ void MainWindow::setupUI()
         }
 
         saveFile("Output.png", OutputType::SPRITE);
+        saveFile("Output.pdf", OutputType::PDF);
+        saveFile("Output.gif", OutputType::GIF);
 
-     });
+    });
 
     // Add the button to the toolbar
     ui->toolBar->addWidget(fileBrowseButton);
@@ -53,11 +55,11 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
     ImageList images = m_model.getImageList();
     output->addImages(images);
-//    PDFAttributes attr;
-//    attr.filePath = filePath;
-//    attr.specificSettings["Title"] = "SampleTitle";
-//    attr.specificSettings["Orientation"] = QPageLayout::Landscape;
-//    attr.background = QColor::fromRgb(133, 193, 233);
+    //    PDFAttributes attr;
+    //    attr.filePath = filePath;
+    //    attr.specificSettings["Title"] = "SampleTitle";
+    //    attr.specificSettings["Orientation"] = QPageLayout::Landscape;
+    //    attr.background = QColor::fromRgb(133, 193, 233);
 
     ImageSpriteAttributes attr;
     attr.filePath = filePath;

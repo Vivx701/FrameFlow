@@ -8,22 +8,28 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+LIBS +=  -lavformat -lavcodec -lavutil -lswscale
+
 SOURCES += \
+    giffile.cpp \
     imagemodel.cpp \
     imagesprite.cpp \
     main.cpp \
     mainwindow.cpp \
     outputfilefactory.cpp \
-    pdffile.cpp
+    pdffile.cpp \
+    videofile.cpp
 
 HEADERS += \
     IOutputFile.h \
     Types.h \
+    giffile.h \
     imagemodel.h \
     imagesprite.h \
     mainwindow.h \
     outputfilefactory.h \
-    pdffile.h
+    pdffile.h \
+    videofile.h
 
 FORMS += \
     mainwindow.ui
