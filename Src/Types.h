@@ -57,6 +57,22 @@ struct ImageSpriteAttributes: public Attributes
 
     ImageSpriteAttributes(const ImageSpriteAttributes &copy) = default;
 };
+
+struct GifAttributes: public Attributes
+{
+    GifAttributes()
+    {
+        background = QColor::fromRgb(255, 255, 255);
+        specificSettings = {
+            {"Creator", SOFTWARENAME},
+            {"Author", SOFTWARENAME},
+            {"FPS",  10}
+        };
+    }
+
+    GifAttributes(const GifAttributes &copy) = default;
+};
+
 typedef QList<QImage> ImageList;
 
 #endif // TYPES_H

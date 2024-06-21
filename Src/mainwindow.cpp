@@ -40,9 +40,9 @@ void MainWindow::setupUI()
             m_model.addImage(name);
         }
 
-        saveFile("Output.png", OutputType::SPRITE);
-        saveFile("Output.pdf", OutputType::PDF);
-        saveFile("Output.gif", OutputType::GIF);
+        //saveFile("Output.png", OutputType::SPRITE);
+        //saveFile("Output.pdf", OutputType::PDF);
+        saveFile("genOutput.gif", OutputType::GIF);
 
     });
 
@@ -61,12 +61,17 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     //    attr.specificSettings["Orientation"] = QPageLayout::Landscape;
     //    attr.background = QColor::fromRgb(133, 193, 233);
 
-    ImageSpriteAttributes attr;
-    attr.filePath = filePath;
-    attr.specificSettings["Orientation"] = Qt::Horizontal;
-    attr.specificSettings["Format"] = "PNG";
-    attr.specificSettings["Author"] = "Vivek P";
+//    ImageSpriteAttributes attr;
+//    attr.filePath = filePath;
+//    attr.specificSettings["Orientation"] = Qt::Horizontal;
+//    attr.specificSettings["Format"] = "PNG";
+//    attr.specificSettings["Author"] = "Vivek P";
 
+
+        GifAttributes attr;
+        attr.filePath = filePath;
+        attr.specificSettings["Author"] = "Vivek P";
+        attr.specificSettings["FPS"] = 1;
 
     output->setAttrib(attr);
     output->save();
