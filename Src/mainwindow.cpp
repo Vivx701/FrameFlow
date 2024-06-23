@@ -71,7 +71,7 @@ void MainWindow::saveFile(QString filePath, OutputType type)
         GifAttributes attr;
         attr.filePath = filePath;
         attr.specificSettings["Author"] = "Vivek P";
-        attr.specificSettings["FPS"] = 1;
+        attr.specificSettings["FPS"] = 30;
 
     output->setAttrib(attr);
     output->save();

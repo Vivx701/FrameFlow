@@ -66,7 +66,8 @@ struct GifAttributes: public Attributes
         specificSettings = {
             {"Creator", SOFTWARENAME},
             {"Author", SOFTWARENAME},
-            {"FPS",  10}
+            {"FPS",  10},
+            {"Loops",  1}
         };
     }
 

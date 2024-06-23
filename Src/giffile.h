@@ -15,7 +15,14 @@ class GifFile : public IOutputFile
 public:
     explicit GifFile(QObject *parent = nullptr);
     void save() override;
-    void addToFrameData(QImage &img, u_int8_t *frameData);
+    AVCodecContext *initializeCodecContext(AVCodec *codec, int fps);
+    AVFrame *initializeFrameFromImage(const QImage &image);
+    bool encodeFramesAndWriteToFile(const QList<AVFrame*> &frames, AVCodecContext* codecContext, AVFormatContext* formatContext, AVStream* stream);
+    void setFrameDelayMetadata(AVFrame* frame, int delay);
+
+private:
+    int m_maxFrameWidth = 0;
+    int m_maxFrameHeight = 0;
 };
 
 #endif // GIFFILE_H
