@@ -14,13 +14,15 @@ class GifFile : public IOutputFile
 {
 public:
     explicit GifFile(QObject *parent = nullptr);
-    void save() override;
-    AVCodecContext *initializeCodecContext(AVCodec *codec, int fps);
-    AVFrame *initializeFrameFromImage(const QImage &image);
-    bool encodeFramesAndWriteToFile(const QList<AVFrame*> &frames, AVCodecContext* codecContext, AVFormatContext* formatContext, AVStream* stream);
-    void setFrameDelayMetadata(AVFrame* frame, int delay);
+    void save();
 
 private:
+    AVCodecContext *initializeCodecContext(AVCodec *codec, int fps);
+    void setExtradata(AVCodecContext *codecContext);
+    AVFrame *initializeFrameFromImage(const QImage &image);
+    bool encodeFramesAndWriteToFile(const QList<AVFrame *> &frames, AVCodecContext *codecContext, AVFormatContext *formatContext, AVStream *stream, int delay);
+    bool addGraphicsControlExtension(AVPacket *pkt, int delay);
+
     int m_maxFrameWidth = 0;
     int m_maxFrameHeight = 0;
 };

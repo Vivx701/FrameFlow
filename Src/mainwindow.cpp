@@ -61,17 +61,18 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     //    attr.specificSettings["Orientation"] = QPageLayout::Landscape;
     //    attr.background = QColor::fromRgb(133, 193, 233);
 
-//    ImageSpriteAttributes attr;
-//    attr.filePath = filePath;
-//    attr.specificSettings["Orientation"] = Qt::Horizontal;
-//    attr.specificSettings["Format"] = "PNG";
-//    attr.specificSettings["Author"] = "Vivek P";
+    //    ImageSpriteAttributes attr;
+    //    attr.filePath = filePath;
+    //    attr.specificSettings["Orientation"] = Qt::Horizontal;
+    //    attr.specificSettings["Format"] = "PNG";
+    //    attr.specificSettings["Author"] = "Vivek P";
 
 
-        GifAttributes attr;
-        attr.filePath = filePath;
-        attr.specificSettings["Author"] = "Vivek P";
-        attr.specificSettings["FPS"] = 30;
+    GifAttributes attr;
+    attr.filePath = filePath;
+    attr.specificSettings["Author"] = "Vivek P";
+    attr.specificSettings["FPS"] = 30;
+    attr.specificSettings["Loops"] = 0;
 
     output->setAttrib(attr);
     output->save();
