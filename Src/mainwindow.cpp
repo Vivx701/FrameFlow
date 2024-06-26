@@ -42,7 +42,8 @@ void MainWindow::setupUI()
 
         //saveFile("Output.png", OutputType::SPRITE);
         //saveFile("Output.pdf", OutputType::PDF);
-        saveFile("genOutput.gif", OutputType::GIF);
+        //saveFile("genOutput.gif", OutputType::GIF);
+        saveFile("genOutput.avi", OutputType::VIDEO);
 
     });
 

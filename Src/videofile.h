@@ -6,18 +6,16 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
+#include <libavutil/imgutils.h>
 }
 
 class VideoFile : public IOutputFile
 {
+
 public:
     explicit VideoFile(QObject *parent = nullptr);
     void save() override;
-    AVFrame* convertQImageToAVFrame(QImage& image, AVCodecContext* codecContext);
-
-
-
-private:
+    void encodeFrame(AVFormatContext *formatContext, AVCodecContext *codecContext, AVFrame *frame, AVStream *stream);
 
 };
 
