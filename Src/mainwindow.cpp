@@ -40,10 +40,12 @@ void MainWindow::setupUI()
             m_model.addImage(name);
         }
 
-        //saveFile("Output.png", OutputType::SPRITE);
-        saveFile("Output.pdf", OutputType::PDF);
+       // saveFile("Output.png", OutputType::SPRITE);
+        //saveFile("Output.pdf", OutputType::PDF);
         //saveFile("genOutput.gif", OutputType::GIF);
         //saveFile("genOutput.mp4", OutputType::VIDEO);
+
+        saveFile("Output.png", OutputType::COLLAGE);
 
     });
 
@@ -56,19 +58,19 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
     ImageList images = m_model.getImageList();
     output->addImages(images);
-    PDFAttributes pattr;
-    pattr.filePath = filePath;
-    pattr.specificSettings["Title"] = "SampleTitle";
-    pattr.specificSettings["Fill"] = "Fit";
-    pattr.specificSettings["Orientation"] = QPageLayout::Landscape;
-    pattr.background = QColor::fromRgb(133, 193, 233);
-    output->setAttrib(pattr);
-    output->save();
-    //    ImageSpriteAttributes attr;
-    //    attr.filePath = filePath;
-    //    attr.specificSettings["Orientation"] = Qt::Horizontal;
-    //    attr.specificSettings["Format"] = "PNG";
-    //    attr.specificSettings["Author"] = "Vivek P";
+//    PDFAttributes pattr;
+//    pattr.filePath = filePath;
+//    pattr.specificSettings["Title"] = "SampleTitle";
+//    pattr.specificSettings["Fill"] = "Fit";
+//    pattr.specificSettings["Orientation"] = QPageLayout::Landscape;
+//    pattr.background = QColor::fromRgb(133, 193, 233);
+//    output->setAttrib(pattr);
+//    output->save();
+//        ImageSpriteAttributes attr;
+//        attr.filePath = filePath;
+//        attr.specificSettings["Orientation"] = Qt::Horizontal;
+//        attr.specificSettings["Format"] = "PNG";
+//        attr.specificSettings["Author"] = "Vivek P";
 
 
 //    GifAttributes attr;
@@ -84,8 +86,11 @@ void MainWindow::saveFile(QString filePath, OutputType type)
 //    attr.specificSettings["FrameDelay"] = 5000;
 //    attr.specificSettings["Copyright"] = "This is vivek";
 
-
-//    output->setAttrib(attr);
-//    output->save();
+    ImageCollageAttributes attr;
+    attr.filePath = filePath;
+    attr.specificSettings["Format"] = "PNG";
+    attr.specificSettings["Author"] = "Vivek P";
+    output->setAttrib(attr);
+    output->save();
 }
 

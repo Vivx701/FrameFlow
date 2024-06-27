@@ -94,6 +94,24 @@ struct VideoAttributes: public Attributes
     VideoAttributes(const VideoAttributes &copy) = default;
 };
 
+/**
+ * @brief Struct to hold attributes specific to image collage generation.
+ */
+struct ImageCollageAttributes: public Attributes
+{
+    ImageCollageAttributes()
+    {
+        background = QColor::fromRgb(255, 255, 255);
+        specificSettings = {
+            {"Creator", SOFTWARENAME},
+            {"Format",  "PNG"},
+            {"Author", SOFTWARENAME},
+            {"Size", QVariant::fromValue(QSize(1920, 1080))}
+        };
+    }
+
+    ImageCollageAttributes(const ImageCollageAttributes &copy) = default;
+};
 typedef QList<QImage> ImageList;
 
 #endif // TYPES_H

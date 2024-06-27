@@ -6,11 +6,12 @@
 #include <imagesprite.h>
 #include <videofile.h>
 #include <giffile.h>
+#include <imagecollage.h>
 
 /**
  * @brief Enum representing the different types of output files.
  */
-enum OutputType{PDF, VIDEO, GIF, SPRITE};
+enum OutputType{PDF, VIDEO, GIF, SPRITE, COLLAGE};
 
 /**
  * @brief A factory class for creating output file objects.
