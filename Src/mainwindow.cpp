@@ -41,9 +41,9 @@ void MainWindow::setupUI()
         }
 
         //saveFile("Output.png", OutputType::SPRITE);
-        //saveFile("Output.pdf", OutputType::PDF);
+        saveFile("Output.pdf", OutputType::PDF);
         //saveFile("genOutput.gif", OutputType::GIF);
-        saveFile("genOutput.mp4", OutputType::VIDEO);
+        //saveFile("genOutput.mp4", OutputType::VIDEO);
 
     });
 
@@ -56,12 +56,14 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
     ImageList images = m_model.getImageList();
     output->addImages(images);
-    //    PDFAttributes attr;
-    //    attr.filePath = filePath;
-    //    attr.specificSettings["Title"] = "SampleTitle";
-    //    attr.specificSettings["Orientation"] = QPageLayout::Landscape;
-    //    attr.background = QColor::fromRgb(133, 193, 233);
-
+    PDFAttributes pattr;
+    pattr.filePath = filePath;
+    pattr.specificSettings["Title"] = "SampleTitle";
+    pattr.specificSettings["Fill"] = "Fit";
+    pattr.specificSettings["Orientation"] = QPageLayout::Landscape;
+    pattr.background = QColor::fromRgb(133, 193, 233);
+    output->setAttrib(pattr);
+    output->save();
     //    ImageSpriteAttributes attr;
     //    attr.filePath = filePath;
     //    attr.specificSettings["Orientation"] = Qt::Horizontal;
@@ -75,15 +77,15 @@ void MainWindow::saveFile(QString filePath, OutputType type)
 //    attr.specificSettings["FPS"] = 30;
 //    attr.specificSettings["Loops"] = 0;
 
-    VideoAttributes attr;
-    attr.filePath = filePath;
-    attr.specificSettings["Author"] = "Vivek P";
-    attr.specificSettings["FPS"] = 30;
-    attr.specificSettings["FrameDelay"] = 5000;
-    attr.specificSettings["Copyright"] = "This is vivek";
+//    VideoAttributes attr;
+//    attr.filePath = filePath;
+//    attr.specificSettings["Author"] = "Vivek P";
+//    attr.specificSettings["FPS"] = 30;
+//    attr.specificSettings["FrameDelay"] = 5000;
+//    attr.specificSettings["Copyright"] = "This is vivek";
 
 
-    output->setAttrib(attr);
-    output->save();
+//    output->setAttrib(attr);
+//    output->save();
 }
 

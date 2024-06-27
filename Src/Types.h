@@ -33,7 +33,8 @@ struct PDFAttributes: public Attributes
                                 {"Margin",  QVariant::fromValue(QMarginsF(10, 10, 10, 10))},
                                 {"Orientation", QPageLayout::Portrait},
                                 {"Version", QVariant::fromValue(QPagedPaintDevice::PdfVersion_1_4)},
-                                {"Title", ""}
+                                {"Title", ""},
+                                {"Fill", "Center"}
 
                             };
 

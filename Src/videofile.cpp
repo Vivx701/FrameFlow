@@ -182,6 +182,7 @@ void VideoFile::save()
     avformat_free_context(formatContext);
 }
 
+
 /**
  * @brief Encodes a single frame and writes it to the output video file.
  *

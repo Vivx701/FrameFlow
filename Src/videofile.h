@@ -33,6 +33,7 @@ public:
      */
     void save() override;
 
+
 private:
     /**
      * @brief Encodes a single frame and writes it to the output video file.

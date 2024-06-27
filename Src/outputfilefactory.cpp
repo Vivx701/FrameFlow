@@ -1,11 +1,19 @@
 #include "outputfilefactory.h"
 
+/**
+ * @brief Constructor for the OutputFileFactory class.
+ * @param parent The parent object.
+ */
 OutputFileFactory::OutputFileFactory(QObject *parent)
     : QObject{parent}
 {
-
 }
 
+/**
+ * @brief Create a unique pointer to an output file object based on the specified file type.
+ * @param fileType The type of output file to create.
+ * @return A unique pointer to the created output file object, or nullptr if the file type is not recognized.
+ */
 std::unique_ptr<IOutputFile> OutputFileFactory::createOutputFile(const OutputType &fileType)
 {
     switch (fileType) {

@@ -1,12 +1,18 @@
 #include "imagemodel.h"
 
-
+/**
+ * @brief Constructor for the ImageModel class.
+ * @param parent The parent object.
+ */
 ImageModel::ImageModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-
 }
 
+/**
+ * @brief Add an image to the model using the provided image path.
+ * @param imagePath The path of the image to be added.
+ */
 void ImageModel::addImage(const QString& imagePath)
 {
     ImageItem item = createImageItem(imagePath);
@@ -18,6 +24,10 @@ void ImageModel::addImage(const QString& imagePath)
     }
 }
 
+/**
+ * @brief Remove an image from the model at the specified index.
+ * @param index The index of the image to be removed.
+ */
 void ImageModel::removeImage(int index)
 {
     if (index >= 0 && index < m_images.size()) {
@@ -27,6 +37,11 @@ void ImageModel::removeImage(int index)
     }
 }
 
+/**
+ * @brief Change the order of images by moving an image from one index to another.
+ * @param fromIndex The index of the image to be moved.
+ * @param toIndex The index where the image should be moved to.
+ */
 void ImageModel::moveImage(int fromIndex, int toIndex)
 {
     if (fromIndex >= 0 && fromIndex < m_images.size() &&
@@ -37,6 +52,11 @@ void ImageModel::moveImage(int fromIndex, int toIndex)
     }
 }
 
+/**
+ * @brief Create an ImageItem object from the provided image path.
+ * @param path The path of the image.
+ * @return The created ImageItem object.
+ */
 ImageItem ImageModel::createImageItem(QString path)
 {
     ImageItem item;
@@ -50,6 +70,11 @@ ImageItem ImageModel::createImageItem(QString path)
     return item;
 }
 
+/**
+ * @brief Return the number of rows (images) in the model.
+ * @param parent The parent index (unused).
+ * @return The number of rows in the model.
+ */
 int ImageModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
@@ -57,6 +82,12 @@ int ImageModel::rowCount(const QModelIndex& parent) const
     return m_images.size();
 }
 
+/**
+ * @brief Return the data for a specific index and role in the model.
+ * @param index The index of the item.
+ * @param role The role of the data to be returned.
+ * @return The data for the specified index and role.
+ */
 QVariant ImageModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
@@ -81,6 +112,10 @@ QVariant ImageModel::data(const QModelIndex& index, int role) const
     }
 }
 
+/**
+ * @brief Return a hash map of role names used by the model.
+ * @return The hash map of role names.
+ */
 QHash<int, QByteArray> ImageModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
@@ -91,6 +126,10 @@ QHash<int, QByteArray> ImageModel::roleNames() const
     return roles;
 }
 
+/**
+ * @brief Return a list of all images stored in the model.
+ * @return The list of images.
+ */
 QList<QImage> ImageModel::getImageList()
 {
     QList<QImage> images;

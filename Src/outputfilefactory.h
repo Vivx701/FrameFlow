@@ -7,13 +7,30 @@
 #include <videofile.h>
 #include <giffile.h>
 
+/**
+ * @brief Enum representing the different types of output files.
+ */
 enum OutputType{PDF, VIDEO, GIF, SPRITE};
+
+/**
+ * @brief A factory class for creating output file objects.
+ */
 class OutputFileFactory : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * @brief Constructor for the OutputFileFactory class.
+     * @param parent The parent object.
+     */
     explicit OutputFileFactory(QObject *parent = nullptr);
-    static  std::unique_ptr<IOutputFile> createOutputFile(const OutputType& fileType);
+
+    /**
+     * @brief Create a unique pointer to an output file object based on the specified file type.
+     * @param fileType The type of output file to create.
+     * @return A unique pointer to the created output file object.
+     */
+    static std::unique_ptr<IOutputFile> createOutputFile(const OutputType& fileType);
 
 signals:
 
