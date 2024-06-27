@@ -38,6 +38,17 @@ public:
         return m_Attrib;
     }
 
+    QSize getMaxSize()
+    {
+        int height = 0, width = 0;
+        for(QImage img:  m_Images)
+        {
+            height = qMax(height, img.height());
+            width  = qMax(width, img.width());
+        }
+        return QSize(width, height);
+    }
+
 signals:
     void progressChanged(int maximum, int value);
 

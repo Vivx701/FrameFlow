@@ -43,7 +43,7 @@ void MainWindow::setupUI()
         //saveFile("Output.png", OutputType::SPRITE);
         //saveFile("Output.pdf", OutputType::PDF);
         //saveFile("genOutput.gif", OutputType::GIF);
-        saveFile("genOutput.avi", OutputType::VIDEO);
+        saveFile("genOutput.mp4", OutputType::VIDEO);
 
     });
 
@@ -69,11 +69,19 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     //    attr.specificSettings["Author"] = "Vivek P";
 
 
-    GifAttributes attr;
+//    GifAttributes attr;
+//    attr.filePath = filePath;
+//    attr.specificSettings["Author"] = "Vivek P";
+//    attr.specificSettings["FPS"] = 30;
+//    attr.specificSettings["Loops"] = 0;
+
+    VideoAttributes attr;
     attr.filePath = filePath;
     attr.specificSettings["Author"] = "Vivek P";
     attr.specificSettings["FPS"] = 30;
-    attr.specificSettings["Loops"] = 0;
+    attr.specificSettings["FrameDelay"] = 5000;
+    attr.specificSettings["Copyright"] = "This is vivek";
+
 
     output->setAttrib(attr);
     output->save();

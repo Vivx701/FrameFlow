@@ -74,6 +74,25 @@ struct GifAttributes: public Attributes
     GifAttributes(const GifAttributes &copy) = default;
 };
 
+struct VideoAttributes: public Attributes
+{
+    VideoAttributes()
+    {
+        background = QColor::fromRgb(255, 255, 255);
+        specificSettings = {
+            {"Creator", SOFTWARENAME},
+            {"Author", SOFTWARENAME},
+            {"FPS",  30},
+            {"FrameDelay",  2000},
+            {"Title",  "Slideshow"},
+            {"Description",  "Slide show created using "+QString(SOFTWARENAME)},
+            {"Copyright",  ""}
+        };
+    }
+
+    VideoAttributes(const VideoAttributes &copy) = default;
+};
+
 typedef QList<QImage> ImageList;
 
 #endif // TYPES_H
