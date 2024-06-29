@@ -29,8 +29,8 @@ std::unique_ptr<IOutputFile> OutputFileFactory::createOutputFile(const OutputTyp
     case OutputType::VIDEO:
         return std::make_unique<VideoFile>();
         break;
-    case OutputType::COLLAGE:
-        return std::make_unique<ImageCollage>();
+    case OutputType::HTMLGALLERY:
+        return std::make_unique<HTMLGallery>();
         break;
     default:
         break;

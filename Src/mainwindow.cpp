@@ -45,7 +45,8 @@ void MainWindow::setupUI()
         //saveFile("genOutput.gif", OutputType::GIF);
         //saveFile("genOutput.mp4", OutputType::VIDEO);
 
-        saveFile("Output.png", OutputType::COLLAGE);
+        saveFile("genOutputHTML", OutputType::HTMLGALLERY);
+
 
     });
 
@@ -86,10 +87,17 @@ void MainWindow::saveFile(QString filePath, OutputType type)
 //    attr.specificSettings["FrameDelay"] = 5000;
 //    attr.specificSettings["Copyright"] = "This is vivek";
 
-    ImageCollageAttributes attr;
+//    ImageCollageAttributes attr;
+//    attr.filePath = filePath;
+//    attr.specificSettings["Format"] = "PNG";
+//    attr.specificSettings["Author"] = "Vivek P";
+
+
+    HTMLGalleryAttributes attr;
     attr.filePath = filePath;
-    attr.specificSettings["Format"] = "PNG";
     attr.specificSettings["Author"] = "Vivek P";
+    attr.specificSettings["Copyright"] = "This is vivek";
+    attr.specificSettings["EnableLightbox"] = false;
     output->setAttrib(attr);
     output->save();
 }

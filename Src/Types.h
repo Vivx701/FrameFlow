@@ -1,3 +1,8 @@
+/**
+ * @file types.h
+ * @brief Defines common types and attributes for various output formats in the FrameFlow application.
+ */
+
 #ifndef TYPES_H
 #define TYPES_H
 
@@ -11,40 +16,60 @@
 #include <QPageLayout>
 #include <QPagedPaintDevice>
 
-
+/// @brief Name of the software
 #define SOFTWARENAME "FrameFlow"
+/// @brief Version number of the software
 #define VERSION 1.0
 
+/**
+ * @struct Attributes
+ * @brief Base structure for holding common attributes across different output types.
+ */
 struct Attributes
 {
-    QColor background;
-    QString filePath;
-    QVariantMap specificSettings;
+    QColor background;         ///< Background color for the output
+    QString filePath;          ///< File path for the output
+    QVariantMap specificSettings;  ///< Map of specific settings for each output type
 };
 
+/**
+ * @struct PDFAttributes
+ * @brief Attributes specific to PDF output.
+ */
 struct PDFAttributes: public Attributes
 {
+    /**
+     * @brief Default constructor for PDFAttributes.
+     * Initializes default values for PDF-specific settings.
+     */
     PDFAttributes()
     {
         background = QColor::fromRgb(255, 255, 255);
         specificSettings = {
-                                {"Size", QPageSize::A4},
-                                {"Creator", SOFTWARENAME},
-                                {"Margin",  QVariant::fromValue(QMarginsF(10, 10, 10, 10))},
-                                {"Orientation", QPageLayout::Portrait},
-                                {"Version", QVariant::fromValue(QPagedPaintDevice::PdfVersion_1_4)},
-                                {"Title", ""},
-                                {"Fill", "Center"}
-
-                            };
-
+            {"Size", QPageSize::A4},
+            {"Creator", SOFTWARENAME},
+            {"Margin",  QVariant::fromValue(QMarginsF(10, 10, 10, 10))},
+            {"Orientation", QPageLayout::Portrait},
+            {"Version", QVariant::fromValue(QPagedPaintDevice::PdfVersion_1_4)},
+            {"Title", ""},
+            {"Fill", "Center"}
+        };
     }
 
+    /// @brief Copy constructor
     PDFAttributes(const PDFAttributes &copy) = default;
 };
 
+/**
+ * @struct ImageSpriteAttributes
+ * @brief Attributes specific to image sprite generation.
+ */
 struct ImageSpriteAttributes: public Attributes
 {
+    /**
+     * @brief Default constructor for ImageSpriteAttributes.
+     * Initializes default values for image sprite-specific settings.
+     */
     ImageSpriteAttributes()
     {
         background = QColor::fromRgb(255, 255, 255);
@@ -56,11 +81,20 @@ struct ImageSpriteAttributes: public Attributes
         };
     }
 
+    /// @brief Copy constructor
     ImageSpriteAttributes(const ImageSpriteAttributes &copy) = default;
 };
 
+/**
+ * @struct GifAttributes
+ * @brief Attributes specific to GIF output.
+ */
 struct GifAttributes: public Attributes
 {
+    /**
+     * @brief Default constructor for GifAttributes.
+     * Initializes default values for GIF-specific settings.
+     */
     GifAttributes()
     {
         background = QColor::fromRgb(255, 255, 255);
@@ -72,11 +106,20 @@ struct GifAttributes: public Attributes
         };
     }
 
+    /// @brief Copy constructor
     GifAttributes(const GifAttributes &copy) = default;
 };
 
+/**
+ * @struct VideoAttributes
+ * @brief Attributes specific to video output.
+ */
 struct VideoAttributes: public Attributes
 {
+    /**
+     * @brief Default constructor for VideoAttributes.
+     * Initializes default values for video-specific settings.
+     */
     VideoAttributes()
     {
         background = QColor::fromRgb(255, 255, 255);
@@ -91,27 +134,45 @@ struct VideoAttributes: public Attributes
         };
     }
 
+    /// @brief Copy constructor
     VideoAttributes(const VideoAttributes &copy) = default;
 };
 
+
 /**
- * @brief Struct to hold attributes specific to image collage generation.
+ * @struct HTMLGalleryAttributes
+ * @brief Attributes specific to HTML gallery generation.
  */
-struct ImageCollageAttributes: public Attributes
+struct HTMLGalleryAttributes: public Attributes
 {
-    ImageCollageAttributes()
+    /**
+     * @brief Default constructor for HTMLGalleryAttributes.
+     * Initializes default values for HTML gallery-specific settings.
+     */
+    HTMLGalleryAttributes()
     {
-        background = QColor::fromRgb(255, 255, 255);
+        background = QColor::fromRgb(240, 240, 240);  // Light gray background
         specificSettings = {
             {"Creator", SOFTWARENAME},
-            {"Format",  "PNG"},
             {"Author", SOFTWARENAME},
-            {"Size", QVariant::fromValue(QSize(1920, 1080))}
+            {"Title", "Photo Gallery"},
+            {"Description", "Photo gallery created using " + QString(SOFTWARENAME)},
+            {"ThumbnailSize", 200},  // Default thumbnail size in pixels
+            {"ColumnsCount", 4},     // Default number of columns in the gallery grid
+            {"ImageQuality", 85},    // JPEG quality for saved images (0-100)
+            {"Copyright", ""},
+            {"EnableLightbox", true} // Enable lightbox for image viewing
         };
     }
 
-    ImageCollageAttributes(const ImageCollageAttributes &copy) = default;
+    /// @brief Copy constructor
+    HTMLGalleryAttributes(const HTMLGalleryAttributes &copy) = default;
 };
+
+/**
+ * @typedef ImageList
+ * @brief A list of QImage objects used for storing multiple images.
+ */
 typedef QList<QImage> ImageList;
 
 #endif // TYPES_H
