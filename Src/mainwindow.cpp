@@ -4,7 +4,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QDebug>
-
+#include <imagedelegate.h>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,9 +26,24 @@ void MainWindow::setupUI()
     QToolButton *fileBrowseButton = new QToolButton(this);
     fileBrowseButton->setText("Click me!");
     fileBrowseButton->setIcon(QIcon(":/icons/filebrowser.png"));
-    ui->listView->setModel(&m_model);
+   // ui->listView->setModel(&m_model);
+    ui->tableView->setModel(&m_model);
+    ImageDelegate *delegate = new ImageDelegate(this);
+    ui->tableView->setItemDelegate(delegate);
+
+//    ui->tableView->resizeColumnsToContents();
+//    ui->tableView->resizeRowsToContents();
+
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
 
+
+    QObject::connect(delegate, &ImageDelegate::deleteButtonClicked, [&](const QModelIndex& index) {
+           // Handle the deletion of the image at the given index
+           qDebug()<<index.row();
+           m_model.removeRow(index.row());
+       });
     // Connect the clicked signal to a slot
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
 

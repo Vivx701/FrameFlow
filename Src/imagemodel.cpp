@@ -5,7 +5,11 @@
  * @param parent The parent object.
  */
 ImageModel::ImageModel(QObject *parent)
-    : QAbstractListModel{parent}
+    : QAbstractTableModel(parent)
+{
+}
+
+ImageModel::~ImageModel()
 {
 }
 
@@ -18,7 +22,7 @@ void ImageModel::addImage(const QString& imagePath)
     ImageItem item = createImageItem(imagePath);
     if(item.info.exists())
     {
-        beginInsertRows(QModelIndex(), m_images.size(), m_images.size());
+        beginInsertRows(QModelIndex(), rowCount(), rowCount());
         m_images.append(item);
         endInsertRows();
     }
@@ -31,7 +35,7 @@ void ImageModel::addImage(const QString& imagePath)
 void ImageModel::removeImage(int index)
 {
     if (index >= 0 && index < m_images.size()) {
-        beginRemoveRows(QModelIndex(), index, index);
+        beginRemoveRows(QModelIndex(), index / 3, index / 3);
         m_images.removeAt(index);
         endRemoveRows();
     }
@@ -46,7 +50,7 @@ void ImageModel::moveImage(int fromIndex, int toIndex)
 {
     if (fromIndex >= 0 && fromIndex < m_images.size() &&
         toIndex >= 0 && toIndex < m_images.size()) {
-        beginMoveRows(QModelIndex(), fromIndex, fromIndex, QModelIndex(), toIndex);
+        beginMoveRows(QModelIndex(), fromIndex / 3, fromIndex / 3, QModelIndex(), toIndex / 3);
         m_images.move(fromIndex, toIndex);
         endMoveRows();
     }
@@ -65,13 +69,13 @@ ImageItem ImageModel::createImageItem(QString path)
     {
         QImage image(item.info.absoluteFilePath());
         item.resolution = image.size();
-        item.preview = image.scaled(100, 75);
+        item.preview = image.scaled(500, 500);
     }
     return item;
 }
 
 /**
- * @brief Return the number of rows (images) in the model.
+ * @brief Return the number of rows in the model.
  * @param parent The parent index (unused).
  * @return The number of rows in the model.
  */
@@ -79,7 +83,19 @@ int ImageModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0; // No nested items
-    return m_images.size();
+    return (m_images.size() + 2) / 3; // 3 columns per row
+}
+
+/**
+ * @brief Return the number of columns in the model.
+ * @param parent The parent index (unused).
+ * @return The number of columns in the model.
+ */
+int ImageModel::columnCount(const QModelIndex& parent) const
+{
+    if (parent.isValid())
+        return 0; // No nested items
+    return 3; // Fixed number of columns
 }
 
 /**
@@ -92,15 +108,17 @@ QVariant ImageModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-
-    const int row = index.row();
-    if (row < 0 || row >= m_images.size())
+    int row = index.row();
+    int col = index.column();
+    int imageIndex = row * 3 + col;
+    if (imageIndex < 0 || imageIndex >= m_images.size())
         return QVariant();
-
-    const ImageItem& item = m_images.at(row);
+    const ImageItem& item = m_images.at(imageIndex);
     switch (role) {
     case Qt::DisplayRole:
         return item.info.absoluteFilePath();
+    case Qt::SizeHintRole:
+        return QSize(200, 200);
     case PreviewRole:
         return QVariant::fromValue(item.preview);
     case ResolutionRole:
@@ -139,3 +157,33 @@ QList<QImage> ImageModel::getImageList()
     }
     return images;
 }
+
+/**
+ * @brief Create an index for the given row and column.
+ * @param row The row number.
+ * @param column The column number.
+ * @param parent The parent index (unused in this model).
+ * @return The model index for the specified row and column.
+ */
+QModelIndex ImageModel::index(int row, int column, const QModelIndex& parent) const
+{
+    if (parent.isValid() || row < 0 || column < 0 || row >= rowCount() || column >= columnCount())
+        return QModelIndex();
+
+    return createIndex(row, column);
+}
+
+/**
+ * @brief Return the item flags for the given model index.
+ * @param index The model index.
+ * @return The item flags for the index.
+ */
+Qt::ItemFlags ImageModel::flags(const QModelIndex& index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+}
+
+

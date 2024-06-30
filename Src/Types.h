@@ -15,6 +15,9 @@
 #include <QMarginsF>
 #include <QPageLayout>
 #include <QPagedPaintDevice>
+#include <QImage>
+#include <QFileInfo>
+
 
 /// @brief Name of the software
 #define SOFTWARENAME "FrameFlow"
@@ -174,5 +177,20 @@ struct HTMLGalleryAttributes: public Attributes
  * @brief A list of QImage objects used for storing multiple images.
  */
 typedef QList<QImage> ImageList;
+
+// Custom roles for the image model
+enum ImageRoles {
+    ImagePathRole = Qt::UserRole + 1,  // Role for storing the image path
+    PreviewRole,                       // Role for storing the image preview
+    ResolutionRole,                    // Role for storing the image resolution
+    FileNameRole                       // Role for storing the image file name
+};
+
+// Struct representing an image item in the model
+struct ImageItem {
+    QImage preview;     // Image preview
+    QSize resolution;   // Image resolution
+    QFileInfo info;     // Image file information
+};
 
 #endif // TYPES_H

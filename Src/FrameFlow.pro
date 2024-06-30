@@ -13,6 +13,7 @@ LIBS +=  -lavformat -lavcodec -lavutil -lswscale
 SOURCES += \
     giffile.cpp \
     htmlgallery.cpp \
+    imagedelegate.cpp \
     imagemodel.cpp \
     imagesprite.cpp \
     main.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     Types.h \
     giffile.h \
     htmlgallery.h \
+    imagedelegate.h \
     imagemodel.h \
     imagesprite.h \
     mainwindow.h \
