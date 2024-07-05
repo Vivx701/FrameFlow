@@ -5,7 +5,7 @@
  * @param parent The parent object.
  */
 ImageModel::ImageModel(QObject *parent)
-    : QAbstractTableModel(parent)
+    : QAbstractListModel(parent)
 {
 }
 
@@ -83,7 +83,7 @@ int ImageModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0; // No nested items
-    return (m_images.size() + 2) / 3; // 3 columns per row
+    return m_images.size();
 }
 
 /**
@@ -95,7 +95,7 @@ int ImageModel::columnCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0; // No nested items
-    return 3; // Fixed number of columns
+    return 1;
 }
 
 /**
@@ -108,9 +108,8 @@ QVariant ImageModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-    int row = index.row();
-    int col = index.column();
-    int imageIndex = row * 3 + col;
+
+    int imageIndex = index.row();
     if (imageIndex < 0 || imageIndex >= m_images.size())
         return QVariant();
     const ImageItem& item = m_images.at(imageIndex);

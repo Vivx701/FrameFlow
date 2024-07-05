@@ -1,5 +1,6 @@
 <RCC>
-    <qresource prefix="/icons">
-        <file>filebrowser.png</file>
+    <qresource prefix="/Files">
+        <file>Images/empty.png</file>
+        <file>Images/filebrowser.png</file>
     </qresource>
 </RCC>

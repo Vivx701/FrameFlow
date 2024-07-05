@@ -1,13 +1,13 @@
 #ifndef IMAGEMODEL_H
 #define IMAGEMODEL_H
 
-#include <QAbstractTableModel>
+#include <QAbstractListModel>
 #include <QFileInfo>
 #include <QImage>
 #include <Types.h>
 
 
-class ImageModel : public QAbstractTableModel
+class ImageModel : public QAbstractListModel
 {
     Q_OBJECT
 

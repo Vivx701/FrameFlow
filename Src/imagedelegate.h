@@ -2,6 +2,7 @@
 #define IMAGEDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QFontMetrics>
 #include <Types.h>
 
 /**
