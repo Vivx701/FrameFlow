@@ -2,7 +2,8 @@
 
 #include <QPainter>
 #include <QMouseEvent>
-#include <QApplication>
+#include <QPainterPath>
+#include <QBrush>
 
 /**
  * @brief Constructor for ImageDelegate.
@@ -22,36 +23,31 @@ void ImageDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
     QImage previewImg = index.data(PreviewRole).value<QImage>();
     if (!previewImg.isNull()) {
 
-
-        QString caption = index.data(FileNameRole).toString();
-
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-
         // Draw the image
-        QRect imageRect = option.rect.adjusted(5, 5, -5, -25);
+        QRect imageRect = option.rect.adjusted(5, 5, -5, -5);
+        // Create a path for the rounded square
+        qreal radius = previewImg.width() * 0.02; // Adjust this value to change corner roundness
+        QPainterPath path;
+        path.addRoundedRect(imageRect, radius, radius);
+        painter->setClipPath(path);
+
+        // Draw selection rectangle if the item is selected
+        if (option.state & QStyle::State_Selected) {
+            painter->setPen(QPen(option.palette.highlight(), 3));
+            QBrush selectionBrush(Qt::blue, Qt::SolidPattern);
+            selectionBrush.setColor(QColor(93, 173, 226, 100));
+            painter->setBrush(selectionBrush);
+            painter->drawRect(option.rect.adjusted(1, 1, -1, -1));
+        }
+
         painter->drawImage(imageRect, previewImg);
-        painter->drawRect(option.rect);
-
-        // Draw the caption
-        QFontMetrics fontMetrics = painter->fontMetrics();
-
-        QRect captionRect = option.rect.adjusted(5, option.rect.height() - 20, -5, -5);
-        QString elidedText = fontMetrics.elidedText(caption, Qt::ElideRight, captionRect.width());
-        painter->drawText(captionRect, Qt::AlignHCenter | Qt::AlignVCenter, caption);
-
-        // Draw the delete button
-        QStyleOptionButton buttonOption;
-        buttonOption.rect = QRect(option.rect.right() - 30, option.rect.top() + 20, 20, 20);
-        buttonOption.state = QStyle::State_Enabled;
-        buttonOption.text  = "X";
-
-        QStyle* style = option.widget ? option.widget->style() : QApplication::style();
-        style->drawControl(QStyle::CE_PushButton, &buttonOption, painter, option.widget);
-
+        painter->drawRoundedRect(imageRect, radius, radius);
         painter->restore();
+
     } else {
         QStyledItemDelegate::paint(painter, option, index);
     }

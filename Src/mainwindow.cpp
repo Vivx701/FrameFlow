@@ -43,6 +43,8 @@ void MainWindow::setupUI()
             ui->graphicsView->fitInView(m_pixmapItem.boundingRect(), Qt::KeepAspectRatio);
             ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
         }
+        QString properties = m_model.getSelectedImageProperties(index);
+        ui->propertiesLabel->setText(properties);
 
 
     });

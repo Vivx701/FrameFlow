@@ -185,4 +185,44 @@ Qt::ItemFlags ImageModel::flags(const QModelIndex& index) const
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 
+/**
+ * @brief Generates a string containing all properties of a QImage.
+ *
+ * This function extracts various properties of a QImage and formats them
+ * into a human-readable string, with each property labeled.
+ *
+ */
+QString ImageModel::getSelectedImageProperties(const QModelIndex& index)
+{
+    if(!index.isValid())
+    {
+        return QString();
+    }
+
+    const ImageItem& item = m_images.at(index.row());
+
+    QImage image(item.info.absoluteFilePath());
+    QString properties;
+    properties += "Filename: " + item.info.fileName() + "\n";
+    properties += "Dir: " + item.info.absolutePath() + "\n";
+    properties += "Bytes: " + QString::number(item.info.size()) + "\n\n\n";
+
+    properties += "Width: " + QString::number(image.width()) + " px\n";
+    properties += "Height: " + QString::number(image.height()) + " px\n";
+    properties += "Depth: " + QString::number(image.depth()) + " bits\n";
+    properties += "Format: " + QString::number(image.format()) + "\n";
+    properties += "Color Count: " + QString::number(image.colorCount()) + "\n";
+    properties += "Is Null: " + QString(image.isNull() ? "Yes" : "No") + "\n";
+    properties += "Bytes Per Line: " + QString::number(image.bytesPerLine()) + "\n";
+    properties += "Device Pixel Ratio: " + QString::number(image.devicePixelRatio()) + "\n";
+    properties += "DotsPerMeterX: " + QString::number(image.dotsPerMeterX()) + "\n";
+    properties += "DotsPerMeterY: " + QString::number(image.dotsPerMeterY()) + "\n";
+    properties += "Offset: (" + QString::number(image.offset().x()) + ", " + QString::number(image.offset().y()) + ")\n";
+    properties += "Is Grayscale: " + QString(image.isGrayscale() ? "Yes" : "No") + "\n";
+    properties += "Has Alpha Channel: " + QString(image.hasAlphaChannel() ? "Yes" : "No") + "\n";
+    properties += "Bit Plane Count: " + QString::number(image.bitPlaneCount()) + "\n";
+
+    return properties;
+}
+
 
