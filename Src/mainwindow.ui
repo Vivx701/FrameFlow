@@ -78,15 +78,68 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QPushButton" name="leftButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Left</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/Dark/icons/Resources/Icons/dark/arrow-left-bold-box-outline.png</normaloff>:/Dark/icons/Resources/Icons/dark/arrow-left-bold-box-outline.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="default">
+            <bool>false</bool>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="rightButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Right</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/Dark/icons/Resources/Icons/dark/arrow-right-bold-box-outline.png</normaloff>:/Dark/icons/Resources/Icons/dark/arrow-right-bold-box-outline.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -106,21 +159,60 @@
          <item>
           <widget class="QPushButton" name="deleteButton">
            <property name="text">
-            <string>Delete</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/Dark/icons/Resources/Icons/dark/image-remove-outline.png</normaloff>:/Dark/icons/Resources/Icons/dark/image-remove-outline.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="deleteButton_2">
+          <widget class="QPushButton" name="moveBackButton">
            <property name="text">
-            <string>Move back</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/Dark/icons/Resources/Icons/dark/image-move-back.png</normaloff>:/Dark/icons/Resources/Icons/dark/image-move-back.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="deleteButton_3">
+          <widget class="QPushButton" name="moveFrontButton">
            <property name="text">
-            <string>Move right</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/Dark/icons/Resources/Icons/dark/image-move.png</normaloff>:/Dark/icons/Resources/Icons/dark/image-move.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -162,6 +254,9 @@
       <property name="viewMode">
        <enum>QListView::ListMode</enum>
       </property>
+      <property name="selectionRectVisible">
+       <bool>false</bool>
+      </property>
      </widget>
     </item>
    </layout>
@@ -187,6 +282,8 @@
    </attribute>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

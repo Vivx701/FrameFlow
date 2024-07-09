@@ -23,9 +23,52 @@ MainWindow::~MainWindow()
 void MainWindow::setupUI()
 {
 
+    QToolButton *newButton = new QToolButton(this);
+    newButton->setText("New");
+    newButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/new-box.png"));
+    newButton->setToolTip("Start a new project");
+    newButton->setFixedSize(QSize(75, 50));
+
     QToolButton *fileBrowseButton = new QToolButton(this);
-    fileBrowseButton->setText("Click me!");
-    fileBrowseButton->setIcon(QIcon(":/Files/Images/filebrowser.png"));
+    fileBrowseButton->setText("Browse");
+    fileBrowseButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/plus-box.png"));
+    fileBrowseButton->setToolTip("Add images to project");
+    fileBrowseButton->setFixedSize(QSize(75, 50));
+
+    QToolButton *exportButton = new QToolButton(this);
+    exportButton->setText("Export");
+    exportButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/export.png"));
+    exportButton->setToolTip("Export the images ");
+    exportButton->setFixedSize(QSize(75, 50));
+
+    QToolButton *settingsButton = new QToolButton(this);
+    settingsButton->setText("Export");
+    settingsButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/cog.png"));
+    settingsButton->setToolTip("Settings");
+    settingsButton->setFixedSize(QSize(75, 50));
+
+    QToolButton *aboutButton = new QToolButton(this);
+    aboutButton->setText("Export");
+    aboutButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/information-outline.png"));
+    aboutButton->setToolTip("About screen");
+    aboutButton->setFixedSize(QSize(75, 50));
+
+
+    // Add the buttons to the toolbar
+    ui->toolBar->setIconSize(QSize(50, 50));
+    QWidget *spacer = new QWidget(this);
+    spacer->setFixedHeight(100);
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    ui->toolBar->addWidget(spacer);
+    ui->toolBar->addWidget(newButton);
+    ui->toolBar->addWidget(fileBrowseButton);
+    ui->toolBar->addWidget(exportButton);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addWidget(settingsButton);
+    ui->toolBar->addWidget(aboutButton);
+
+
+
     ui->listView->setModel(&m_model);
     ImageDelegate *delegate = new ImageDelegate(this);
     ui->listView->setItemDelegate(delegate);
@@ -50,13 +93,6 @@ void MainWindow::setupUI()
     });
 
 
-
-
-    QObject::connect(delegate, &ImageDelegate::deleteButtonClicked, [&](const QModelIndex& index) {
-        // Handle the deletion of the image at the given index
-        qDebug()<<index.row();
-        m_model.removeRow(index.row());
-    });
     // Connect the clicked signal to a slot
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
 
@@ -78,8 +114,7 @@ void MainWindow::setupUI()
 
     });
 
-    // Add the button to the toolbar
-    ui->toolBar->addWidget(fileBrowseButton);
+
 }
 
 void MainWindow::saveFile(QString filePath, OutputType type)
@@ -128,5 +163,66 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     attr.specificSettings["EnableLightbox"] = false;
     output->setAttrib(attr);
     output->save();
+}
+
+
+void MainWindow::on_leftButton_clicked()
+{
+    if(m_model.rowCount() == 0)
+    {
+        return;
+    }
+    QModelIndex currentIndex = ui->listView->currentIndex();
+    int newRow = (currentIndex.row() == 0)? (m_model.rowCount()-1): (currentIndex.row()-1);
+    ui->listView->setCurrentIndex(m_model.index(newRow, 0));
+}
+
+
+void MainWindow::on_rightButton_clicked()
+{
+    if(m_model.rowCount() == 0)
+    {
+        return;
+    }
+    QModelIndex currentIndex = ui->listView->currentIndex();
+    int newRow = (currentIndex.row()+1)%m_model.rowCount();
+    ui->listView->setCurrentIndex(m_model.index(newRow, 0));
+}
+
+
+void MainWindow::on_deleteButton_clicked()
+{
+    if(m_model.rowCount() == 0)
+    {
+        return;
+    }
+    QModelIndex currentIndex = ui->listView->currentIndex();
+    m_model.removeImage(currentIndex.row());
+}
+
+
+
+void MainWindow::on_moveBackButton_clicked()
+{
+    if(m_model.rowCount() == 0)
+    {
+        return;
+    }
+    QModelIndex currentIndex = ui->listView->currentIndex();
+    int newRow = (currentIndex.row() == 0)? (currentIndex.row()): (currentIndex.row()-1);
+    m_model.moveImage(currentIndex.row(), newRow);
+    ui->listView->setCurrentIndex(m_model.index(newRow, 0));
+}
+
+
+void MainWindow::on_moveFrontButton_clicked()
+{
+    if(m_model.rowCount() == 0)
+    {
+        return;
+    }
+    QModelIndex currentIndex = ui->listView->currentIndex();
+    int newRow = (currentIndex.row() ==  m_model.rowCount()-1)? (currentIndex.row()): (currentIndex.row()+1);
+    m_model.moveImage(currentIndex.row(), newRow);
 }
 

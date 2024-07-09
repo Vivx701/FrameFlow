@@ -35,7 +35,7 @@ void ImageModel::addImage(const QString& imagePath)
 void ImageModel::removeImage(int index)
 {
     if (index >= 0 && index < m_images.size()) {
-        beginRemoveRows(QModelIndex(), index / 3, index / 3);
+        beginRemoveRows(QModelIndex(), index, index);
         m_images.removeAt(index);
         endRemoveRows();
     }
@@ -48,9 +48,13 @@ void ImageModel::removeImage(int index)
  */
 void ImageModel::moveImage(int fromIndex, int toIndex)
 {
+    if(fromIndex == toIndex)
+    {
+        return;
+    }
     if (fromIndex >= 0 && fromIndex < m_images.size() &&
         toIndex >= 0 && toIndex < m_images.size()) {
-        beginMoveRows(QModelIndex(), fromIndex / 3, fromIndex / 3, QModelIndex(), toIndex / 3);
+        beginMoveRows(QModelIndex(), fromIndex, fromIndex, QModelIndex(), toIndex > fromIndex ? toIndex + 1 : toIndex);
         m_images.move(fromIndex, toIndex);
         endMoveRows();
     }

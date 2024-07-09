@@ -1,6 +1,14 @@
 <RCC>
-    <qresource prefix="/Files">
-        <file>Images/empty.png</file>
-        <file>Images/filebrowser.png</file>
+    <qresource prefix="/Dark/icons">
+        <file>Resources/Icons/dark/arrow-left-bold-box-outline.png</file>
+        <file>Resources/Icons/dark/arrow-right-bold-box-outline.png</file>
+        <file>Resources/Icons/dark/cog.png</file>
+        <file>Resources/Icons/dark/export.png</file>
+        <file>Resources/Icons/dark/image-move-back.png</file>
+        <file>Resources/Icons/dark/image-move.png</file>
+        <file>Resources/Icons/dark/image-remove-outline.png</file>
+        <file>Resources/Icons/dark/information-outline.png</file>
+        <file>Resources/Icons/dark/new-box.png</file>
+        <file>Resources/Icons/dark/plus-box.png</file>
     </qresource>
 </RCC>

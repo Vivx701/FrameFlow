@@ -22,6 +22,13 @@ public:
     void setupUI();
     void saveFile(QString filePath, OutputType type);
 
+private slots:
+    void on_leftButton_clicked();
+    void on_rightButton_clicked();
+    void on_deleteButton_clicked();
+    void on_moveBackButton_clicked();
+    void on_moveFrontButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     ImageModel m_model;
