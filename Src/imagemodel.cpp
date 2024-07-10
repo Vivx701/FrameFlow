@@ -53,11 +53,32 @@ void ImageModel::moveImage(int fromIndex, int toIndex)
         return;
     }
     if (fromIndex >= 0 && fromIndex < m_images.size() &&
-        toIndex >= 0 && toIndex < m_images.size()) {
+            toIndex >= 0 && toIndex < m_images.size()) {
         beginMoveRows(QModelIndex(), fromIndex, fromIndex, QModelIndex(), toIndex > fromIndex ? toIndex + 1 : toIndex);
         m_images.move(fromIndex, toIndex);
         endMoveRows();
     }
+}
+
+/**
+ * @brief Clears all images from the model.
+ *
+ * This function removes all image items from the model's internal storage.
+ * It uses the model reset functions to ensure all connected views are properly updated.
+ * After calling this function, the model will be empty.
+ *
+ * @note This operation cannot be undone. All image data in the model will be lost.
+ *
+ * @see beginResetModel(), endResetModel()
+ *
+ * @emit imagesCleared() Signal emitted after all images have been removed.
+ */
+void ImageModel::clearImages()
+{
+    beginResetModel();
+    m_images.clear();
+    endResetModel();
+    emit imagesCleared();
 }
 
 /**
@@ -196,37 +217,39 @@ Qt::ItemFlags ImageModel::flags(const QModelIndex& index) const
  * into a human-readable string, with each property labeled.
  *
  */
-QString ImageModel::getSelectedImageProperties(const QModelIndex& index)
+QVector<QPair<QString, QString>> ImageModel::getSelectedImageProperties(const QModelIndex& index)
 {
+    QVector<QPair<QString, QString>> properties;
+
     if(!index.isValid())
     {
-        return QString();
+        return properties;
     }
 
     const ImageItem& item = m_images.at(index.row());
 
     QImage image(item.info.absoluteFilePath());
-    QString properties;
-    properties += "Filename: " + item.info.fileName() + "\n";
-    properties += "Dir: " + item.info.absolutePath() + "\n";
-    properties += "Bytes: " + QString::number(item.info.size()) + "\n\n\n";
 
-    properties += "Width: " + QString::number(image.width()) + " px\n";
-    properties += "Height: " + QString::number(image.height()) + " px\n";
-    properties += "Depth: " + QString::number(image.depth()) + " bits\n";
-    properties += "Format: " + QString::number(image.format()) + "\n";
-    properties += "Color Count: " + QString::number(image.colorCount()) + "\n";
-    properties += "Is Null: " + QString(image.isNull() ? "Yes" : "No") + "\n";
-    properties += "Bytes Per Line: " + QString::number(image.bytesPerLine()) + "\n";
-    properties += "Device Pixel Ratio: " + QString::number(image.devicePixelRatio()) + "\n";
-    properties += "DotsPerMeterX: " + QString::number(image.dotsPerMeterX()) + "\n";
-    properties += "DotsPerMeterY: " + QString::number(image.dotsPerMeterY()) + "\n";
-    properties += "Offset: (" + QString::number(image.offset().x()) + ", " + QString::number(image.offset().y()) + ")\n";
-    properties += "Is Grayscale: " + QString(image.isGrayscale() ? "Yes" : "No") + "\n";
-    properties += "Has Alpha Channel: " + QString(image.hasAlphaChannel() ? "Yes" : "No") + "\n";
-    properties += "Bit Plane Count: " + QString::number(image.bitPlaneCount()) + "\n";
+    properties.push_back(qMakePair(QString("Filename"), item.info.fileName()));
+    properties.push_back(qMakePair(QString("Dir"), item.info.absolutePath()));
+    properties.push_back(qMakePair(QString("Bytes"), QString::number(item.info.size())));
+    properties.push_back(qMakePair(QString("Modified"), item.info.lastModified().toString()));
+
+    properties.push_back(qMakePair(QString("Width"), QString::number(image.width()) + " px"));
+    properties.push_back(qMakePair(QString("Height"), QString::number(image.height()) + " px"));
+    properties.push_back(qMakePair(QString("Depth"), QString::number(image.depth()) + " bits"));
+    properties.push_back(qMakePair(QString("Format"), QString::number(image.format())));
+    properties.push_back(qMakePair(QString("Color Count"), QString::number(image.colorCount())));
+    properties.push_back(qMakePair(QString("Is Null"), image.isNull() ? "Yes" : "No"));
+    properties.push_back(qMakePair(QString("Bytes Per Line"), QString::number(image.bytesPerLine())));
+    properties.push_back(qMakePair(QString("Device Pixel Ratio"), QString::number(image.devicePixelRatio())));
+    properties.push_back(qMakePair(QString("DotsPerMeterX"), QString::number(image.dotsPerMeterX())));
+    properties.push_back(qMakePair(QString("DotsPerMeterY"), QString::number(image.dotsPerMeterY())));
+    properties.push_back(qMakePair(QString("Offset"), "(" + QString::number(image.offset().x()) + ", " + QString::number(image.offset().y()) + ")"));
+    properties.push_back(qMakePair(QString("Is Grayscale"), image.isGrayscale() ? "Yes" : "No"));
+    properties.push_back(qMakePair(QString("Has Alpha Channel"), image.hasAlphaChannel() ? "Yes" : "No"));
+    properties.push_back(qMakePair(QString("Bit Plane Count"), QString::number(image.bitPlaneCount())));
 
     return properties;
 }
-
 

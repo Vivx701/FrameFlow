@@ -6,6 +6,8 @@
 #include <QImage>
 #include <Types.h>
 #include <QColorSpace>
+#include <QVector>
+#include <QPair>
 
 class ImageModel : public QAbstractListModel
 {
@@ -19,6 +21,7 @@ public:
     void addImage(const QString& imagePath);
     void removeImage(int index);
     void moveImage(int fromIndex, int toIndex);
+    void clearImages();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     int columnCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -27,8 +30,10 @@ public:
     QList<QImage> getImageList();
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-    QString getSelectedImageProperties(const QModelIndex& index);
+    QVector<QPair<QString, QString>> getSelectedImageProperties(const QModelIndex& index);
 
+signals:
+    void imagesCleared();
 
 private:
     QList<ImageItem> m_images;

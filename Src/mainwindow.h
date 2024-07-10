@@ -5,6 +5,10 @@
 #include <imagemodel.h>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QMap>
+#include <QLineEdit>
+#include <QSpacerItem>
+#include<QMessageBox>
 
 #include "outputfilefactory.h"
 
@@ -21,6 +25,8 @@ public:
     ~MainWindow();
     void setupUI();
     void saveFile(QString filePath, OutputType type);
+    void resetAll();
+    void clearProperties();
 
 private slots:
     void on_leftButton_clicked();

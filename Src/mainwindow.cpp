@@ -86,14 +86,39 @@ void MainWindow::setupUI()
             ui->graphicsView->fitInView(m_pixmapItem.boundingRect(), Qt::KeepAspectRatio);
             ui->graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
         }
-        QString properties = m_model.getSelectedImageProperties(index);
-        ui->propertiesLabel->setText(properties);
+        QVector<QPair<QString, QString>> imageProperties = m_model.getSelectedImageProperties(index);
+
+
+
+        //Add new contents
+        clearProperties();
+        for (const auto& property : imageProperties) {
+            ui->propertiesLayout->addRow(property.first, new QLineEdit(property.second, this));
+            if(property.first == "Modified")
+            {
+                ui->propertiesLayout->addItem(new QSpacerItem(50, 30, QSizePolicy::Expanding, QSizePolicy::Fixed));
+            }
+        }
 
 
     });
 
 
     // Connect the clicked signal to a slot
+    connect(newButton, &QToolButton::clicked, this, [this](){
+
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Confirm New",
+                                      "Are you sure you want to start again ?\nAll changes will be lost.",
+                                      QMessageBox::Yes|QMessageBox::No);
+
+        if (reply == QMessageBox::Yes) {
+            // User confirmed, proceed with clearing
+            resetAll();
+        }
+
+    });
+
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
 
         QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Image"), QDir::homePath(),
@@ -163,6 +188,23 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     attr.specificSettings["EnableLightbox"] = false;
     output->setAttrib(attr);
     output->save();
+}
+
+void MainWindow::resetAll()
+{
+    m_model.clearImages();
+    ui->listView->reset();
+    clearProperties();
+    m_pixmapItem.setPixmap(QPixmap());
+}
+
+void MainWindow::clearProperties()
+{
+    //clear the existing contents
+    while ( ui->propertiesLayout->rowCount() > 0)
+    {
+        ui->propertiesLayout->removeRow(0);
+    }
 }
 
 
