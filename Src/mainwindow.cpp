@@ -5,7 +5,7 @@
 #include <QDir>
 #include <QDebug>
 #include <imagedelegate.h>
-
+#include <exportdialog.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -93,7 +93,9 @@ void MainWindow::setupUI()
         //Add new contents
         clearProperties();
         for (const auto& property : imageProperties) {
-            ui->propertiesLayout->addRow(property.first, new QLineEdit(property.second, this));
+            QLineEdit *secondText = new QLineEdit(property.second, this);
+            secondText->setReadOnly(true);
+            ui->propertiesLayout->addRow(property.first, secondText);
             if(property.first == "Modified")
             {
                 ui->propertiesLayout->addItem(new QSpacerItem(50, 30, QSizePolicy::Expanding, QSizePolicy::Fixed));
@@ -139,6 +141,16 @@ void MainWindow::setupUI()
 
     });
 
+    connect(exportButton, &QToolButton::clicked, this, [this](){
+
+        ExportDialog exportDialog;
+        if(QDialog::Accepted == exportDialog.exec())
+        {
+
+        }
+
+
+    });
 
 }
 

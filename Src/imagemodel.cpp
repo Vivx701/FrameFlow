@@ -249,6 +249,7 @@ QVector<QPair<QString, QString>> ImageModel::getSelectedImageProperties(const QM
     properties.push_back(qMakePair(QString("Is Grayscale"), image.isGrayscale() ? "Yes" : "No"));
     properties.push_back(qMakePair(QString("Has Alpha Channel"), image.hasAlphaChannel() ? "Yes" : "No"));
     properties.push_back(qMakePair(QString("Bit Plane Count"), QString::number(image.bitPlaneCount())));
+    properties.push_back(qMakePair(QString("Index"), QString::number(index.row()+1)+"/"+QString::number(rowCount())));
 
     return properties;
 }

@@ -11,6 +11,7 @@ CONFIG += c++17
 LIBS +=  -lavformat -lavcodec -lavutil -lswscale
 
 SOURCES += \
+    exportdialog.cpp \
     giffile.cpp \
     htmlgallery.cpp \
     imagedelegate.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 HEADERS += \
     IOutputFile.h \
     Types.h \
+    exportdialog.h \
     giffile.h \
     htmlgallery.h \
     imagedelegate.h \
@@ -36,6 +38,7 @@ HEADERS += \
     videofile.h
 
 FORMS += \
+    exportdialog.ui \
     mainwindow.ui
 
 # Default rules for deployment.
