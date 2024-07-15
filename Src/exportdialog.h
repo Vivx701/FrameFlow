@@ -15,6 +15,9 @@ class ExportDialog : public QDialog
 public:
     explicit ExportDialog(QWidget *parent = nullptr);
     QString currentTabName();
+    QString currentSavePath();
+    void fillAttribMap();
+    void fillComboBoxValues();
     Attributes exportSettings();
     ~ExportDialog();
 
@@ -23,6 +26,7 @@ private slots:
 
 private:
     Ui::ExportDialog *ui;
+    QMap<QString, std::function<Attributes()>> m_attributeMap;
 };
 
 #endif // EXPORTDIALOG_H

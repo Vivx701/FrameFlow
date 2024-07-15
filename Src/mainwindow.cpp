@@ -146,7 +146,15 @@ void MainWindow::setupUI()
         ExportDialog exportDialog;
         if(QDialog::Accepted == exportDialog.exec())
         {
-
+            QMap<QString, OutputType> outputMap = {
+                {"pdf", OutputType::PDF},
+                {"video", OutputType::VIDEO},
+                {"sprite", OutputType::SPRITE},
+                {"gif", OutputType::GIF},
+                {"html", OutputType::HTMLGALLERY},
+            };
+            Attributes attrib = exportDialog.exportSettings();
+            writeFile(attrib, outputMap[exportDialog.currentTabName()]);
         }
 
 
@@ -199,6 +207,15 @@ void MainWindow::saveFile(QString filePath, OutputType type)
     attr.specificSettings["Copyright"] = "This is vivek";
     attr.specificSettings["EnableLightbox"] = false;
     output->setAttrib(attr);
+    output->save();
+}
+
+void MainWindow::writeFile(Attributes &attrib, OutputType type)
+{
+    std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
+    ImageList images = m_model.getImageList();
+    output->addImages(images);
+    output->setAttrib(attrib);
     output->save();
 }
 

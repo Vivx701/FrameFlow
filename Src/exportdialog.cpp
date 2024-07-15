@@ -2,6 +2,7 @@
 #include "ui_exportdialog.h"
 #include <QFileDialog>
 #include <QDir>
+#include <QPageSize>
 
 ExportDialog::ExportDialog(QWidget *parent) :
     QDialog(parent),
@@ -13,19 +14,8 @@ ExportDialog::ExportDialog(QWidget *parent) :
     connect(ui->videoBrowseButton, SIGNAL(clicked()), this, SLOT(openFolderDialog()));
     connect(ui->htmlBrowseButton, SIGNAL(clicked()), this, SLOT(openFolderDialog()));
 
-
-    attributeMap["pdf"] = [this](){
-                                    PDFAttributes pattr;
-                                    pattr.filePath = currentSavePath();
-                                    pattr.specificSettings["Title"] = ui->pdfDocumentTitle->text();
-                                    pattr.specificSettings["Fill"] = ui->pdfFill->currentText();
-                                    pattr.specificSettings["Orientation"] = (ui->pdfOrientation->currentIndex() == 0)? QPageLayout::Portrait : QPageLayout::Landscape;
-                                    pattr.specificSettings["Version"] = QVariant::fromValue(QPagedPaintDevice::PdfVersion_1_6);
-                                    int margin = ui->pdfMargin->value();
-                                    pattr.specificSettings["Margin"] = QVariant::fromValue(QMarginsF(margin, margin, margin, margin));
-                                    return pattr;
-
-                              };
+    fillComboBoxValues();
+    fillAttribMap();
 
 
 
@@ -78,9 +68,44 @@ QString ExportDialog::currentSavePath()
     return filePath+extension;
 }
 
+void ExportDialog::fillAttribMap()
+{
+    m_attributeMap["pdf"] = [this](){
+                                    PDFAttributes pattr;
+                                    pattr.filePath = currentSavePath();
+                                    pattr.specificSettings["Title"] = ui->pdfDocumentTitle->text();
+                                    pattr.specificSettings["Fill"] = ui->pdfFill->currentText();
+                                    pattr.specificSettings["Orientation"] = ui->pdfOrientation->currentData();
+                                    pattr.specificSettings["Version"] = QVariant::fromValue(QPagedPaintDevice::PdfVersion_1_6);
+                                    int margin = ui->pdfMargin->value();
+                                    pattr.specificSettings["Margin"] = QVariant::fromValue(QMarginsF(margin, margin, margin, margin));
+                                    pattr.specificSettings["Size"] = ui->pdfSizes->currentData();
+                                    return pattr;
+    };
+}
+
+void ExportDialog::fillComboBoxValues()
+{
+    //Fill page size
+    QList<QPageSize::PageSizeId> pageSizes = {QPageSize::A0, QPageSize::A1, QPageSize::A2, QPageSize::A3, QPageSize::A4, QPageSize::A5, QPageSize::A6, QPageSize::A7,
+                                              QPageSize::A8, QPageSize::A9, QPageSize::A10, QPageSize::B0, QPageSize::B1, QPageSize::B2, QPageSize::B3, QPageSize::B4, QPageSize::B5,
+                                              QPageSize::Comm10E, QPageSize::Executive, QPageSize::Folio, QPageSize::Ledger, QPageSize::Legal, QPageSize::Letter, QPageSize::Tabloid, QPageSize::Postcard};
+    for (const auto& sizeId : pageSizes)
+    {
+        QString sizeName = QPageSize(sizeId).name();
+        ui->pdfSizes->addItem(sizeName, QVariant::fromValue(sizeId));
+    }
+
+    //page orientation
+    ui->pdfOrientation->addItem("Portrait", QVariant::fromValue(QPageLayout::Portrait));
+    ui->pdfOrientation->addItem("Landscape", QVariant::fromValue(QPageLayout::Landscape));
+
+}
+
+
 Attributes ExportDialog::exportSettings()
 {
-
+    return m_attributeMap[currentTabName()]();
 }
 
 ExportDialog::~ExportDialog()

@@ -8,10 +8,6 @@
 #include <giffile.h>
 #include <htmlgallery.h>
 
-/**
- * @brief Enum representing the different types of output files.
- */
-enum OutputType{PDF, VIDEO, GIF, SPRITE, HTMLGALLERY};
 
 /**
  * @brief A factory class for creating output file objects.

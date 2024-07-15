@@ -25,6 +25,7 @@ public:
     ~MainWindow();
     void setupUI();
     void saveFile(QString filePath, OutputType type);
+    void writeFile(Attributes &attrib, OutputType type);
     void resetAll();
     void clearProperties();
 

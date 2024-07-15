@@ -193,4 +193,10 @@ struct ImageItem {
     QFileInfo info;     // Image file information
 };
 
+/**
+ * @brief Enum representing the different types of output files.
+ */
+enum OutputType{PDF, VIDEO, GIF, SPRITE, HTMLGALLERY};
+
+
 #endif // TYPES_H

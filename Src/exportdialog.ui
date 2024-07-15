@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="pdf">
       <attribute name="title">
@@ -35,6 +35,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="pdfFileName">
+           <property name="text">
+            <string>output</string>
+           </property>
            <property name="maxLength">
             <number>1000</number>
            </property>
@@ -94,143 +97,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QComboBox" name="sizeComboBox">
-           <item>
-            <property name="text">
-             <string>A0</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A3</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A4</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A5</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A6</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A7</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A8</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A9</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>A10</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>B0</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>B1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>B2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>B3</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>B4</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>B5</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Executive</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Folio</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Ledger</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Legal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Letter</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Postcard</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>DoublePostcard</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>EnvelopePersonal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>SuperA</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>SuperB</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="pdfSizes"/>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="orientationLabel">
@@ -240,18 +107,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QComboBox" name="orientationComboBox">
-           <item>
-            <property name="text">
-             <string>Horizontal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Vertical</string>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="pdfOrientation"/>
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="marginLabel">
@@ -261,7 +117,7 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QSpinBox" name="marginSpinBox"/>
+          <widget class="QSpinBox" name="pdfMargin"/>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="fillLabel">
@@ -271,7 +127,7 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QComboBox" name="fillComboBox">
+          <widget class="QComboBox" name="pdfFill">
            <item>
             <property name="text">
              <string>Center</string>
@@ -297,7 +153,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="documentTitleLineEdit">
+          <widget class="QLineEdit" name="pdfDocumentTitle">
            <property name="minimumSize">
             <size>
              <width>500</width>
@@ -323,6 +179,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <layout class="QFormLayout" name="formLayout_7">
+         <property name="verticalSpacing">
+          <number>6</number>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="fileNameLabel_2">
            <property name="text">
@@ -332,6 +191,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="spriteFileName">
+           <property name="text">
+            <string>output</string>
+           </property>
            <property name="maxLength">
             <number>1000</number>
            </property>
@@ -391,7 +253,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="formatComboBox">
+          <widget class="QComboBox" name="spriteFormatComboBox">
            <item>
             <property name="text">
              <string>PNG</string>
@@ -450,6 +312,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="videoFileName">
+           <property name="text">
+            <string>output</string>
+           </property>
            <property name="maxLength">
             <number>1000</number>
            </property>
@@ -509,7 +374,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="titleLineEdit"/>
+          <widget class="QLineEdit" name="videoTitle"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="descriptionLabel">
@@ -561,6 +426,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="htmlFileName">
+           <property name="text">
+            <string>output</string>
+           </property>
            <property name="maxLength">
             <number>1000</number>
            </property>

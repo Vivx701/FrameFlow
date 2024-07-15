@@ -35,7 +35,7 @@ void PdfFile::save()
 
     QPdfWriter pdfWriter(attrib->filePath);
 
-    QPageSize pageSize = qvariant_cast<QPageSize>(attrib->specificSettings["Size"]);
+    QPageSize pageSize = attrib->specificSettings["Size"].value<QPageSize::PageSizeId>();
     pdfWriter.setPageSize(pageSize);
 
     QString creator = attrib->specificSettings["Creator"].toString();
