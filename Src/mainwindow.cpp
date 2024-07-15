@@ -55,17 +55,20 @@ void MainWindow::setupUI()
 
 
     // Add the buttons to the toolbar
-    ui->toolBar->setIconSize(QSize(50, 50));
+    ui->SideBar->setIconSize(QSize(50, 50));
     QWidget *spacer = new QWidget(this);
-    spacer->setFixedHeight(100);
+    spacer->setFixedHeight(200);
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    ui->toolBar->addWidget(spacer);
-    ui->toolBar->addWidget(newButton);
-    ui->toolBar->addWidget(fileBrowseButton);
-    ui->toolBar->addWidget(exportButton);
-    ui->toolBar->addSeparator();
-    ui->toolBar->addWidget(settingsButton);
-    ui->toolBar->addWidget(aboutButton);
+
+
+
+    ui->SideBar->addWidget(spacer);
+    ui->SideBar->addWidget(newButton);
+    ui->SideBar->addWidget(fileBrowseButton);
+    ui->SideBar->addWidget(exportButton);
+    ui->SideBar->addSeparator();
+    ui->SideBar->addWidget(settingsButton);
+    ui->SideBar->addWidget(aboutButton);
 
 
 
@@ -144,6 +147,7 @@ void MainWindow::setupUI()
     connect(exportButton, &QToolButton::clicked, this, [this](){
 
         ExportDialog exportDialog;
+        exportDialog.loadTheme(":/Theme/Resources/Theme/Default.qss");
         if(QDialog::Accepted == exportDialog.exec())
         {
             QMap<QString, OutputType> outputMap = {
@@ -156,7 +160,6 @@ void MainWindow::setupUI()
             Attributes attrib = exportDialog.exportSettings();
             writeFile(attrib, outputMap[exportDialog.currentTabName()]);
         }
-
 
     });
 

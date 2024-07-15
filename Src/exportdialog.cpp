@@ -54,7 +54,7 @@ QString ExportDialog::currentSavePath()
     }
     else if(tabName == "sprite")
     {
-        extension +=  ui->spriteFormatComboBox->currentText().toLower();
+        extension +=  ui->spriteFormat->currentText().toLower();
     }
     else if(tabName == "video")
     {
@@ -81,7 +81,43 @@ void ExportDialog::fillAttribMap()
                                     pattr.specificSettings["Margin"] = QVariant::fromValue(QMarginsF(margin, margin, margin, margin));
                                     pattr.specificSettings["Size"] = ui->pdfSizes->currentData();
                                     return pattr;
-    };
+                               };
+
+
+    m_attributeMap["sprite"] = [this](){
+                                    ImageSpriteAttributes sattr;
+                                    sattr.filePath = currentSavePath();
+                                    sattr.specificSettings["Orientation"] = ui->spriteOrientation->currentData();
+                                    sattr.specificSettings["Format"] = ui->spriteFormat->currentText();
+                                    sattr.specificSettings["Author"] = ui->authorEdit->text();
+                                    return sattr;
+                                };
+
+
+    m_attributeMap["video"] = [this](){
+
+                                    VideoAttributes vattr;
+                                    vattr.filePath = currentSavePath();
+                                    vattr.specificSettings["Title"] = ui->videoTitle->text();
+                                    vattr.specificSettings["Description"] = ui->videoDescription->text();
+                                    vattr.specificSettings["Author"] = ui->videoAuthor->text();
+                                    vattr.specificSettings["FPS"] = 30;
+                                    int delay = (ui->videoFrameDelay->value() == 0)? 500: ui->videoFrameDelay->value()*1000;
+                                    vattr.specificSettings["FrameDelay"] = delay;
+                                    vattr.specificSettings["Copyright"] = ui->copyrightLabel->text();
+                                    return vattr;
+                                };
+
+    m_attributeMap["html"] = [this](){
+                                    HTMLGalleryAttributes hattr;
+                                    hattr.filePath = currentSavePath();
+                                    hattr.specificSettings["Title"] = ui->htmlTitle->text();
+                                    hattr.specificSettings["Description"] = ui->htmlDescription->text();
+                                    hattr.specificSettings["ThumbnailSize"] = ui->htmlThumbnailSize->value();
+                                    hattr.specificSettings["EnableLightbox"] = (ui->htmlEnableLightBox->currentIndex() == 0)? true: false;
+                                    hattr.specificSettings["ColumnsCount"] = ui->htmlColumnCount->value();
+                                    return hattr;
+                                };
 }
 
 void ExportDialog::fillComboBoxValues()
@@ -100,12 +136,27 @@ void ExportDialog::fillComboBoxValues()
     ui->pdfOrientation->addItem("Portrait", QVariant::fromValue(QPageLayout::Portrait));
     ui->pdfOrientation->addItem("Landscape", QVariant::fromValue(QPageLayout::Landscape));
 
+
+    //sprite settings
+    ui->spriteOrientation->addItem("Horizontal", QVariant::fromValue(Qt::Horizontal));
+    ui->spriteOrientation->addItem("Vertical", QVariant::fromValue(Qt::Vertical));
+
 }
 
 
 Attributes ExportDialog::exportSettings()
 {
     return m_attributeMap[currentTabName()]();
+}
+
+void ExportDialog::loadTheme(QString path)
+{
+    // Load and apply the style sheet
+    QFile file(path);
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        QTextStream stream(&file);
+        this->setStyleSheet(stream.readAll());
+    }
 }
 
 ExportDialog::~ExportDialog()

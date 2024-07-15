@@ -69,7 +69,6 @@ void PdfFile::save()
 
         QRectF pageRect = painter.viewport();
         QRectF imageRect = image.rect();
-
         QRectF targetRect;
         if (fillStyle == "Center") {
             // Center the image on the page without scaling
@@ -92,8 +91,11 @@ void PdfFile::save()
         }
 
         painter.drawImage(targetRect, image);
-        pdfWriter.newPage();
         count++;
+        if(count != m_Images.count())
+        {
+            pdfWriter.newPage();
+        }
         emit progressChanged(m_Images.count(), count);
     }
     painter.end();

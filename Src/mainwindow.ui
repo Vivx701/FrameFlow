@@ -30,7 +30,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>300</width>
+          <width>400</width>
           <height>0</height>
          </size>
         </property>
@@ -256,7 +256,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="SideBar">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>

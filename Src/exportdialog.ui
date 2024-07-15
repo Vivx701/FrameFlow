@@ -11,13 +11,17 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Export images</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/Dark/icons/Resources/Icons/dark/export.png</normaloff>:/Dark/icons/Resources/Icons/dark/export.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="pdf">
       <attribute name="title">
@@ -117,7 +121,17 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QSpinBox" name="pdfMargin"/>
+          <widget class="QSpinBox" name="pdfMargin">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="singleStep">
+            <number>50</number>
+           </property>
+          </widget>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="fillLabel">
@@ -253,7 +267,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QComboBox" name="spriteFormatComboBox">
+          <widget class="QComboBox" name="spriteFormat">
            <item>
             <property name="text">
              <string>PNG</string>
@@ -279,17 +293,20 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QComboBox" name="orientationComboBox_2">
-           <item>
-            <property name="text">
-             <string>Horizontal</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Vertical</string>
-            </property>
-           </item>
+          <widget class="QComboBox" name="spriteOrientation"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="authorLabel">
+           <property name="text">
+            <string>Author</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="authorEdit">
+           <property name="maxLength">
+            <number>1000</number>
+           </property>
           </widget>
          </item>
         </layout>
@@ -374,7 +391,11 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="videoTitle"/>
+          <widget class="QLineEdit" name="videoTitle">
+           <property name="maxLength">
+            <number>500</number>
+           </property>
+          </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="descriptionLabel">
@@ -384,27 +405,56 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="descriptionLineEdit"/>
+          <widget class="QLineEdit" name="videoDescription">
+           <property name="maxLength">
+            <number>500</number>
+           </property>
+          </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QLabel" name="copyRightLabel">
+          <widget class="QLabel" name="copyrightLabel">
            <property name="text">
-            <string>CopyRight</string>
+            <string>Copyright</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLineEdit" name="copyRightLineEdit"/>
+          <widget class="QLineEdit" name="videoCopyRight">
+           <property name="maxLength">
+            <number>500</number>
+           </property>
+          </widget>
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="frameDelayLabel">
            <property name="text">
-            <string>Frame delay</string>
+            <string>Frame delay (Seconds)</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QSpinBox" name="frameDelaySpinBox"/>
+          <widget class="QSpinBox" name="videoFrameDelay">
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>60</number>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="authorLabel_2">
+           <property name="text">
+            <string>Author</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="videoAuthor">
+           <property name="maxLength">
+            <number>100</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -488,7 +538,11 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="titleLineEdit_2"/>
+          <widget class="QLineEdit" name="htmlTitle">
+           <property name="maxLength">
+            <number>1000</number>
+           </property>
+          </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="descriptionLabel_2">
@@ -498,7 +552,11 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="descriptionLineEdit_2"/>
+          <widget class="QLineEdit" name="htmlDescription">
+           <property name="maxLength">
+            <number>1000</number>
+           </property>
+          </widget>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="thumbnailSizeLabel">
@@ -508,7 +566,17 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QSpinBox" name="thumbnailSizeSpinBox"/>
+          <widget class="QSpinBox" name="htmlThumbnailSize">
+           <property name="minimum">
+            <number>100</number>
+           </property>
+           <property name="maximum">
+            <number>5000</number>
+           </property>
+           <property name="singleStep">
+            <number>50</number>
+           </property>
+          </widget>
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="columnCountLabel">
@@ -518,7 +586,14 @@
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QSpinBox" name="columnCountSpinBox"/>
+          <widget class="QSpinBox" name="htmlColumnCount">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>10</number>
+           </property>
+          </widget>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="enableLightBoxLabel">
@@ -528,7 +603,7 @@
           </widget>
          </item>
          <item row="4" column="1">
-          <widget class="QComboBox" name="enableLightBoxComboBox">
+          <widget class="QComboBox" name="htmlEnableLightBox">
            <item>
             <property name="text">
              <string>Yes</string>
@@ -553,13 +628,15 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

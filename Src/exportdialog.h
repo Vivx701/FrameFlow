@@ -19,6 +19,7 @@ public:
     void fillAttribMap();
     void fillComboBoxValues();
     Attributes exportSettings();
+    void loadTheme(QString path);
     ~ExportDialog();
 
 private slots:
