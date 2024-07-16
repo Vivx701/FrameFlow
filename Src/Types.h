@@ -105,7 +105,8 @@ struct GifAttributes: public Attributes
             {"Creator", SOFTWARENAME},
             {"Author", SOFTWARENAME},
             {"FPS",  10},
-            {"Loops",  1}
+            {"Loops",  1},
+            {"Delay",  100}
         };
     }
 

@@ -6,235 +6,214 @@ GifFile::GifFile(QObject *parent)
 
 }
 
-void GifFile::save() {
-    GifAttributes *attrib = static_cast<GifAttributes*>(&m_Attrib);
-    if (attrib->filePath.isEmpty()) {
-        return;
+bool GifFile::initialize()
+{
+    avformat_alloc_output_context2(&m_formatContext, NULL, NULL, m_filename.toStdString().c_str());
+    if (!m_formatContext) {
+        qDebug() << "Could not create output context";
+        return false;
     }
 
-    QString creator = attrib->specificSettings["Creator"].toString();
-    QString author = attrib->specificSettings["Author"].toString();
-    int fps = attrib->specificSettings["FPS"].toInt();
-    int loops = attrib->specificSettings["Loops"].toInt();
-    int delay = 100 / fps;  // Calculate delay from fps
-
-    avformat_network_init();
-
-    QList<AVFrame*> frames;
-    for (const QImage &image : m_Images) {
-        AVFrame* frame = initializeFrameFromImage(image);
-        if (!frame) {
-            return;
-        }
-        frames.append(frame);
+    m_stream = avformat_new_stream(m_formatContext, NULL);
+    if (!m_stream) {
+        qDebug() << "Failed allocating output stream";
+        return false;
     }
 
-    AVCodec* codec = avcodec_find_encoder(AV_CODEC_ID_GIF);
-    if (!codec) {
-        qDebug() << "Codec not found.";
-        return;
+    m_codec = avcodec_find_encoder(AV_CODEC_ID_GIF);
+    if (!m_codec) {
+        qDebug() << "Codec not found";
+        return false;
     }
 
-    AVCodecContext* codecContext = initializeCodecContext(codec, fps);
-    if (!codecContext) {
-        return;
+    m_codecContext = avcodec_alloc_context3(m_codec);
+    if (!m_codecContext) {
+        qDebug() << "Could not allocate video codec context";
+        return false;
     }
 
-    AVFormatContext* formatContext = nullptr;
-    avformat_alloc_output_context2(&formatContext, nullptr, "gif", attrib->filePath.toUtf8().data());
-    if (!formatContext) {
-        qDebug() << "Error creating output format context.";
-        avcodec_free_context(&codecContext);
-        return;
+    m_packet = av_packet_alloc();
+    if (!m_packet) {
+        qDebug() << "Could not allocate packet";
+        return false;
     }
 
-    AVStream* stream = avformat_new_stream(formatContext, codec);
-    if (!stream) {
-        qDebug() << "Failed allocating output stream.";
-        avformat_free_context(formatContext);
-        avcodec_free_context(&codecContext);
-        return;
-    }
-    stream->time_base = (AVRational){1, fps};
+    m_codecContext->bit_rate = 1200000;
+    m_codecContext->width = m_width;
+    m_codecContext->height = m_height;
+    m_codecContext->time_base = (AVRational){1, m_fps};
+    m_codecContext->pix_fmt = AV_PIX_FMT_RGB8;
 
-    if (avcodec_parameters_from_context(stream->codecpar, codecContext) < 0) {
-        qDebug() << "Failed to copy codec parameters to stream.";
-        avformat_free_context(formatContext);
-        avcodec_free_context(&codecContext);
-        return;
-    }
+    // Set GIF-specific options
+    av_opt_set(m_codecContext->priv_data, "loop", std::to_string(m_loopCount).c_str(), 0);
+    av_opt_set(m_codecContext->priv_data, "delay", std::to_string(m_delayMs).c_str(), 0);
 
-    if (avio_open(&formatContext->pb, attrib->filePath.toUtf8().data(), AVIO_FLAG_WRITE) < 0) {
-        qDebug() << "Could not open output file.";
-        avformat_free_context(formatContext);
-        avcodec_free_context(&codecContext);
-        return;
+    if (avcodec_open2(m_codecContext, m_codec, NULL) < 0) {
+        qDebug() << "Could not open codec";
+        return false;
     }
 
-    AVDictionary *opts = nullptr;
-    av_dict_set(&opts, "loop", QString::number(loops).toUtf8().data(), 0);
+    avcodec_parameters_from_context(m_stream->codecpar, m_codecContext);
 
-    if (avformat_write_header(formatContext, &opts) < 0) {
-        qDebug() << "Error occurred when opening output file.";
-        avio_close(formatContext->pb);
-        avformat_free_context(formatContext);
-        avcodec_free_context(&codecContext);
-        return;
+    if (avio_open(&m_formatContext->pb, m_filename.toStdString().c_str(), AVIO_FLAG_WRITE) < 0) {
+        qDebug() << "Could not open output file";
+        return false;
     }
 
-    if (!encodeFramesAndWriteToFile(frames, codecContext, formatContext, stream, delay)) {
-        qDebug() << "Error during frame encoding.";
+    if (avformat_write_header(m_formatContext, NULL) < 0) {
+        qDebug() << "Error occurred when opening output file";
+        return false;
     }
 
-    av_write_trailer(formatContext);
-    avio_close(formatContext->pb);
-    avformat_free_context(formatContext);
-    avcodec_free_context(&codecContext);
+    return true;
+}
 
-    for (AVFrame *frame : frames) {
+bool GifFile::addFrame(const QImage &image)
+{
+    AVFrame* frame = av_frame_alloc();
+    if (!frame) {
+        qDebug() << "Could not allocate video frame";
+        return false;
+    }
+
+    frame->format = AV_PIX_FMT_RGB8;
+    frame->width  = m_width;
+    frame->height = m_height;
+
+    if (av_frame_get_buffer(frame, 32) < 0) {
+        qDebug() << "Could not allocate the video frame data";
         av_frame_free(&frame);
+        return false;
     }
+
+    // Create temporary frame for input image
+    AVFrame* tempFrame = av_frame_alloc();
+    if (!tempFrame) {
+        qDebug() << "Could not allocate temporary video frame";
+        av_frame_free(&frame);
+        return false;
+    }
+
+    // Prepare temporary frame from QImage
+    int bufferSize = av_image_get_buffer_size(AV_PIX_FMT_RGBA, m_width, m_height, 1);
+    uint8_t* buffer = (uint8_t*)av_malloc(bufferSize);
+    av_image_fill_arrays(tempFrame->data, tempFrame->linesize, buffer,
+                         AV_PIX_FMT_RGBA, m_width, m_height, 1);
+
+    // Copy QImage data to temporary frame
+    for (int y = 0; y < m_height; y++) {
+        memcpy(tempFrame->data[0] + y * tempFrame->linesize[0],
+               image.constBits() + y * image.bytesPerLine(),
+               m_width * 4);
+    }
+
+    // Set up swscale context
+    SwsContext* swsContext = sws_getContext(
+        m_width, m_height, AV_PIX_FMT_RGBA,
+        m_width, m_height, AV_PIX_FMT_RGB8,
+        SWS_BILINEAR, NULL, NULL, NULL
+    );
+
+    if (!swsContext) {
+        qDebug() << "Could not initialize the conversion context";
+        av_frame_free(&frame);
+        av_frame_free(&tempFrame);
+        av_free(buffer);
+        return false;
+    }
+
+    // Perform the color conversion
+    sws_scale(swsContext, tempFrame->data, tempFrame->linesize,
+              0, m_height, frame->data, frame->linesize);
+
+    // Clean up
+    sws_freeContext(swsContext);
+    av_frame_free(&tempFrame);
+    av_free(buffer);
+
+    frame->pts = m_frameCount++;
+
+
+
+//    // Set frame-specific delay if provided
+//    if (m_delayMs > 0) {
+//        char delay_str[32];
+//        snprintf(delay_str, sizeof(delay_str), "%d", m_delayMs);
+//        av_dict_set(&frame->metadata, "delay", delay_str, 0);
+//    }
+
+    int ret = avcodec_send_frame(m_codecContext, frame);
+    if (ret < 0) {
+        qDebug() << "Error sending a frame for encoding";
+        av_frame_free(&frame);
+        return false;
+    }
+
+    while (ret >= 0) {
+        ret = avcodec_receive_packet(m_codecContext, m_packet);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+            break;
+        else if (ret < 0) {
+            qDebug() << "Error during encoding";
+            av_frame_free(&frame);
+            return false;
+        }
+
+        av_packet_rescale_ts(m_packet, m_codecContext->time_base, m_stream->time_base);
+        m_packet->stream_index = m_stream->index;
+        ret = av_interleaved_write_frame(m_formatContext, m_packet);
+        av_packet_unref(m_packet);
+    }
+
+    av_frame_free(&frame);
+    return true;
+
 }
 
-AVCodecContext *GifFile::initializeCodecContext(AVCodec *codec, int fps) {
-    AVCodecContext* codecContext = avcodec_alloc_context3(codec);
-    if (!codecContext) {
-        qDebug() << "Could not allocate video codec context.";
-        return nullptr;
+bool GifFile::finalize()
+{
+    // Flush the encoder
+    avcodec_send_frame(m_codecContext, NULL);
+    while (true) {
+        int ret = avcodec_receive_packet(m_codecContext, m_packet);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+            break;
+        else if (ret < 0) {
+            qDebug() << "Error during flushing";
+            return false;
+        }
+
+        av_packet_rescale_ts(m_packet, m_codecContext->time_base, m_stream->time_base);
+        m_packet->stream_index = m_stream->index;
+
+        ret = av_interleaved_write_frame(m_formatContext, m_packet);
+        av_packet_unref(m_packet);
     }
 
-    codecContext->width = m_maxFrameWidth;
-    codecContext->height = m_maxFrameHeight;
-    codecContext->pix_fmt = AV_PIX_FMT_RGB8;
-    codecContext->time_base = (AVRational){1, fps};
-    codecContext->gop_size = 1;
-    codecContext->bit_rate = 400000;
-    codecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+    av_write_trailer(m_formatContext);
+    avcodec_free_context(&m_codecContext);
+    av_packet_free(&m_packet);
+    avio_closep(&m_formatContext->pb);
+    avformat_free_context(m_formatContext);
 
-    codecContext->extradata = (uint8_t *)av_mallocz(AV_INPUT_BUFFER_PADDING_SIZE);
-    codecContext->extradata_size = AV_INPUT_BUFFER_PADDING_SIZE;
-
-    if (codecContext->extradata) {
-        setExtradata(codecContext);
-    } else {
-        qDebug() << "Failed to allocate extradata.";
-        avcodec_free_context(&codecContext);
-        return nullptr;
-    }
-
-    if (avcodec_open2(codecContext, codec, nullptr) < 0) {
-        qDebug() << "Error opening codec.";
-        avcodec_free_context(&codecContext);
-        return nullptr;
-    }
-
-    return codecContext;
+    return true;
 }
 
-void GifFile::setExtradata(AVCodecContext *codecContext) {
-    uint8_t *extra = codecContext->extradata;
+void GifFile::setExtradata()
+{
+    m_codecContext->extradata_size = 19;
+    m_codecContext->extradata = (uint8_t*)av_mallocz(m_codecContext->extradata_size + AV_INPUT_BUFFER_PADDING_SIZE);
+    uint8_t *extra = m_codecContext->extradata;
     extra[0] = 0x21; extra[1] = 0xFF; extra[2] = 0x0B; extra[3] = 'N'; extra[4] = 'E'; extra[5] = 'T';
     extra[6] = 'S'; extra[7] = 'C'; extra[8] = 'A'; extra[9] = 'P'; extra[10] = 'E'; extra[11] = '2';
     extra[12] = '.'; extra[13] = '0'; extra[14] = 3; extra[15] = 1; extra[16] = 0; extra[17] = 0;
 }
 
-AVFrame *GifFile::initializeFrameFromImage(const QImage &image) {
-    QImage converted = image.convertToFormat(QImage::Format_RGB888);
-    AVFrame* frame = av_frame_alloc();
-    if (!frame) {
-        qDebug() << "Could not allocate frame.";
-        return nullptr;
-    }
-    frame->width = converted.width();
-    frame->height = converted.height();
-    frame->format = AV_PIX_FMT_RGB24;
-
-    if (av_frame_get_buffer(frame, 0) < 0) {
-        qDebug() << "Could not allocate 24bit frame data.";
-        av_frame_free(&frame);
-        return nullptr;
-    }
-
-    memcpy(frame->data[0], converted.bits(), converted.sizeInBytes());
-
-    m_maxFrameHeight = qMax(m_maxFrameHeight, converted.height());
-    m_maxFrameWidth = qMax(m_maxFrameWidth, converted.width());
-
-    return frame;
-}
-
-bool GifFile::encodeFramesAndWriteToFile(const QList<AVFrame *> &frames, AVCodecContext *codecContext, AVFormatContext *formatContext, AVStream *stream, int delay) {
-    AVPacket pkt;
-    av_init_packet(&pkt);
-    pkt.data = nullptr;
-    pkt.size = 0;
-
-    for (int i = 0; i < frames.length(); ++i) {
-        AVFrame* srcFrame = frames[i];
-        AVFrame* frame = av_frame_alloc();
-
-        if (!frame) {
-            qDebug() << "Could not allocate frame.";
-            return false;
-        }
-        frame->width = srcFrame->width;
-        frame->height = srcFrame->height;
-        frame->format = AV_PIX_FMT_RGB8;
-        frame->pts = i;
-
-        if (av_frame_get_buffer(frame, 0) < 0) {
-            qDebug() << "Could not allocate frame data.";
-            av_frame_free(&frame);
-            return false;
-        }
-
-        SwsContext* swsCtx = sws_getContext(srcFrame->width, srcFrame->height, (AVPixelFormat)srcFrame->format,
-                                            frame->width, frame->height, AV_PIX_FMT_RGB8, SWS_BICUBIC, nullptr, nullptr, nullptr);
-
-        if (!swsCtx) {
-            qDebug() << "Could not initialize the conversion context.";
-            av_frame_free(&frame);
-            return false;
-        }
-
-        sws_scale(swsCtx, srcFrame->data, srcFrame->linesize, 0, srcFrame->height, frame->data, frame->linesize);
-
-        if (avcodec_send_frame(codecContext, frame) < 0) {
-            qDebug() << "Error sending frame for encoding.";
-            av_frame_free(&frame);
-            sws_freeContext(swsCtx);
-            return false;
-        }
-
-        while (avcodec_receive_packet(codecContext, &pkt) == 0) {
-            pkt.stream_index = stream->index;
-//            if (!addGraphicsControlExtension(&pkt, delay)) {
-//                qDebug() << "Failed to add Graphics Control Extension.";
-//                av_packet_unref(&pkt);
-//                av_frame_free(&frame);
-//                sws_freeContext(swsCtx);
-//                return false;
-//            }
-            if (av_interleaved_write_frame(formatContext, &pkt) < 0) {
-                qDebug() << "Error writing packet.";
-                av_packet_unref(&pkt);
-                av_frame_free(&frame);
-                sws_freeContext(swsCtx);
-                return false;
-            }
-            av_packet_unref(&pkt);
-        }
-
-        av_frame_free(&frame);
-        sws_freeContext(swsCtx);
-    }
-    return true;
-}
-
-bool GifFile::addGraphicsControlExtension(AVPacket *pkt, int delay) {
+bool GifFile::addGraphicsControlExtension(AVPacket *pkt)
+{
     // Ensure delay is within uint8_t range
-    uint8_t delayLowByte = delay & 0xFF;       // Extract low byte
-    uint8_t delayHighByte = (delay >> 8) & 0xFF; // Extract high byte
+    uint8_t delayLowByte = m_delayMs & 0xFF;       // Extract low byte
+    uint8_t delayHighByte = (m_delayMs >> 8) & 0xFF; // Extract high byte
 
     // GCE block structure
     uint8_t gce[8] = {
@@ -272,4 +251,45 @@ bool GifFile::addGraphicsControlExtension(AVPacket *pkt, int delay) {
     }
 
     return true;
+}
+
+
+void GifFile::save()
+{
+    GifAttributes *attrib = static_cast<GifAttributes*>(&m_Attrib);
+    if (attrib->filePath.isEmpty()) {
+        return;
+    }
+    m_filename = attrib->filePath;
+    QString creator = attrib->specificSettings["Creator"].toString();
+    QString author = attrib->specificSettings["Author"].toString();
+    m_fps = attrib->specificSettings["FPS"].toInt();
+    m_loopCount = attrib->specificSettings["Loops"].toInt();
+    m_delayMs = attrib->specificSettings["Delay"].toInt();
+
+    qDebug()<<m_loopCount<<":"<<m_delayMs;
+    QSize maxImageSize = this->getMaxSize();
+    m_height = maxImageSize.height();
+    m_width = maxImageSize.width();
+
+    if(!initialize())
+    {
+        qDebug()<< "Codec initialize failed";
+        return;
+    }
+
+    // Encode frames
+    for (int i = 0; i < m_Images.size(); ++i) {
+        const QImage& img = m_Images[i].convertToFormat(QImage::Format_RGBA8888);
+        if (!addFrame(img)) {
+            qDebug() << "Failed to add frame";
+            return;
+        }
+    }
+
+    // Finalize the GIF
+    if (!finalize()) {
+        qDebug() << "Failed to finalize encoder";
+    }
+
 }

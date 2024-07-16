@@ -139,9 +139,6 @@ void MainWindow::setupUI()
         //saveFile("genOutput.gif", OutputType::GIF);
         //saveFile("genOutput.mp4", OutputType::VIDEO);
 
-        saveFile("genOutputHTML", OutputType::HTMLGALLERY);
-
-
     });
 
     connect(exportButton, &QToolButton::clicked, this, [this](){
@@ -163,6 +160,17 @@ void MainWindow::setupUI()
 
     });
 
+    connect(aboutButton, &QToolButton::clicked, this, [this](){
+
+        GifAttributes attr;
+        attr.filePath = "output.gif";
+        attr.specificSettings["Author"] = "Vivek P";
+        attr.specificSettings["FPS"] = 30;
+        attr.specificSettings["Loops"] = 1;
+        attr.specificSettings["Delay"] = 1000;
+        writeFile(attr, OutputType::GIF);
+
+    });
 }
 
 void MainWindow::saveFile(QString filePath, OutputType type)
