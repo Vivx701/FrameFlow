@@ -167,7 +167,7 @@ void MainWindow::setupUI()
         attr.specificSettings["Author"] = "Vivek P";
         attr.specificSettings["FPS"] = 30;
         attr.specificSettings["Loops"] = 1;
-        attr.specificSettings["Delay"] = 1000;
+        attr.specificSettings["Delay"] = 500;
         writeFile(attr, OutputType::GIF);
 
     });

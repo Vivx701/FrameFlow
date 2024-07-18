@@ -1,13 +1,25 @@
 #include "giffile.h"
 
+/**
+ * @brief Constructs a GifFile object.
+ * @param parent The parent QObject.
+ */
 GifFile::GifFile(QObject *parent)
     : IOutputFile{parent}
 {
-
 }
 
+/**
+ * @brief Initializes the GIF encoding context and opens the output file.
+ * @return true if initialization is successful, false otherwise.
+ */
 bool GifFile::initialize()
 {
+    if (m_width > 65535 || m_height > 65535) {
+        qDebug() << "Image dimensions too large for GIF format";
+        return false;
+    }
+
     avformat_alloc_output_context2(&m_formatContext, NULL, NULL, m_filename.toStdString().c_str());
     if (!m_formatContext) {
         qDebug() << "Could not create output context";
@@ -43,6 +55,7 @@ bool GifFile::initialize()
     m_codecContext->height = m_height;
     m_codecContext->time_base = (AVRational){1, m_fps};
     m_codecContext->pix_fmt = AV_PIX_FMT_RGB8;
+    m_stream->time_base = m_codecContext->time_base;
 
     // Set GIF-specific options
     av_opt_set(m_codecContext->priv_data, "loop", std::to_string(m_loopCount).c_str(), 0);
@@ -68,8 +81,17 @@ bool GifFile::initialize()
     return true;
 }
 
+/**
+ * @brief Adds a frame to the GIF.
+ * @param image The QImage to be added as a frame.
+ * @return true if the frame is successfully added, false otherwise.
+ */
 bool GifFile::addFrame(const QImage &image)
 {
+    if (image.width() > m_width || image.height() > m_height) {
+        qDebug() << "Image dimensions do not match the initialized dimensions";
+        return false;
+    }
     AVFrame* frame = av_frame_alloc();
     if (!frame) {
         qDebug() << "Could not allocate video frame";
@@ -95,23 +117,38 @@ bool GifFile::addFrame(const QImage &image)
     }
 
     // Prepare temporary frame from QImage
-    int bufferSize = av_image_get_buffer_size(AV_PIX_FMT_RGBA, m_width, m_height, 1);
+    int alignment = 32;  // Use 32-byte alignment for best performance
+    int bufferSize = av_image_get_buffer_size(AV_PIX_FMT_RGBA, m_width, m_height, alignment);
     uint8_t* buffer = (uint8_t*)av_malloc(bufferSize);
-    av_image_fill_arrays(tempFrame->data, tempFrame->linesize, buffer,
-                         AV_PIX_FMT_RGBA, m_width, m_height, 1);
+    if (!buffer) {
+        qDebug() << "Could not allocate buffer for temporary frame";
+        av_frame_free(&frame);
+        av_frame_free(&tempFrame);
+        return false;
+    }
 
-    // Copy QImage data to temporary frame
+    int result = av_image_fill_arrays(tempFrame->data, tempFrame->linesize, buffer,
+                                      AV_PIX_FMT_RGBA, m_width, m_height, alignment);
+    if (result < 0) {
+        qDebug() << "Could not fill image arrays";
+        av_free(buffer);
+        av_frame_free(&frame);
+        av_frame_free(&tempFrame);
+        return false;
+    }
+
+    // Copy the image data
     for (int y = 0; y < m_height; y++) {
         memcpy(tempFrame->data[0] + y * tempFrame->linesize[0],
-               image.constBits() + y * image.bytesPerLine(),
-               m_width * 4);
+               image.constScanLine(y),
+               qMin(m_width * 4, tempFrame->linesize[0]));  // Ensure we don't copy more than the line size
     }
 
     // Set up swscale context
     SwsContext* swsContext = sws_getContext(
         m_width, m_height, AV_PIX_FMT_RGBA,
         m_width, m_height, AV_PIX_FMT_RGB8,
-        SWS_BILINEAR, NULL, NULL, NULL
+        SWS_LANCZOS, NULL, NULL, NULL
     );
 
     if (!swsContext) {
@@ -131,16 +168,8 @@ bool GifFile::addFrame(const QImage &image)
     av_frame_free(&tempFrame);
     av_free(buffer);
 
-    frame->pts = m_frameCount++;
-
-
-
-//    // Set frame-specific delay if provided
-//    if (m_delayMs > 0) {
-//        char delay_str[32];
-//        snprintf(delay_str, sizeof(delay_str), "%d", m_delayMs);
-//        av_dict_set(&frame->metadata, "delay", delay_str, 0);
-//    }
+    // Set frame timestamp
+    frame->pts = m_frameCount;
 
     int ret = avcodec_send_frame(m_codecContext, frame);
     if (ret < 0) {
@@ -159,17 +188,34 @@ bool GifFile::addFrame(const QImage &image)
             return false;
         }
 
-        av_packet_rescale_ts(m_packet, m_codecContext->time_base, m_stream->time_base);
+        // Set packet timestamps
+        m_packet->pts = m_packet->dts = av_rescale_q(frame->pts, m_codecContext->time_base, m_stream->time_base);
+        m_packet->duration = av_rescale_q(1, m_codecContext->time_base, m_stream->time_base);
+
+        if (!addGraphicsControlExtension(m_packet)) {
+            qDebug() << "Failed to add Graphics Control Extension";
+            av_frame_free(&frame);
+            return false;
+        }
         m_packet->stream_index = m_stream->index;
         ret = av_interleaved_write_frame(m_formatContext, m_packet);
+        if (ret < 0) {
+            qDebug() << "Error writing packet: "<<ret;
+            av_frame_free(&frame);
+            return false;
+        }
         av_packet_unref(m_packet);
     }
 
+    m_frameCount++;
     av_frame_free(&frame);
     return true;
-
 }
 
+/**
+ * @brief Finalizes the GIF encoding process.
+ * @return true if finalization is successful, false otherwise.
+ */
 bool GifFile::finalize()
 {
     // Flush the encoder
@@ -199,6 +245,9 @@ bool GifFile::finalize()
     return true;
 }
 
+/**
+ * @brief Sets extra data for the codec context.
+ */
 void GifFile::setExtradata()
 {
     m_codecContext->extradata_size = 19;
@@ -209,51 +258,64 @@ void GifFile::setExtradata()
     extra[12] = '.'; extra[13] = '0'; extra[14] = 3; extra[15] = 1; extra[16] = 0; extra[17] = 0;
 }
 
+/**
+ * @brief Adds a Graphics Control Extension to a packet.
+ * @param pkt The packet to which the GCE should be added.
+ * @return true if the GCE is successfully added, false otherwise.
+ */
 bool GifFile::addGraphicsControlExtension(AVPacket *pkt)
 {
-    // Ensure delay is within uint8_t range
-    uint8_t delayLowByte = m_delayMs & 0xFF;       // Extract low byte
-    uint8_t delayHighByte = (m_delayMs >> 8) & 0xFF; // Extract high byte
+    uint16_t delayCentiseconds = m_delayMs / 10;
+    uint8_t delayLowByte = delayCentiseconds & 0xFF;
+    uint8_t delayHighByte = (delayCentiseconds >> 8) & 0xFF;
 
-    // GCE block structure
     uint8_t gce[8] = {
-        0x21,   // Extension Introducer
-        0xF9,   // Graphic Control Label
-        0x04,   // Block Size
-        0x00,   // Flags: No transparency, no user input, disposal method 0
-        delayLowByte,     // Delay time low byte
-        delayHighByte,    // Delay time high byte
-        0x00,   // Transparent color index
-        0x00    // Block Terminator
+        0x21, 0xF9, 0x04, 0x00,
+        delayLowByte, delayHighByte,
+        0x00, 0x00
     };
 
-    // Reallocate packet data with additional space for GCE
-    uint8_t *new_data = (uint8_t *)av_realloc(pkt->data, pkt->size + sizeof(gce));
+    if (av_packet_make_writable(pkt) < 0) {
+        qDebug() << "Failed to make packet writable";
+        return false;
+    }
+
+    int new_size = pkt->size + sizeof(gce);
+    uint8_t *new_data = (uint8_t *)av_realloc(pkt->data, new_size);
     if (!new_data) {
-        qDebug() << "Failed to reallocate packet data.";
+        qDebug() << "Failed to reallocate packet data";
         return false;
     }
 
+    // Find the start of the image data (usually starts with 0x2C)
+    uint8_t *image_start = new_data;
+    while (image_start < new_data + pkt->size - 1 && *image_start != 0x2C) {
+        image_start++;
+    }
+
+    if (image_start == new_data + pkt->size - 1) {
+        qDebug() << "Could not find image descriptor";
+        return false;
+    }
+
+    // Move existing data to make room for GCE
+    memmove(image_start + sizeof(gce), image_start, pkt->size - (image_start - new_data));
+
+    // Insert GCE
+    memcpy(image_start, gce, sizeof(gce));
+
+    // Update packet size and data
+    pkt->size = new_size;
     pkt->data = new_data;
-
-    // Move existing packet data to make space for GCE
-    memmove(pkt->data + sizeof(gce), pkt->data, pkt->size);
-    // Copy GCE to the beginning of the packet data
-    memcpy(pkt->data, gce, sizeof(gce));
-
-    // Update packet size to include GCE
-    pkt->size += sizeof(gce);
-
-    // Verification: Check if the first bytes match the GCE
-    if (memcmp(pkt->data, gce, sizeof(gce)) != 0) {
-        qDebug() << "GCE verification failed.";
-        return false;
-    }
 
     return true;
 }
 
-
+/**
+ * @brief Saves the GIF file.
+ *
+ * This method initializes the encoder, adds frames, and finalizes the GIF file.
+ */
 void GifFile::save()
 {
     GifAttributes *attrib = static_cast<GifAttributes*>(&m_Attrib);
@@ -291,5 +353,4 @@ void GifFile::save()
     if (!finalize()) {
         qDebug() << "Failed to finalize encoder";
     }
-
 }
