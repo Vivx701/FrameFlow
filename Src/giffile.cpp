@@ -58,8 +58,8 @@ bool GifFile::initialize()
     m_stream->time_base = m_codecContext->time_base;
 
     // Set GIF-specific options
-    av_opt_set(m_codecContext->priv_data, "loop", std::to_string(m_loopCount).c_str(), 0);
-    av_opt_set(m_codecContext->priv_data, "delay", std::to_string(m_delayMs).c_str(), 0);
+   // av_opt_set(m_codecContext->priv_data, "loop", std::to_string(m_loopCount).c_str(), 0);
+    //av_opt_set(m_codecContext->priv_data, "delay", std::to_string(m_delayMs).c_str(), 0);
 
     if (avcodec_open2(m_codecContext, m_codec, NULL) < 0) {
         qDebug() << "Could not open codec";
@@ -270,7 +270,7 @@ bool GifFile::addGraphicsControlExtension(AVPacket *pkt)
     uint8_t delayHighByte = (delayCentiseconds >> 8) & 0xFF;
 
     uint8_t gce[8] = {
-        0x21, 0xF9, 0x04, 0x00,
+        0x21, 0xF9, 0x04, 0x05,
         delayLowByte, delayHighByte,
         0x00, 0x00
     };
@@ -298,6 +298,16 @@ bool GifFile::addGraphicsControlExtension(AVPacket *pkt)
         return false;
     }
 
+    if (image_start != new_data && *(image_start - 1) == 0x21) {
+        qDebug() << "GCE already present or unexpected data structure";
+        return false;
+    }
+
+    if (image_start + sizeof(gce) > new_data + new_size) {
+        qDebug() << "Buffer overflow would occur";
+        return false;
+    }
+
     // Move existing data to make room for GCE
     memmove(image_start + sizeof(gce), image_start, pkt->size - (image_start - new_data));
 
@@ -307,6 +317,7 @@ bool GifFile::addGraphicsControlExtension(AVPacket *pkt)
     // Update packet size and data
     pkt->size = new_size;
     pkt->data = new_data;
+    pkt->flags |= AV_PKT_FLAG_KEY;
 
     return true;
 }
