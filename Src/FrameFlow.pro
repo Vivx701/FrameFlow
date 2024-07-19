@@ -35,7 +35,8 @@ HEADERS += \
     mainwindow.h \
     outputfilefactory.h \
     pdffile.h \
-    videofile.h
+    videofile.h\
+    gif.h
 
 FORMS += \
     exportdialog.ui \
