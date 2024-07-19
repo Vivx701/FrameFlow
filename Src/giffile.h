@@ -30,6 +30,8 @@ public:
      * including initialization, adding frames, and finalization.
      */
     void save() override;
+private:
+    int8_t m_depth=8;
 };
 
 #endif // GIFFILE_H

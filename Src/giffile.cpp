@@ -2,8 +2,19 @@
 #include <QDebug>
 #include <gif.h>
 
+/**
+ * @brief Constructs a GifFile object.
+ * @param parent The parent QObject.
+ */
 GifFile::GifFile(QObject *parent) : IOutputFile{parent} {}
 
+
+/**
+ * @brief Saves the GIF file.
+ *
+ * This method handles the entire process of creating a GIF file,
+ * including initialization, adding frames, finalization, and setting the loop count.
+ */
 void GifFile::save()
 {
     GifAttributes *attrib = static_cast<GifAttributes*>(&m_Attrib);
@@ -13,7 +24,6 @@ void GifFile::save()
     }
 
     QString filename = attrib->filePath;
-    int loopCount = attrib->specificSettings["Loops"].toInt();
     int delayMs = attrib->specificSettings["Delay"].toInt();
 
     QSize maxImageSize = this->getMaxSize();
@@ -26,7 +36,7 @@ void GifFile::save()
     }
 
     GifWriter writer{};
-    if (!GifBegin(&writer, filename.toStdString().c_str(), width, height, delayMs / 10, 8, true)) {
+    if (!GifBegin(&writer, filename.toStdString().c_str(), width, height, delayMs / 10, m_depth, true)) {
         qDebug() << "Failed to initialize GIF writer";
         return;
     }
