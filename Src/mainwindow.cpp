@@ -162,14 +162,6 @@ void MainWindow::setupUI()
 
     connect(aboutButton, &QToolButton::clicked, this, [this](){
 
-        GifAttributes attr;
-        attr.filePath = "output.gif";
-        attr.specificSettings["Author"] = "Vivek P";
-        attr.specificSettings["FPS"] = 30;
-        attr.specificSettings["Loops"] = 1;
-        attr.specificSettings["Delay"] = 1000;
-        writeFile(attr, OutputType::GIF);
-
     });
 }
 

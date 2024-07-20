@@ -102,10 +102,6 @@ struct GifAttributes: public Attributes
     {
         background = QColor::fromRgb(255, 255, 255);
         specificSettings = {
-            {"Creator", SOFTWARENAME},
-            {"Author", SOFTWARENAME},
-            {"FPS",  10},
-            {"Loops",  1},
             {"Delay",  100}
         };
     }

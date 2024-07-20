@@ -13,6 +13,7 @@ ExportDialog::ExportDialog(QWidget *parent) :
     connect(ui->spriteBrowseButton, SIGNAL(clicked()), this, SLOT(openFolderDialog()));
     connect(ui->videoBrowseButton, SIGNAL(clicked()), this, SLOT(openFolderDialog()));
     connect(ui->htmlBrowseButton, SIGNAL(clicked()), this, SLOT(openFolderDialog()));
+    connect(ui->gifBrowseButton, SIGNAL(clicked()), this, SLOT(openFolderDialog()));
 
     fillComboBoxValues();
     fillAttribMap();
@@ -45,9 +46,10 @@ QString ExportDialog::currentSavePath()
         return filePath;
     }
 
+
     filePath =  QDir(saveLocation->text()).filePath(fileName->text());
 
-    QString extension = ".";
+    QString extension = "";
     if(tabName == "pdf")
     {
         extension += "pdf";
@@ -64,7 +66,10 @@ QString ExportDialog::currentSavePath()
     {
         extension =  "";
     }
-
+    else if(tabName == "gif")
+    {
+        extension =  ".gif";
+    }
     return filePath+extension;
 }
 
@@ -118,6 +123,14 @@ void ExportDialog::fillAttribMap()
                                     hattr.specificSettings["ColumnsCount"] = ui->htmlColumnCount->value();
                                     return hattr;
                                 };
+
+
+    m_attributeMap["gif"] = [this](){
+                                        GifAttributes gattr;
+                                        gattr.filePath = currentSavePath();
+                                        gattr.specificSettings["Delay"] = 1000*ui->gifFrameDelay->value();
+                                        return gattr;
+                                   };
 }
 
 void ExportDialog::fillComboBoxValues()
