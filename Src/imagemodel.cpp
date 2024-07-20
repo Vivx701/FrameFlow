@@ -1,4 +1,5 @@
 #include "imagemodel.h"
+#include <Strings.h>
 
 /**
  * @brief Constructor for the ImageModel class.
@@ -229,28 +230,26 @@ QVector<QPair<QString, QString>> ImageModel::getSelectedImageProperties(const QM
     const ImageItem& item = m_images.at(index.row());
 
     QImage image(item.info.absoluteFilePath());
+    properties.push_back(qMakePair(Strings::FILENAME_PROPERTY, item.info.fileName()));
+    properties.push_back(qMakePair(Strings::DIR_PROPERTY, item.info.absolutePath()));
+    properties.push_back(qMakePair(Strings::BYTES_PROPERTY, QString::number(item.info.size())));
+    properties.push_back(qMakePair(Strings::MODIFIED_PROPERTY, item.info.lastModified().toString()));
 
-    properties.push_back(qMakePair(QString("Filename"), item.info.fileName()));
-    properties.push_back(qMakePair(QString("Dir"), item.info.absolutePath()));
-    properties.push_back(qMakePair(QString("Bytes"), QString::number(item.info.size())));
-    properties.push_back(qMakePair(QString("Modified"), item.info.lastModified().toString()));
-
-    properties.push_back(qMakePair(QString("Width"), QString::number(image.width()) + " px"));
-    properties.push_back(qMakePair(QString("Height"), QString::number(image.height()) + " px"));
-    properties.push_back(qMakePair(QString("Depth"), QString::number(image.depth()) + " bits"));
-    properties.push_back(qMakePair(QString("Format"), QString::number(image.format())));
-    properties.push_back(qMakePair(QString("Color Count"), QString::number(image.colorCount())));
-    properties.push_back(qMakePair(QString("Is Null"), image.isNull() ? "Yes" : "No"));
-    properties.push_back(qMakePair(QString("Bytes Per Line"), QString::number(image.bytesPerLine())));
-    properties.push_back(qMakePair(QString("Device Pixel Ratio"), QString::number(image.devicePixelRatio())));
-    properties.push_back(qMakePair(QString("DotsPerMeterX"), QString::number(image.dotsPerMeterX())));
-    properties.push_back(qMakePair(QString("DotsPerMeterY"), QString::number(image.dotsPerMeterY())));
-    properties.push_back(qMakePair(QString("Offset"), "(" + QString::number(image.offset().x()) + ", " + QString::number(image.offset().y()) + ")"));
-    properties.push_back(qMakePair(QString("Is Grayscale"), image.isGrayscale() ? "Yes" : "No"));
-    properties.push_back(qMakePair(QString("Has Alpha Channel"), image.hasAlphaChannel() ? "Yes" : "No"));
-    properties.push_back(qMakePair(QString("Bit Plane Count"), QString::number(image.bitPlaneCount())));
-    properties.push_back(qMakePair(QString("Index"), QString::number(index.row()+1)+"/"+QString::number(rowCount())));
-
+    properties.push_back(qMakePair(Strings::WIDTH_PROPERTY, QString::number(image.width()) + " " + Strings::PIXELS_UNIT));
+    properties.push_back(qMakePair(Strings::HEIGHT_PROPERTY, QString::number(image.height()) + " " + Strings::PIXELS_UNIT));
+    properties.push_back(qMakePair(Strings::DEPTH_PROPERTY, QString::number(image.depth()) + " " + Strings::BITS_UNIT));
+    properties.push_back(qMakePair(Strings::FORMAT_PROPERTY, QString::number(image.format())));
+    properties.push_back(qMakePair(Strings::COLOR_COUNT_PROPERTY, QString::number(image.colorCount())));
+    properties.push_back(qMakePair(Strings::IS_NULL_PROPERTY, image.isNull() ? Strings::YES : Strings::NO));
+    properties.push_back(qMakePair(Strings::BYTES_PER_LINE_PROPERTY, QString::number(image.bytesPerLine())));
+    properties.push_back(qMakePair(Strings::DEVICE_PIXEL_RATIO_PROPERTY, QString::number(image.devicePixelRatio())));
+    properties.push_back(qMakePair(Strings::DOTS_PER_METER_X_PROPERTY, QString::number(image.dotsPerMeterX())));
+    properties.push_back(qMakePair(Strings::DOTS_PER_METER_Y_PROPERTY, QString::number(image.dotsPerMeterY())));
+    properties.push_back(qMakePair(Strings::OFFSET_PROPERTY, "(" + QString::number(image.offset().x()) + ", " + QString::number(image.offset().y()) + ")"));
+    properties.push_back(qMakePair(Strings::IS_GRAYSCALE_PROPERTY, image.isGrayscale() ? Strings::YES : Strings::NO));
+    properties.push_back(qMakePair(Strings::HAS_ALPHA_CHANNEL_PROPERTY, image.hasAlphaChannel() ? Strings::YES : Strings::NO));
+    properties.push_back(qMakePair(Strings::BIT_PLANE_COUNT_PROPERTY, QString::number(image.bitPlaneCount())));
+    properties.push_back(qMakePair(Strings::INDEX_PROPERTY, QString::number(index.row()+1)+"/"+QString::number(rowCount())));
     return properties;
 }
 

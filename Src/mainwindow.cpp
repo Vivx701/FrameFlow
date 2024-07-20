@@ -1,12 +1,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "Strings.h"
 #include <QToolButton>
 #include <QFileDialog>
 #include <QDir>
 #include <QDebug>
+#include <QMessageBox>
 #include <imagedelegate.h>
 #include <exportdialog.h>
 
+/**
+ * @brief Constructor for MainWindow
+ * @param parent The parent widget
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -15,52 +21,59 @@ MainWindow::MainWindow(QWidget *parent)
     setupUI();
 }
 
+/**
+ * @brief Destructor for MainWindow
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+/**
+ * @brief Sets up the user interface
+ */
 void MainWindow::setupUI()
 {
-
+    // Create and set up the New button
     QToolButton *newButton = new QToolButton(this);
-    newButton->setText("New");
+    newButton->setText(Strings::NEW_BUTTON_TEXT);
     newButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/new-box.png"));
-    newButton->setToolTip("Start a new project");
+    newButton->setToolTip(Strings::NEW_BUTTON_TOOLTIP);
     newButton->setFixedSize(QSize(75, 50));
 
+    // Create and set up the Browse button
     QToolButton *fileBrowseButton = new QToolButton(this);
-    fileBrowseButton->setText("Browse");
+    fileBrowseButton->setText(Strings::BROWSE_BUTTON_TEXT);
     fileBrowseButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/plus-box.png"));
-    fileBrowseButton->setToolTip("Add images to project");
+    fileBrowseButton->setToolTip(Strings::BROWSE_BUTTON_TOOLTIP);
     fileBrowseButton->setFixedSize(QSize(75, 50));
 
+    // Create and set up the Export button
     QToolButton *exportButton = new QToolButton(this);
-    exportButton->setText("Export");
+    exportButton->setText(Strings::EXPORT_BUTTON_TEXT);
     exportButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/export.png"));
-    exportButton->setToolTip("Export the images ");
+    exportButton->setToolTip(Strings::EXPORT_BUTTON_TOOLTIP);
     exportButton->setFixedSize(QSize(75, 50));
 
+    // Create and set up the Settings button
     QToolButton *settingsButton = new QToolButton(this);
-    settingsButton->setText("Export");
+    settingsButton->setText(Strings::EXPORT_BUTTON_TEXT);
     settingsButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/cog.png"));
-    settingsButton->setToolTip("Settings");
+    settingsButton->setToolTip(Strings::SETTINGS_BUTTON_TOOLTIP);
     settingsButton->setFixedSize(QSize(75, 50));
 
+    // Create and set up the About button
     QToolButton *aboutButton = new QToolButton(this);
-    aboutButton->setText("Export");
+    aboutButton->setText(Strings::EXPORT_BUTTON_TEXT);
     aboutButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/information-outline.png"));
-    aboutButton->setToolTip("About screen");
+    aboutButton->setToolTip(Strings::ABOUT_BUTTON_TOOLTIP);
     aboutButton->setFixedSize(QSize(75, 50));
-
 
     // Add the buttons to the toolbar
     ui->SideBar->setIconSize(QSize(50, 50));
     QWidget *spacer = new QWidget(this);
     spacer->setFixedHeight(200);
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-
 
     ui->SideBar->addWidget(spacer);
     ui->SideBar->addWidget(newButton);
@@ -70,8 +83,7 @@ void MainWindow::setupUI()
     ui->SideBar->addWidget(settingsButton);
     ui->SideBar->addWidget(aboutButton);
 
-
-
+    // Set up the list view and graphics view
     ui->listView->setModel(&m_model);
     ImageDelegate *delegate = new ImageDelegate(this);
     ui->listView->setItemDelegate(delegate);
@@ -79,8 +91,8 @@ void MainWindow::setupUI()
     ui->graphicsView->setAlignment(Qt::AlignCenter);
     m_scene.addItem(&m_pixmapItem);
 
-    QObject::connect(ui->listView, &QListView::clicked,  [this](const QModelIndex& index) {
-
+    // Connect the list view clicked signal
+    QObject::connect(ui->listView, &QListView::clicked, [this](const QModelIndex& index) {
         QImage img(index.data(Qt::DisplayRole).toString());
         if(!img.isNull())
         {
@@ -91,58 +103,44 @@ void MainWindow::setupUI()
         }
         QVector<QPair<QString, QString>> imageProperties = m_model.getSelectedImageProperties(index);
 
-
-
-        //Add new contents
+        // Add new contents
         clearProperties();
         for (const auto& property : imageProperties) {
             QLineEdit *secondText = new QLineEdit(property.second, this);
             secondText->setReadOnly(true);
             ui->propertiesLayout->addRow(property.first, secondText);
-            if(property.first == "Modified")
+            if(property.first == Strings::MODIFIED_PROPERTY)
             {
                 ui->propertiesLayout->addItem(new QSpacerItem(50, 30, QSizePolicy::Expanding, QSizePolicy::Fixed));
             }
         }
-
-
     });
 
-
-    // Connect the clicked signal to a slot
+    // Connect the New button clicked signal
     connect(newButton, &QToolButton::clicked, this, [this](){
-
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, "Confirm New",
-                                      "Are you sure you want to start again ?\nAll changes will be lost.",
+        reply = QMessageBox::question(this, Strings::CONFIRM_NEW_TITLE,
+                                      Strings::CONFIRM_NEW_MESSAGE,
                                       QMessageBox::Yes|QMessageBox::No);
 
         if (reply == QMessageBox::Yes) {
-            // User confirmed, proceed with clearing
             resetAll();
         }
-
     });
 
+    // Connect the Browse button clicked signal
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
-
-        QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Image"), QDir::homePath(),
-                                                              tr("Image Files (*.png *.jpg *.bmp)"));
+        QStringList fileNames = QFileDialog::getOpenFileNames(this, Strings::OPEN_IMAGE_DIALOG_TITLE, QDir::homePath(),
+                                                              Strings::IMAGE_FILES_FILTER);
 
         for(QString name: fileNames)
         {
             m_model.addImage(name);
         }
-
-        // saveFile("Output.png", OutputType::SPRITE);
-        //saveFile("Output.pdf", OutputType::PDF);
-        //saveFile("genOutput.gif", OutputType::GIF);
-        //saveFile("genOutput.mp4", OutputType::VIDEO);
-
     });
 
+    // Connect the Export button clicked signal
     connect(exportButton, &QToolButton::clicked, this, [this](){
-
         ExportDialog exportDialog;
         exportDialog.loadTheme(":/Theme/Resources/Theme/Default.qss");
         if(QDialog::Accepted == exportDialog.exec())
@@ -157,62 +155,19 @@ void MainWindow::setupUI()
             Attributes attrib = exportDialog.exportSettings();
             writeFile(attrib, outputMap[exportDialog.currentTabName()]);
         }
-
     });
 
+    // Connect the About button clicked signal
     connect(aboutButton, &QToolButton::clicked, this, [this](){
-
+        // TODO: Implement about dialog
     });
 }
 
-void MainWindow::saveFile(QString filePath, OutputType type)
-{
-    std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
-    ImageList images = m_model.getImageList();
-    output->addImages(images);
-    //    PDFAttributes pattr;
-    //    pattr.filePath = filePath;
-    //    pattr.specificSettings["Title"] = "SampleTitle";
-    //    pattr.specificSettings["Fill"] = "Fit";
-    //    pattr.specificSettings["Orientation"] = QPageLayout::Landscape;
-    //    pattr.background = QColor::fromRgb(133, 193, 233);
-    //    output->setAttrib(pattr);
-    //    output->save();
-    //        ImageSpriteAttributes attr;
-    //        attr.filePath = filePath;
-    //        attr.specificSettings["Orientation"] = Qt::Horizontal;
-    //        attr.specificSettings["Format"] = "PNG";
-    //        attr.specificSettings["Author"] = "Vivek P";
-
-
-    //    GifAttributes attr;
-    //    attr.filePath = filePath;
-    //    attr.specificSettings["Author"] = "Vivek P";
-    //    attr.specificSettings["FPS"] = 30;
-    //    attr.specificSettings["Loops"] = 0;
-
-    //    VideoAttributes attr;
-    //    attr.filePath = filePath;
-    //    attr.specificSettings["Author"] = "Vivek P";
-    //    attr.specificSettings["FPS"] = 30;
-    //    attr.specificSettings["FrameDelay"] = 5000;
-    //    attr.specificSettings["Copyright"] = "This is vivek";
-
-    //    ImageCollageAttributes attr;
-    //    attr.filePath = filePath;
-    //    attr.specificSettings["Format"] = "PNG";
-    //    attr.specificSettings["Author"] = "Vivek P";
-
-
-    HTMLGalleryAttributes attr;
-    attr.filePath = filePath;
-    attr.specificSettings["Author"] = "Vivek P";
-    attr.specificSettings["Copyright"] = "This is vivek";
-    attr.specificSettings["EnableLightbox"] = false;
-    output->setAttrib(attr);
-    output->save();
-}
-
+/**
+ * @brief Writes the output file
+ * @param attrib The attributes for the output
+ * @param type The type of output file
+ */
 void MainWindow::writeFile(Attributes &attrib, OutputType type)
 {
     std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
@@ -222,6 +177,9 @@ void MainWindow::writeFile(Attributes &attrib, OutputType type)
     output->save();
 }
 
+/**
+ * @brief Resets all data and UI elements
+ */
 void MainWindow::resetAll()
 {
     m_model.clearImages();
@@ -230,16 +188,20 @@ void MainWindow::resetAll()
     m_pixmapItem.setPixmap(QPixmap());
 }
 
+/**
+ * @brief Clears the properties layout
+ */
 void MainWindow::clearProperties()
 {
-    //clear the existing contents
-    while ( ui->propertiesLayout->rowCount() > 0)
+    while (ui->propertiesLayout->rowCount() > 0)
     {
         ui->propertiesLayout->removeRow(0);
     }
 }
 
-
+/**
+ * @brief Handles the left button click
+ */
 void MainWindow::on_leftButton_clicked()
 {
     if(m_model.rowCount() == 0)
@@ -251,7 +213,9 @@ void MainWindow::on_leftButton_clicked()
     ui->listView->setCurrentIndex(m_model.index(newRow, 0));
 }
 
-
+/**
+ * @brief Handles the right button click
+ */
 void MainWindow::on_rightButton_clicked()
 {
     if(m_model.rowCount() == 0)
@@ -263,7 +227,9 @@ void MainWindow::on_rightButton_clicked()
     ui->listView->setCurrentIndex(m_model.index(newRow, 0));
 }
 
-
+/**
+ * @brief Handles the delete button click
+ */
 void MainWindow::on_deleteButton_clicked()
 {
     if(m_model.rowCount() == 0)
@@ -274,8 +240,9 @@ void MainWindow::on_deleteButton_clicked()
     m_model.removeImage(currentIndex.row());
 }
 
-
-
+/**
+ * @brief Handles the move back button click
+ */
 void MainWindow::on_moveBackButton_clicked()
 {
     if(m_model.rowCount() == 0)
@@ -288,7 +255,9 @@ void MainWindow::on_moveBackButton_clicked()
     ui->listView->setCurrentIndex(m_model.index(newRow, 0));
 }
 
-
+/**
+ * @brief Handles the move front button click
+ */
 void MainWindow::on_moveFrontButton_clicked()
 {
     if(m_model.rowCount() == 0)
@@ -299,4 +268,3 @@ void MainWindow::on_moveFrontButton_clicked()
     int newRow = (currentIndex.row() ==  m_model.rowCount()-1)? (currentIndex.row()): (currentIndex.row()+1);
     m_model.moveImage(currentIndex.row(), newRow);
 }
-

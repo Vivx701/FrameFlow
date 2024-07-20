@@ -25,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     IOutputFile.h \
+    Strings.h \
     Types.h \
     exportdialog.h \
     giffile.h \
