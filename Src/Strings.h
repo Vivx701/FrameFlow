@@ -10,10 +10,12 @@ namespace Strings {
 inline const QString NEW_BUTTON_TEXT = QObject::tr("New");
 inline const QString BROWSE_BUTTON_TEXT = QObject::tr("Browse");
 inline const QString EXPORT_BUTTON_TEXT = QObject::tr("Export");
+inline const QString CBOARD_BUTTON_TEXT = QObject::tr("Clipboard");
 
 // Tooltips
 inline const QString NEW_BUTTON_TOOLTIP = QObject::tr("Start a new project");
 inline const QString BROWSE_BUTTON_TOOLTIP = QObject::tr("Add images to project");
+inline const QString CLIPBRD_BUTTON_TOOLTIP = QObject::tr("Add image from clipboard");
 inline const QString EXPORT_BUTTON_TOOLTIP = QObject::tr("Export the images");
 inline const QString SETTINGS_BUTTON_TOOLTIP = QObject::tr("Settings");
 inline const QString ABOUT_BUTTON_TOOLTIP = QObject::tr("About screen");

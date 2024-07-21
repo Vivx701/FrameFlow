@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <imagedelegate.h>
 #include <exportdialog.h>
+#include <QClipboard>
+#include <QMimeData>
 
 /**
  * @brief Constructor for MainWindow
@@ -15,7 +17,7 @@
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), tempDir(new QTemporaryDir())
 {
     ui->setupUi(this);
     setupUI();
@@ -26,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
  */
 MainWindow::~MainWindow()
 {
+    delete tempDir;
     delete ui;
 }
 
@@ -47,6 +50,13 @@ void MainWindow::setupUI()
     fileBrowseButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/plus-box.png"));
     fileBrowseButton->setToolTip(Strings::BROWSE_BUTTON_TOOLTIP);
     fileBrowseButton->setFixedSize(QSize(75, 50));
+
+    // Create and set up the Browse button
+    QToolButton *addFromClipboardButton = new QToolButton(this);
+    addFromClipboardButton->setText(Strings::CBOARD_BUTTON_TEXT);
+    addFromClipboardButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/plus-box.png"));
+    addFromClipboardButton->setToolTip(Strings::CLIPBRD_BUTTON_TOOLTIP);
+    addFromClipboardButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Export button
     QToolButton *exportButton = new QToolButton(this);
@@ -78,6 +88,7 @@ void MainWindow::setupUI()
     ui->SideBar->addWidget(spacer);
     ui->SideBar->addWidget(newButton);
     ui->SideBar->addWidget(fileBrowseButton);
+    ui->SideBar->addWidget(addFromClipboardButton);
     ui->SideBar->addWidget(exportButton);
     ui->SideBar->addSeparator();
     ui->SideBar->addWidget(settingsButton);
@@ -157,9 +168,31 @@ void MainWindow::setupUI()
         }
     });
 
-    // Connect the About button clicked signal
-    connect(aboutButton, &QToolButton::clicked, this, [this](){
-        // TODO: Implement about dialog
+    // Connect the addFromClipboardButton  clicked signal
+    connect(addFromClipboardButton, &QToolButton::clicked, this, [this](){
+
+        QClipboard *clipboard = QApplication::clipboard();
+        const QMimeData *mimeData = clipboard->mimeData();
+
+        if (mimeData->hasImage()) {
+             qDebug() << "AmimeData->hasImage";
+            QImage image = qvariant_cast<QImage>(mimeData->imageData());
+            if (!image.isNull()) {
+                qDebug() << "image is not NULL";
+                QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz");
+                QString fileName =  QString("clipboard_image_%1.png").arg(timestamp);
+                QString filePath = tempDir->filePath(fileName);
+
+                if (image.save(filePath, "PNG")) {
+                    qDebug() << "Image saved to:" << filePath;
+                     m_model.addImage(filePath);
+
+                } else {
+                    qDebug() << "Failed to save image";
+                }
+            }
+        }
+
     });
 }
 
@@ -197,6 +230,12 @@ void MainWindow::clearProperties()
     {
         ui->propertiesLayout->removeRow(0);
     }
+}
+
+QString MainWindow::getTempFolder()
+{
+    qint64 pid = QCoreApplication::applicationPid();
+
 }
 
 /**

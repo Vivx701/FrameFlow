@@ -8,7 +8,8 @@
 #include <QMap>
 #include <QLineEdit>
 #include <QSpacerItem>
-#include<QMessageBox>
+#include <QMessageBox>
+#include <QTemporaryDir>
 
 #include "outputfilefactory.h"
 
@@ -27,6 +28,8 @@ public:
     void writeFile(Attributes &attrib, OutputType type);
     void resetAll();
     void clearProperties();
+    QString getTempFolder();
+
 
 private slots:
     void on_leftButton_clicked();
@@ -40,5 +43,6 @@ private:
     ImageModel m_model;
     QGraphicsScene m_scene;
     QGraphicsPixmapItem m_pixmapItem;
+    QTemporaryDir *tempDir;
 };
 #endif // MAINWINDOW_H

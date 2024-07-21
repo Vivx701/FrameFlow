@@ -142,7 +142,7 @@ void VideoFile::save()
 
     // Encode frames
     for (int i = 0; i < m_Images.size(); ++i) {
-        const QImage& img = m_Images[i].convertToFormat(QImage::Format_RGBA8888);
+        const QImage& img = m_Images[i].convertToFormat(QImage::Format_RGBA8888).scaled(frame->width, frame->height);;
 
         // Convert RGBA to YUV420P
         const uint8_t *inData[1] = { img.bits() };

@@ -27,7 +27,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideRight</enum>
@@ -710,6 +710,9 @@
           <widget class="QDoubleSpinBox" name="gifFrameDelay">
            <property name="decimals">
             <number>1</number>
+           </property>
+           <property name="minimum">
+            <double>0.500000000000000</double>
            </property>
            <property name="maximum">
             <double>60.000000000000000</double>
