@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QTemporaryDir>
 
-#include "outputfilefactory.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,8 +28,6 @@ public:
     void writeFile(Attributes &attrib, OutputType type);
     void resetAll();
     void clearProperties();
-    QString getTempFolder();
-
 
 private slots:
     void on_leftButton_clicked();

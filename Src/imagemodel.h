@@ -17,7 +17,6 @@ public:
 
     explicit ImageModel(QObject *parent = nullptr);
     ~ImageModel();
-
     void addImage(const QString& imagePath);
     void removeImage(int index);
     void moveImage(int fromIndex, int toIndex);

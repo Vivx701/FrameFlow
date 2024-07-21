@@ -35,6 +35,7 @@ void VideoFile::save()
     int frameDelayMs  = attrib->specificSettings["FrameDelay"].toInt();
     QString copyright =  attrib->specificSettings["Copyright"].toString();
 
+
     QSize videoSize = this->getMaxSize();
     videoSize.setWidth(videoSize.width() - (videoSize.width() % 2));
     videoSize.setHeight(videoSize.height() - (videoSize.height() % 2));  // height divisible by 2
@@ -141,6 +142,8 @@ void VideoFile::save()
     int64_t current_pts = 0;
 
     // Encode frames
+
+    emit progressChanged(m_Images.count()+1, 0);
     for (int i = 0; i < m_Images.size(); ++i) {
         const QImage& img = m_Images[i].convertToFormat(QImage::Format_RGBA8888).scaled(frame->width, frame->height);;
 
@@ -166,6 +169,7 @@ void VideoFile::save()
             encodeFrame(formatContext, codecContext, frame, videoStream);
             current_pts += 1000 / fps;
         }
+        emit progressChanged(m_Images.count()+1, i+1);
     }
 
     // Flush encoder
@@ -180,6 +184,7 @@ void VideoFile::save()
     sws_freeContext(swsContext);
     avio_closep(&formatContext->pb);
     avformat_free_context(formatContext);
+    emit progressChanged(m_Images.count()+1, m_Images.count()+1);
 }
 
 

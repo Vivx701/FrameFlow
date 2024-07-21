@@ -25,6 +25,7 @@ inline const QString OPEN_IMAGE_DIALOG_TITLE = QObject::tr("Open Image");
 inline const QString IMAGE_FILES_FILTER = QObject::tr("Image Files (*.png *.jpg *.bmp)");
 inline const QString CONFIRM_NEW_TITLE = QObject::tr("Confirm New");
 inline const QString CONFIRM_NEW_MESSAGE = QObject::tr("Are you sure you want to start again ?\nAll changes will be lost.");
+inline const QString SAVING_MESSAGE = QObject::tr("Saving");
 
 // Property names
 inline const QString FILENAME_PROPERTY = QObject::tr("Filename");

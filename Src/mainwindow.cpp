@@ -10,6 +10,7 @@
 #include <exportdialog.h>
 #include <QClipboard>
 #include <QMimeData>
+#include <progressdialog.h>
 
 /**
  * @brief Constructor for MainWindow
@@ -203,11 +204,14 @@ void MainWindow::setupUI()
  */
 void MainWindow::writeFile(Attributes &attrib, OutputType type)
 {
-    std::unique_ptr<IOutputFile> output = OutputFileFactory::createOutputFile(type);
+
     ImageList images = m_model.getImageList();
-    output->addImages(images);
-    output->setAttrib(attrib);
-    output->save();
+    ProgressDialog pDialog(images, this);
+    pDialog.setFilename(attrib.filePath);
+    pDialog.setFixedSize(640, 200);
+    pDialog.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    pDialog.setAttributes(attrib, type);
+    pDialog.exec();
 }
 
 /**
@@ -230,12 +234,6 @@ void MainWindow::clearProperties()
     {
         ui->propertiesLayout->removeRow(0);
     }
-}
-
-QString MainWindow::getTempFolder()
-{
-    qint64 pid = QCoreApplication::applicationPid();
-
 }
 
 /**
