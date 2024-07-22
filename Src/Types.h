@@ -195,5 +195,4 @@ struct ImageItem {
  */
 enum OutputType{PDF, VIDEO, GIF, SPRITE, HTMLGALLERY};
 
-
 #endif // TYPES_H

@@ -88,7 +88,25 @@ void VideoFile::save()
     }
 
     // Set codec parameters
-    codecContext->bit_rate = 2000000;  // 2 Mbps
+    int64_t bitrate = 0;
+    if (videoSize.width() >= 3840 && videoSize.height() >= 2160) {
+        // 4K
+        bitrate = 35000000; // 35 Mbps
+    } else if (videoSize.width() >= 2560 && videoSize.height() >= 1440) {
+        // 1440p
+        bitrate = 16000000; // 16 Mbps
+    } else if (videoSize.width() >= 1920 && videoSize.height() >= 1080) {
+        // 1080p
+        bitrate = 8000000;  // 8 Mbps
+    } else if (videoSize.width() >= 1280 && videoSize.height() >= 720) {
+        // 720p
+        bitrate = 5000000;  // 5 Mbps
+    } else {
+        // SD or lower
+        bitrate = 2500000;  // 2.5 Mbps
+    }
+
+    codecContext->bit_rate = bitrate;
     codecContext->width = videoSize.width();
     codecContext->height = videoSize.height();
     codecContext->time_base = (AVRational){1, 1000}; // Use milliseconds as time base
