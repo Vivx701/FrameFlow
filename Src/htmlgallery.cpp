@@ -57,19 +57,23 @@ void HTMLGallery::save()
     QString htmlContent = generateHtmlHeader(title, description, columnsCount);
 
     // Process images
+    emit progressChanged(m_Images.count(), 0);
     for (int i = 0; i < m_Images.size(); ++i) {
+
         QString imageName = QString("image_%1.jpg").arg(i + 1, 3, 10, QChar('0'));
         QString thumbnailName = QString("thumb_%1.jpg").arg(i + 1, 3, 10, QChar('0'));
 
         // Save full-size image
         m_Images[i].save(imagesDir.filePath(imageName), "JPG", imageQuality);
 
-        // Create and save thumbnail
+        // Create and save thumbnail with adjusted quality
         QImage thumbnail = m_Images[i].scaled(thumbnailSize, thumbnailSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        thumbnail.save(imagesDir.filePath(thumbnailName), "JPG", imageQuality);
+        int adjustedQuality = adjustQualityForThumbnail(thumbnailSize, imageQuality);
+        thumbnail.save(imagesDir.filePath(thumbnailName), "JPG", adjustedQuality);
 
         // Add image to HTML content
         htmlContent += generateImageHtml(imageName, thumbnailName, i, enableLightbox);
+        emit progressChanged(m_Images.count(), i+1);
     }
 
     htmlContent += generateHtmlFooter(enableLightbox);
@@ -188,4 +192,32 @@ QString HTMLGallery::generateHtmlFooter(bool enableLightbox)
         "</html>";
 
     return footer;
+}
+
+/**
+ * @brief Adjusts the quality setting for thumbnails based on their size.
+ *
+ * This method applies the following rules:
+ * - For small thumbnails (<=100px): Caps quality at 70% of base quality or 70, whichever is lower.
+ * - For medium thumbnails (101-200px): Caps quality at 80% of base quality or 80, whichever is lower.
+ * - For large thumbnails (>200px): Uses the full base quality.
+ *
+ * @param thumbnailSize The size of the thumbnail in pixels.
+ * @param baseQuality The base quality setting for images.
+ * @return An adjusted quality value for the thumbnail.
+ */
+int HTMLGallery::adjustQualityForThumbnail(int thumbnailSize, int baseQuality)
+{
+    // Define quality thresholds
+    const int smallThreshold = 100;  // px
+    const int mediumThreshold = 200; // px
+
+    // Adjust quality based on thumbnail size
+    if (thumbnailSize <= smallThreshold) {
+        return qMin(baseQuality, 70);  // Lower quality for small thumbnails
+    } else if (thumbnailSize <= mediumThreshold) {
+        return qMin(baseQuality, 80);  // Medium quality for medium thumbnails
+    } else {
+        return baseQuality;  // Full quality for large thumbnails
+    }
 }

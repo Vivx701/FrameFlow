@@ -55,7 +55,7 @@ void MainWindow::setupUI()
     // Create and set up the Browse button
     QToolButton *addFromClipboardButton = new QToolButton(this);
     addFromClipboardButton->setText(Strings::CBOARD_BUTTON_TEXT);
-    addFromClipboardButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/plus-box.png"));
+    addFromClipboardButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/paste.png"));
     addFromClipboardButton->setToolTip(Strings::CLIPBRD_BUTTON_TOOLTIP);
     addFromClipboardButton->setFixedSize(QSize(75, 50));
 
@@ -153,6 +153,13 @@ void MainWindow::setupUI()
 
     // Connect the Export button clicked signal
     connect(exportButton, &QToolButton::clicked, this, [this](){
+
+        if(m_model.rowCount() < 1)
+        {
+            emit showErrorMessage(Strings::NO_IMAGES_TITLE, Strings::NO_IMAGES_MSG, QMessageBox::Information);
+            return;
+        }
+
         ExportDialog exportDialog;
         exportDialog.loadTheme(":/Theme/Resources/Theme/Default.qss");
         if(QDialog::Accepted == exportDialog.exec())
@@ -176,10 +183,8 @@ void MainWindow::setupUI()
         const QMimeData *mimeData = clipboard->mimeData();
 
         if (mimeData->hasImage()) {
-             qDebug() << "AmimeData->hasImage";
             QImage image = qvariant_cast<QImage>(mimeData->imageData());
             if (!image.isNull()) {
-                qDebug() << "image is not NULL";
                 QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz");
                 QString fileName =  QString("clipboard_image_%1.png").arg(timestamp);
                 QString filePath = tempDir->filePath(fileName);
@@ -189,11 +194,27 @@ void MainWindow::setupUI()
                      m_model.addImage(filePath);
 
                 } else {
-                    qDebug() << "Failed to save image";
+                    emit showErrorMessage(Strings::FAILED_CBOARD_TITLE, Strings::FAILED_CBOARD_MSG, QMessageBox::Critical);
                 }
             }
         }
+        else
+        {
+            emit showErrorMessage(Strings::NO_CBOARD_TITLE, Strings::NO_CBOARD_MSG, QMessageBox::Information);
+        }
 
+    });
+
+
+    //Show error message.
+    connect(this, &MainWindow::showErrorMessage, this, [](QString title, QString msg, QMessageBox::Icon icon){
+        QMessageBox msgBox;
+        msgBox.setIcon(icon);
+        msgBox.setText(title);
+        msgBox.setInformativeText(msg);
+        msgBox.setWindowTitle(SOFTWARENAME);
+        msgBox.setFixedSize(600, 300);
+        msgBox.exec();
     });
 }
 
@@ -209,7 +230,6 @@ void MainWindow::writeFile(Attributes &attrib, OutputType type)
     ProgressDialog pDialog(images, this);
     pDialog.setFilename(attrib.filePath);
     pDialog.setFixedSize(640, 200);
-    pDialog.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     pDialog.setAttributes(attrib, type);
     pDialog.exec();
 }

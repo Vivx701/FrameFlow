@@ -18,7 +18,17 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QGraphicsView" name="graphicsView"/>
+       <widget class="QGraphicsView" name="graphicsView">
+        <property name="backgroundBrush">
+         <brush brushstyle="Dense1Pattern">
+          <color alpha="255">
+           <red>93</red>
+           <green>109</green>
+           <blue>126</blue>
+          </color>
+         </brush>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QFrame" name="details">
@@ -264,7 +274,7 @@
     <bool>false</bool>
    </property>
    <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
+    <enum>Qt::ToolButtonIconOnly</enum>
    </property>
    <property name="floatable">
     <bool>false</bool>

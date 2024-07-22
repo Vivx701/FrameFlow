@@ -40,7 +40,8 @@ void GifFile::save()
         qDebug() << "Failed to initialize GIF writer";
         return;
     }
-
+    emit progressChanged(m_Images.count(), 0);
+    int8_t index = 0;
     for (const QImage& img : m_Images) {
         QImage rgbImage = img.convertToFormat(QImage::Format_RGB888).scaled(width, height);
         std::vector<uint8_t> frameData(width * height * 4);
@@ -61,6 +62,8 @@ void GifFile::save()
             GifEnd(&writer);
             return;
         }
+
+        emit progressChanged(m_Images.count(), ++index);
     }
 
     if (!GifEnd(&writer)) {

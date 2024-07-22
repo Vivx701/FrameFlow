@@ -159,7 +159,7 @@ struct HTMLGalleryAttributes: public Attributes
             {"Description", "Photo gallery created using " + QString(SOFTWARENAME)},
             {"ThumbnailSize", 200},  // Default thumbnail size in pixels
             {"ColumnsCount", 4},     // Default number of columns in the gallery grid
-            {"ImageQuality", 85},    // JPEG quality for saved images (0-100)
+            {"ImageQuality", 100},    // JPEG quality for saved images (0-100)
             {"Copyright", ""},
             {"EnableLightbox", true} // Enable lightbox for image viewing
         };

@@ -56,6 +56,17 @@ inline const QString BITS_UNIT = QObject::tr("bits");
 inline const QString YES = QObject::tr("Yes");
 inline const QString NO = QObject::tr("No");
 
+
+//Message Text
+inline const QString NO_CBOARD_TITLE = QObject::tr("No image");
+inline const QString NO_CBOARD_MSG = QObject::tr("No image found in clipboard");
+
+inline const QString FAILED_CBOARD_TITLE = QObject::tr("Failed");
+inline const QString FAILED_CBOARD_MSG = QObject::tr("Failed to load the image");
+
+inline const QString NO_IMAGES_TITLE = QObject::tr("No Images Added");
+inline const QString NO_IMAGES_MSG = QObject::tr("Please add at least one image before proceeding");
+
 } // namespace Strings
 
 #endif // STRINGS_H

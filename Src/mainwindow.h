@@ -36,6 +36,9 @@ private slots:
     void on_moveBackButton_clicked();
     void on_moveFrontButton_clicked();
 
+signals:
+    void showErrorMessage(QString title, QString msg, QMessageBox::Icon icon);
+
 private:
     Ui::MainWindow *ui;
     ImageModel m_model;

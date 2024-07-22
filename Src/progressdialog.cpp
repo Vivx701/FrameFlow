@@ -6,9 +6,9 @@ ProgressDialog::ProgressDialog(ImageList& images, QWidget *parent) :
     ui(new Ui::ProgressDialog),
     m_images(images)
 {
+    setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
     ui->setupUi(this);
     ui->closeButton->setEnabled(false);
-
 }
 
 void ProgressDialog::setFilename(QString path)

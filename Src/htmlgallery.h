@@ -62,6 +62,14 @@ private:
      * @return A QString containing the HTML footer content, including scripts.
      */
     QString generateHtmlFooter(bool enableLightbox);
+
+    /**
+     * @brief Adjusts the quality setting for thumbnails based on their size.
+     * @param thumbnailSize The size of the thumbnail in pixels.
+     * @param baseQuality The base quality setting for images.
+     * @return An adjusted quality value for the thumbnail.
+     */
+    int adjustQualityForThumbnail(int thumbnailSize, int baseQuality);
 };
 
 #endif // HTMLGALLERY_H
