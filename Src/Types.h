@@ -195,4 +195,6 @@ struct ImageItem {
  */
 enum OutputType{PDF, VIDEO, GIF, SPRITE, HTMLGALLERY};
 
+//Settings
+const QString LANGUAGE = "lang";
 #endif // TYPES_H

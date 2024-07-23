@@ -10,7 +10,9 @@
 #include <exportdialog.h>
 #include <QClipboard>
 #include <QMimeData>
+#include <settingsdialog.h>
 #include <progressdialog.h>
+#include <QPair>
 
 /**
  * @brief Constructor for MainWindow
@@ -205,6 +207,19 @@ void MainWindow::setupUI()
 
     });
 
+    // Connect the Settings  clicked signal
+    connect(settingsButton, &QToolButton::clicked, this, [this](){
+        settingsDialog sDialog;
+        sDialog.setFixedSize(600, 250);
+        if(QDialog::Accepted == sDialog.exec())
+        {
+            QSettings settings;
+            QMap<QString, QString> values =  sDialog.Settings();
+            for (QMap<QString, QString>::const_iterator it = values.constBegin(); it != values.constEnd(); ++it) {
+                settings.setValue(it.key(), it.value());
+            }
+        }
+    });
 
     //Show error message.
     connect(this, &MainWindow::showErrorMessage, this, [](QString title, QString msg, QMessageBox::Icon icon){

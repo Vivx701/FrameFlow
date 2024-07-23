@@ -22,6 +22,7 @@ SOURCES += \
     outputfilefactory.cpp \
     pdffile.cpp \
     progressdialog.cpp \
+    settingsdialog.cpp \
     videofile.cpp
 
 HEADERS += \
@@ -38,13 +39,15 @@ HEADERS += \
     outputfilefactory.h \
     pdffile.h \
     progressdialog.h \
+    settingsdialog.h \
     videofile.h\
     gif.h
 
 FORMS += \
     exportdialog.ui \
     mainwindow.ui \
-    progressdialog.ui
+    progressdialog.ui \
+    settingsdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
