@@ -1,6 +1,7 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 #include <QFontDatabase>
+#include <Types.h>
 
 settingsDialog::settingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -28,15 +29,26 @@ void settingsDialog::fillItems()
     };
     connect(ui->languageComboBox, &QComboBox::currentTextChanged, this, langSelector);
     langSelector();
+    ui->languageComboBox->setCurrentText(qApp->property(LANGUAGE.toLocal8Bit().data()).toString());
+    ui->fontList->setCurrentText(qApp->property(FONT.toLocal8Bit().data()).toString());
+
+
+    //ThemeList
+    ui->themeList->addItems(ThemeMap.keys());
+    QString themeName = qApp->property(COLORTHEME.toLocal8Bit().data()).toString();
+    ui->themeList->setCurrentText(themeName);
+
+
+
+
 }
 
 const QMap<QString, QString> settingsDialog::Settings() const
 {
     QMap<QString, QString> settings;
-    settings["lang"]  = ui->languageComboBox->currentText();
-    settings["icontheme"] = ui->iconThemeList->currentText();
-    settings["theme"] = ui->themeList->currentText();
-    settings["fontfamily"] = ui->fontList->currentText();
-    settings["fontsize"] = QString::number(ui->fontSize->value());
+    settings[LANGUAGE]  = ui->languageComboBox->currentText();
+    settings[ICONTHEME] = ui->iconThemeList->currentText();
+    settings[COLORTHEME] = ui->themeList->currentText();
+    settings[FONT] = ui->fontList->currentText();
     return settings;
 }

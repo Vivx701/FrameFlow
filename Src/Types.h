@@ -197,4 +197,16 @@ enum OutputType{PDF, VIDEO, GIF, SPRITE, HTMLGALLERY};
 
 //Settings
 const QString LANGUAGE = "lang";
+const QString ICONTHEME = "icontheme";
+const QString COLORTHEME = "theme";
+const QString FONT = "fontfamily";
+const QString FONTSIZE = "fontsize";
+
+//Theme
+const QMap<QString, QString> ThemeMap = {
+                                    {"Default", ":/Theme/Resources/Theme/Default.qss"},
+                                    {"Light", ":/Theme/Resources/Theme/Light.qss"},
+                                    {"Dark", ":/Theme/Resources/Theme/Dark.qss"}
+                               };
+
 #endif // TYPES_H

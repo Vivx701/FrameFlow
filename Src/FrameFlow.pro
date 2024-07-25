@@ -56,3 +56,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     Resources.qrc
+
+DISTFILES += \
+    Resources/Theme/Dark.qss \
+    Resources/Theme/Light.qss

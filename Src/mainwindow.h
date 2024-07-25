@@ -28,6 +28,8 @@ public:
     void writeFile(Attributes &attrib, OutputType type);
     void resetAll();
     void clearProperties();
+    void applySettings();
+    QString currentTheme();
 
 private slots:
     void on_leftButton_clicked();

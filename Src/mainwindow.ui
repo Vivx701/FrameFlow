@@ -45,10 +45,13 @@
          </size>
         </property>
         <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+         <enum>QFrame::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
@@ -240,7 +243,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="listView">
+     <widget class="QListView" name="imageListView">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
         <horstretch>0</horstretch>

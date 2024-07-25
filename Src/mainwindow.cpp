@@ -13,6 +13,7 @@
 #include <settingsdialog.h>
 #include <progressdialog.h>
 #include <QPair>
+#include <QProcess>
 
 /**
  * @brief Constructor for MainWindow
@@ -98,15 +99,15 @@ void MainWindow::setupUI()
     ui->SideBar->addWidget(aboutButton);
 
     // Set up the list view and graphics view
-    ui->listView->setModel(&m_model);
+    ui->imageListView->setModel(&m_model);
     ImageDelegate *delegate = new ImageDelegate(this);
-    ui->listView->setItemDelegate(delegate);
+    ui->imageListView->setItemDelegate(delegate);
     ui->graphicsView->setScene(&m_scene);
     ui->graphicsView->setAlignment(Qt::AlignCenter);
     m_scene.addItem(&m_pixmapItem);
 
     // Connect the list view clicked signal
-    QObject::connect(ui->listView, &QListView::clicked, [this](const QModelIndex& index) {
+    QObject::connect(ui->imageListView, &QListView::clicked, [this](const QModelIndex& index) {
         QImage img(index.data(Qt::DisplayRole).toString());
         if(!img.isNull())
         {
@@ -121,8 +122,10 @@ void MainWindow::setupUI()
         clearProperties();
         for (const auto& property : imageProperties) {
             QLineEdit *secondText = new QLineEdit(property.second, this);
+            secondText->setFont(qApp->font());
             secondText->setReadOnly(true);
             ui->propertiesLayout->addRow(property.first, secondText);
+
             if(property.first == Strings::MODIFIED_PROPERTY)
             {
                 ui->propertiesLayout->addItem(new QSpacerItem(50, 30, QSizePolicy::Expanding, QSizePolicy::Fixed));
@@ -163,7 +166,7 @@ void MainWindow::setupUI()
         }
 
         ExportDialog exportDialog;
-        exportDialog.loadTheme(":/Theme/Resources/Theme/Default.qss");
+        exportDialog.loadTheme(currentTheme());
         if(QDialog::Accepted == exportDialog.exec())
         {
             QMap<QString, OutputType> outputMap = {
@@ -218,6 +221,7 @@ void MainWindow::setupUI()
             for (QMap<QString, QString>::const_iterator it = values.constBegin(); it != values.constEnd(); ++it) {
                 settings.setValue(it.key(), it.value());
             }
+            applySettings();
         }
     });
 
@@ -255,7 +259,7 @@ void MainWindow::writeFile(Attributes &attrib, OutputType type)
 void MainWindow::resetAll()
 {
     m_model.clearImages();
-    ui->listView->reset();
+    ui->imageListView->reset();
     clearProperties();
     m_pixmapItem.setPixmap(QPixmap());
 }
@@ -271,6 +275,38 @@ void MainWindow::clearProperties()
     }
 }
 
+void MainWindow::applySettings()
+{
+    QSettings settings;
+    // Read a value
+    QString lang = settings.value(LANGUAGE, "English").toString();
+    QString icontheme = settings.value(ICONTHEME, "Default").toString();
+    QString colortheme = settings.value(COLORTHEME, "Default").toString();
+    QString fontfamily = settings.value(FONT, "Monospace").toString();
+
+    qApp->setProperty(LANGUAGE.toLocal8Bit().data(), lang);
+    qApp->setProperty(ICONTHEME.toLocal8Bit().data(), icontheme);
+    qApp->setProperty(COLORTHEME.toLocal8Bit().data(), colortheme);
+    qApp->setProperty(FONT.toLocal8Bit().data(), fontfamily);
+
+    // Set App font
+    QFont globalFont(fontfamily);  // Font family and size
+    qApp->setFont(globalFont);
+
+    QFile file(ThemeMap[colortheme]);
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    qApp->setStyleSheet(styleSheet);
+}
+
+QString MainWindow::currentTheme()
+{
+    QString themeName = qApp->property(COLORTHEME.toLocal8Bit().data()).toString();
+    return ThemeMap[themeName];
+}
+
+
+
 /**
  * @brief Handles the left button click
  */
@@ -280,9 +316,9 @@ void MainWindow::on_leftButton_clicked()
     {
         return;
     }
-    QModelIndex currentIndex = ui->listView->currentIndex();
+    QModelIndex currentIndex = ui->imageListView->currentIndex();
     int newRow = (currentIndex.row() == 0)? (m_model.rowCount()-1): (currentIndex.row()-1);
-    ui->listView->setCurrentIndex(m_model.index(newRow, 0));
+    ui->imageListView->setCurrentIndex(m_model.index(newRow, 0));
 }
 
 /**
@@ -294,9 +330,9 @@ void MainWindow::on_rightButton_clicked()
     {
         return;
     }
-    QModelIndex currentIndex = ui->listView->currentIndex();
+    QModelIndex currentIndex = ui->imageListView->currentIndex();
     int newRow = (currentIndex.row()+1)%m_model.rowCount();
-    ui->listView->setCurrentIndex(m_model.index(newRow, 0));
+    ui->imageListView->setCurrentIndex(m_model.index(newRow, 0));
 }
 
 /**
@@ -308,7 +344,7 @@ void MainWindow::on_deleteButton_clicked()
     {
         return;
     }
-    QModelIndex currentIndex = ui->listView->currentIndex();
+    QModelIndex currentIndex = ui->imageListView->currentIndex();
     m_model.removeImage(currentIndex.row());
 }
 
@@ -321,10 +357,10 @@ void MainWindow::on_moveBackButton_clicked()
     {
         return;
     }
-    QModelIndex currentIndex = ui->listView->currentIndex();
+    QModelIndex currentIndex = ui->imageListView->currentIndex();
     int newRow = (currentIndex.row() == 0)? (currentIndex.row()): (currentIndex.row()-1);
     m_model.moveImage(currentIndex.row(), newRow);
-    ui->listView->setCurrentIndex(m_model.index(newRow, 0));
+    ui->imageListView->setCurrentIndex(m_model.index(newRow, 0));
 }
 
 /**
@@ -336,7 +372,7 @@ void MainWindow::on_moveFrontButton_clicked()
     {
         return;
     }
-    QModelIndex currentIndex = ui->listView->currentIndex();
+    QModelIndex currentIndex = ui->imageListView->currentIndex();
     int newRow = (currentIndex.row() ==  m_model.rowCount()-1)? (currentIndex.row()): (currentIndex.row()+1);
     m_model.moveImage(currentIndex.row(), newRow);
 }

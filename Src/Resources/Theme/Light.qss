@@ -1,14 +1,14 @@
-/* Default.qss */
+/* light.qss */
 #MainWindow {
-    background-color: #f0f3f4;
+    background-color:  #fbfcfc;
 }
 
 #SideBar {
-    background-color:  #212f3d;
+    background-color:  #d0d0d0;
 }
 
 QToolButton {
-    background-color:  #ecf0f1;
+    background-color:  #d0d0d0;
     color: white;
 }
 
@@ -17,7 +17,7 @@ QToolButton:hover {
 }
 
 #contolFrame {
-    background-color:   #ecf0f1;
+    background-color:   #f6f6f6;
     color: #ffffff;
 }
 
@@ -33,17 +33,21 @@ QToolButton:hover {
     background-color:  #fdfefe;
 }
 
-QWidget#details QLabel, QLineEdit{
-    font-family: Roboto, sans-serif;
+QWidget#details QLabel{
     font-size: 15px;
-    font-weight: normal;
-    font-style: normal;
+    color: #17202a;
+}
+
+QWidget#details QLineEdit{
+    font-size: 15px;
+    color: #17202a;
 }
 
 QWidget#imageListView{
-    background-color:  #566573;
+    background-color:  #ececec;
 }
 
 #ExportDialog{
-    background-color:  #212f3d;
+    background-color:  #fbfcfc;
 }
+

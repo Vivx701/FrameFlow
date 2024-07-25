@@ -1,8 +1,11 @@
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
+#include <QSettings>
+#include <QFont>
 
 #include "mainwindow.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -11,14 +14,17 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setApplicationName(SOFTWARENAME);
     QCoreApplication::setApplicationVersion("1.0");
+
+
     // Load and apply the style sheet
-    QFile file(":/Theme/Resources/Theme/Default.qss");
+    QFile file("");
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream stream(&file);
         a.setStyleSheet(stream.readAll());
     }
 
     MainWindow w;
+    w.applySettings();
     w.setWindowTitle(SOFTWARENAME);
     w.show();
     return a.exec();

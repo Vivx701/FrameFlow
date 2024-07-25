@@ -14,5 +14,7 @@
     </qresource>
     <qresource prefix="/Theme">
         <file>Resources/Theme/Default.qss</file>
+        <file>Resources/Theme/Light.qss</file>
+        <file>Resources/Theme/Dark.qss</file>
     </qresource>
 </RCC>
