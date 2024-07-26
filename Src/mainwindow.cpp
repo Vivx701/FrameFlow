@@ -21,7 +21,7 @@
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), tempDir(new QTemporaryDir())
+    , ui(new Ui::MainWindow), tempDir(new QTemporaryDir()), iconThemeManager(new IconThemeManager)
 {
     ui->setupUi(this);
     setupUI();
@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete tempDir;
+    delete iconThemeManager;
     delete ui;
 }
 
@@ -44,42 +45,42 @@ void MainWindow::setupUI()
     // Create and set up the New button
     QToolButton *newButton = new QToolButton(this);
     newButton->setText(Strings::NEW_BUTTON_TEXT);
-    newButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/new-box.png"));
+    newButton->setIcon(iconThemeManager->getIcon(ICONTYPE::NEW_BUTTON));
     newButton->setToolTip(Strings::NEW_BUTTON_TOOLTIP);
     newButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Browse button
     QToolButton *fileBrowseButton = new QToolButton(this);
     fileBrowseButton->setText(Strings::BROWSE_BUTTON_TEXT);
-    fileBrowseButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/plus-box.png"));
+    fileBrowseButton->setIcon(iconThemeManager->getIcon(ICONTYPE::BROWSE_BUTTON));
     fileBrowseButton->setToolTip(Strings::BROWSE_BUTTON_TOOLTIP);
     fileBrowseButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Browse button
     QToolButton *addFromClipboardButton = new QToolButton(this);
     addFromClipboardButton->setText(Strings::CBOARD_BUTTON_TEXT);
-    addFromClipboardButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/paste.png"));
+    addFromClipboardButton->setIcon(iconThemeManager->getIcon(ICONTYPE::CBOARD_BUTTON));
     addFromClipboardButton->setToolTip(Strings::CLIPBRD_BUTTON_TOOLTIP);
     addFromClipboardButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Export button
     QToolButton *exportButton = new QToolButton(this);
     exportButton->setText(Strings::EXPORT_BUTTON_TEXT);
-    exportButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/export.png"));
+    exportButton->setIcon(iconThemeManager->getIcon(ICONTYPE::EXPORT_BUTTON));
     exportButton->setToolTip(Strings::EXPORT_BUTTON_TOOLTIP);
     exportButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Settings button
     QToolButton *settingsButton = new QToolButton(this);
-    settingsButton->setText(Strings::EXPORT_BUTTON_TEXT);
-    settingsButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/cog.png"));
+    settingsButton->setText(Strings::SETTINGS_BUTTON_TEXT);
+    settingsButton->setIcon(iconThemeManager->getIcon(ICONTYPE::SETTINGS_BUTTON));
     settingsButton->setToolTip(Strings::SETTINGS_BUTTON_TOOLTIP);
     settingsButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the About button
     QToolButton *aboutButton = new QToolButton(this);
-    aboutButton->setText(Strings::EXPORT_BUTTON_TEXT);
-    aboutButton->setIcon(QIcon(":/Dark/icons/Resources/Icons/dark/information-outline.png"));
+    aboutButton->setText(Strings::ABOUT_BUTTON_TEXT);
+    aboutButton->setIcon(iconThemeManager->getIcon(ICONTYPE::ABOUT_BUTTON));
     aboutButton->setToolTip(Strings::ABOUT_BUTTON_TOOLTIP);
     aboutButton->setFixedSize(QSize(75, 50));
 
@@ -97,6 +98,13 @@ void MainWindow::setupUI()
     ui->SideBar->addSeparator();
     ui->SideBar->addWidget(settingsButton);
     ui->SideBar->addWidget(aboutButton);
+
+    //Set icons
+    ui->leftButton->setIcon(iconThemeManager->getIcon(ICONTYPE::LEFT_BUTTON));
+    ui->rightButton->setIcon(iconThemeManager->getIcon(ICONTYPE::RIGHT_BUTTON));
+    ui->moveBackButton->setIcon(iconThemeManager->getIcon(ICONTYPE::MOVEBACK_BUTTON));
+    ui->moveFrontButton->setIcon(iconThemeManager->getIcon(ICONTYPE::MOVEFRONT_BUTTON));
+    ui->deleteButton->setIcon(iconThemeManager->getIcon(ICONTYPE::DELETE_BUTTON));
 
     // Set up the list view and graphics view
     ui->imageListView->setModel(&m_model);

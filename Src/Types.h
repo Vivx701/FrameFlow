@@ -200,7 +200,7 @@ const QString LANGUAGE = "lang";
 const QString ICONTHEME = "icontheme";
 const QString COLORTHEME = "theme";
 const QString FONT = "fontfamily";
-const QString FONTSIZE = "fontsize";
+
 
 //Theme
 const QMap<QString, QString> ThemeMap = {

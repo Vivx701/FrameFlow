@@ -14,6 +14,7 @@ SOURCES += \
     exportdialog.cpp \
     giffile.cpp \
     htmlgallery.cpp \
+    iconthememanager.cpp \
     imagedelegate.cpp \
     imagemodel.cpp \
     imagesprite.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     exportdialog.h \
     giffile.h \
     htmlgallery.h \
+    iconthememanager.h \
     imagedelegate.h \
     imagemodel.h \
     imagesprite.h \

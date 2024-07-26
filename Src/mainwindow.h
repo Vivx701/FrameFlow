@@ -10,6 +10,7 @@
 #include <QSpacerItem>
 #include <QMessageBox>
 #include <QTemporaryDir>
+#include <iconthememanager.h>
 
 
 
@@ -47,5 +48,6 @@ private:
     QGraphicsScene m_scene;
     QGraphicsPixmapItem m_pixmapItem;
     QTemporaryDir *tempDir;
+    IconThemeManager *iconThemeManager;
 };
 #endif // MAINWINDOW_H
