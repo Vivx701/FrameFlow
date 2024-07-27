@@ -51,3 +51,18 @@ QWidget#imageListView{
     background-color:  #31363F;
 }
 
+#settingsDialog{
+    background-color:  #31363F;
+    color: white;
+}
+#settingsDialog QLabel{
+    color: white;
+}
+
+#aboutDialog {
+    background-color:  #31363F;
+    color: white;
+}
+#aboutDialog QLabel{
+    color: white;
+}

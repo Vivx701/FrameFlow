@@ -22,8 +22,7 @@ enum class ICONTYPE {
 };
 
 //Theme names
-#define DARKTHEME  "Dark"
-#define LIGHTTHEME "Light"
+#define MATERIAL  "Material"
 #define DEFAULTTHEME "Default"
 
 

@@ -47,7 +47,15 @@ private:
     ImageModel m_model;
     QGraphicsScene m_scene;
     QGraphicsPixmapItem m_pixmapItem;
-    QTemporaryDir *tempDir;
-    IconThemeManager *iconThemeManager;
+    QTemporaryDir *mp_tempDir;
+    IconThemeManager *mp_iconThemeManager;
+
+    //toolbuttons
+     QToolButton *newButton;
+     QToolButton *fileBrowseButton;
+     QToolButton *addFromClipboardButton;
+     QToolButton *exportButton;
+     QToolButton *settingsButton;
+     QToolButton *aboutButton;
 };
 #endif // MAINWINDOW_H

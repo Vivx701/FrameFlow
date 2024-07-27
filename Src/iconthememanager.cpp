@@ -3,44 +3,32 @@
 IconThemeManager::IconThemeManager(QObject *parent) : QObject(parent)
 {
     // Initialize with default themes and icons
-    m_themeIcons[LIGHTTHEME][ICONTYPE::NEW_BUTTON]       = ":/Dark/icons/Resources/Icons/dark/new-box.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::BROWSE_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/plus-box.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::CBOARD_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/paste.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::EXPORT_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/export.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::SETTINGS_BUTTON]  = ":/Dark/icons/Resources/Icons/dark/cog.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::ABOUT_BUTTON]     = ":/Dark/icons/Resources/Icons/dark/information-outline.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::LEFT_BUTTON]      = ":/Dark/icons/Resources/Icons/dark/arrow-left-bold-box-outline.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::RIGHT_BUTTON]     = ":/Dark/icons/Resources/Icons/dark/arrow-right-bold-box-outline.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::MOVEBACK_BUTTON]  = ":/Dark/icons/Resources/Icons/dark/image-move-back.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::MOVEFRONT_BUTTON] = ":/Dark/icons/Resources/Icons/dark/image-move.png";
-    m_themeIcons[LIGHTTHEME][ICONTYPE::DELETE_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/image-remove-outline.png";
 
-
-    m_themeIcons[DARKTHEME][ICONTYPE::NEW_BUTTON]       = ":/Dark/icons/Resources/Icons/dark/new-box.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::BROWSE_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/plus-box.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::CBOARD_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/paste.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::EXPORT_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/export.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::SETTINGS_BUTTON]  = ":/Dark/icons/Resources/Icons/dark/cog.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::ABOUT_BUTTON]     = ":/Dark/icons/Resources/Icons/dark/information-outline.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::LEFT_BUTTON]      = ":/Dark/icons/Resources/Icons/dark/arrow-left-bold-box-outline.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::RIGHT_BUTTON]     = ":/Dark/icons/Resources/Icons/dark/arrow-right-bold-box-outline.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::MOVEBACK_BUTTON]  = ":/Dark/icons/Resources/Icons/dark/image-move-back.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::MOVEFRONT_BUTTON] = ":/Dark/icons/Resources/Icons/dark/image-move.png";
-    m_themeIcons[DARKTHEME][ICONTYPE::DELETE_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/image-remove-outline.png";
+    m_themeIcons[MATERIAL][ICONTYPE::NEW_BUTTON]       = ":/Icons/Material/Resources/Icons/Material/new.png";
+    m_themeIcons[MATERIAL][ICONTYPE::BROWSE_BUTTON]    = ":/Icons/Material/Resources/Icons/Material/add_photo.png";
+    m_themeIcons[MATERIAL][ICONTYPE::CBOARD_BUTTON]    = ":/Icons/Material/Resources/Icons/Material/paste.png";
+    m_themeIcons[MATERIAL][ICONTYPE::EXPORT_BUTTON]    = ":/Icons/Material/Resources/Icons/Material/save.png";
+    m_themeIcons[MATERIAL][ICONTYPE::SETTINGS_BUTTON]  = ":/Icons/Material/Resources/Icons/Material/settings.png";
+    m_themeIcons[MATERIAL][ICONTYPE::ABOUT_BUTTON]     = ":/Icons/Material/Resources/Icons/Material/info.png";
+    m_themeIcons[MATERIAL][ICONTYPE::LEFT_BUTTON]      = ":/Icons/Material/Resources/Icons/Material/left.png";
+    m_themeIcons[MATERIAL][ICONTYPE::RIGHT_BUTTON]     = ":/Icons/Material/Resources/Icons/Material/right.png";
+    m_themeIcons[MATERIAL][ICONTYPE::MOVEBACK_BUTTON]  = ":/Icons/Material/Resources/Icons/Material/image-move-back.png";
+    m_themeIcons[MATERIAL][ICONTYPE::MOVEFRONT_BUTTON] = ":/Icons/Material/Resources/Icons/Material/image-move.png";
+    m_themeIcons[MATERIAL][ICONTYPE::DELETE_BUTTON]    = ":/Icons/Material/Resources/Icons/Material/delete.png";
 
 
 
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::NEW_BUTTON]      = ":/Dark/icons/Resources/Icons/dark/new-box.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::BROWSE_BUTTON]   = ":/Dark/icons/Resources/Icons/dark/plus-box.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::CBOARD_BUTTON]   = ":/Dark/icons/Resources/Icons/dark/paste.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::EXPORT_BUTTON]   = ":/Dark/icons/Resources/Icons/dark/export.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::SETTINGS_BUTTON] = ":/Dark/icons/Resources/Icons/dark/cog.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::ABOUT_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/information-outline.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::LEFT_BUTTON]     = ":/Dark/icons/Resources/Icons/dark/arrow-left-bold-box-outline.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::RIGHT_BUTTON]    = ":/Dark/icons/Resources/Icons/dark/arrow-right-bold-box-outline.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::MOVEBACK_BUTTON] = ":/Dark/icons/Resources/Icons/dark/image-move-back.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::MOVEFRONT_BUTTON]= ":/Dark/icons/Resources/Icons/dark/image-move.png";
-    m_themeIcons[DEFAULTTHEME][ICONTYPE::DELETE_BUTTON]   = ":/Dark/icons/Resources/Icons/dark/image-remove-outline.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::NEW_BUTTON]      = ":/Icons/Default/Resources/Icons/Default/new-box.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::BROWSE_BUTTON]   = ":/Icons/Default/Resources/Icons/Default/add.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::CBOARD_BUTTON]   = ":/Icons/Default/Resources/Icons/Default/paste.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::EXPORT_BUTTON]   = ":/Icons/Default/Resources/Icons/Default/export.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::SETTINGS_BUTTON] = ":/Icons/Default/Resources/Icons/Default/cog.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::ABOUT_BUTTON]    = ":/Icons/Default/Resources/Icons/Default/information-outline.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::LEFT_BUTTON]     = ":/Icons/Default/Resources/Icons/Default/arrow-left-bold-box-outline.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::RIGHT_BUTTON]    = ":/Icons/Default/Resources/Icons/Default/arrow-right-bold-box-outline.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::MOVEBACK_BUTTON] = ":/Icons/Default/Resources/Icons/Default/image-move-back.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::MOVEFRONT_BUTTON]= ":/Icons/Default/Resources/Icons/Default/image-move.png";
+    m_themeIcons[DEFAULTTHEME][ICONTYPE::DELETE_BUTTON]   = ":/Icons/Default/Resources/Icons/Default/image-remove-outline.png";
 
     m_currentTheme = DEFAULTTHEME; // Set default theme
 }

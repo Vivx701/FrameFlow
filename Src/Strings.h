@@ -69,6 +69,20 @@ inline const QString FAILED_CBOARD_MSG = QObject::tr("Failed to load the image")
 inline const QString NO_IMAGES_TITLE = QObject::tr("No Images Added");
 inline const QString NO_IMAGES_MSG = QObject::tr("Please add at least one image before proceeding");
 
+// About Dialog
+inline const QString ABOUT_DIALOG_TITLE = QObject::tr("About FrameFlow");
+inline const QString APP_NAME = QObject::tr("FrameFlow");
+inline const QString APP_VERSION = QObject::tr("Version 1.0");
+inline const QString APP_DESCRIPTION = QObject::tr("FrameFlow is a versatile application designed to transform series of images into various multimedia formats. With FrameFlow, you can easily create videos, PDFs, sprite images, GIFs, and HTML presentations from your image sequences. Whether you're a designer, animator, or content creator, FrameFlow streamlines your workflow for efficient and creative visual storytelling.");
+inline const QString APP_COPYRIGHT = QObject::tr("Copyright © 2024 vivx_developer (https://github.com/Vivx701/FrameFlow)");
+inline const QString FFMPEG_REFERENCE = QObject::tr("This application uses FFmpeg for video processing.");
+inline const QString GIFH_REFERENCE = QObject::tr("GIF encoding powered by gif-h");
+inline const QString GIFH_LINK = QObject::tr("https://github.com/charlietangora/gif-h");
+inline const QString QT_VERSION_BUTTON_TEXT = QObject::tr("Show Qt Version");
+inline const QString CLOSE_BUTTON_TEXT = QObject::tr("Close");
+inline const QString QT_VERSION_DIALOG_TITLE = QObject::tr("Qt Version");
+inline const QString QT_VERSION_MESSAGE = QObject::tr("This application is using Qt version %1");
+
 } // namespace Strings
 
 #endif // STRINGS_H

@@ -27,9 +27,11 @@ SOURCES += \
     videofile.cpp
 
 HEADERS += \
+    FrameFlowSplashScreen.h \
     IOutputFile.h \
     Strings.h \
     Types.h \
+    aboutDialog.h \
     exportdialog.h \
     giffile.h \
     htmlgallery.h \

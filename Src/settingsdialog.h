@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QSettings>
 #include <Types.h>
+#include <iconthememanager.h>
 
 namespace Ui {
 class settingsDialog;

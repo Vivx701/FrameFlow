@@ -14,6 +14,7 @@
 #include <progressdialog.h>
 #include <QPair>
 #include <QProcess>
+#include <aboutDialog.h>
 
 /**
  * @brief Constructor for MainWindow
@@ -21,7 +22,7 @@
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), tempDir(new QTemporaryDir()), iconThemeManager(new IconThemeManager)
+    , ui(new Ui::MainWindow), mp_tempDir(new QTemporaryDir()), mp_iconThemeManager(new IconThemeManager)
 {
     ui->setupUi(this);
     setupUI();
@@ -32,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
  */
 MainWindow::~MainWindow()
 {
-    delete tempDir;
-    delete iconThemeManager;
+    delete mp_tempDir;
+    delete mp_iconThemeManager;
     delete ui;
 }
 
@@ -43,44 +44,44 @@ MainWindow::~MainWindow()
 void MainWindow::setupUI()
 {
     // Create and set up the New button
-    QToolButton *newButton = new QToolButton(this);
+    newButton = new QToolButton(this);
     newButton->setText(Strings::NEW_BUTTON_TEXT);
-    newButton->setIcon(iconThemeManager->getIcon(ICONTYPE::NEW_BUTTON));
+    newButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::NEW_BUTTON));
     newButton->setToolTip(Strings::NEW_BUTTON_TOOLTIP);
     newButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Browse button
-    QToolButton *fileBrowseButton = new QToolButton(this);
+    fileBrowseButton = new QToolButton(this);
     fileBrowseButton->setText(Strings::BROWSE_BUTTON_TEXT);
-    fileBrowseButton->setIcon(iconThemeManager->getIcon(ICONTYPE::BROWSE_BUTTON));
+    fileBrowseButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::BROWSE_BUTTON));
     fileBrowseButton->setToolTip(Strings::BROWSE_BUTTON_TOOLTIP);
     fileBrowseButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Browse button
-    QToolButton *addFromClipboardButton = new QToolButton(this);
+    addFromClipboardButton = new QToolButton(this);
     addFromClipboardButton->setText(Strings::CBOARD_BUTTON_TEXT);
-    addFromClipboardButton->setIcon(iconThemeManager->getIcon(ICONTYPE::CBOARD_BUTTON));
+    addFromClipboardButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::CBOARD_BUTTON));
     addFromClipboardButton->setToolTip(Strings::CLIPBRD_BUTTON_TOOLTIP);
     addFromClipboardButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Export button
-    QToolButton *exportButton = new QToolButton(this);
+    exportButton = new QToolButton(this);
     exportButton->setText(Strings::EXPORT_BUTTON_TEXT);
-    exportButton->setIcon(iconThemeManager->getIcon(ICONTYPE::EXPORT_BUTTON));
+    exportButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::EXPORT_BUTTON));
     exportButton->setToolTip(Strings::EXPORT_BUTTON_TOOLTIP);
     exportButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Settings button
-    QToolButton *settingsButton = new QToolButton(this);
+    settingsButton = new QToolButton(this);
     settingsButton->setText(Strings::SETTINGS_BUTTON_TEXT);
-    settingsButton->setIcon(iconThemeManager->getIcon(ICONTYPE::SETTINGS_BUTTON));
+    settingsButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::SETTINGS_BUTTON));
     settingsButton->setToolTip(Strings::SETTINGS_BUTTON_TOOLTIP);
     settingsButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the About button
-    QToolButton *aboutButton = new QToolButton(this);
+    aboutButton = new QToolButton(this);
     aboutButton->setText(Strings::ABOUT_BUTTON_TEXT);
-    aboutButton->setIcon(iconThemeManager->getIcon(ICONTYPE::ABOUT_BUTTON));
+    aboutButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::ABOUT_BUTTON));
     aboutButton->setToolTip(Strings::ABOUT_BUTTON_TOOLTIP);
     aboutButton->setFixedSize(QSize(75, 50));
 
@@ -100,11 +101,11 @@ void MainWindow::setupUI()
     ui->SideBar->addWidget(aboutButton);
 
     //Set icons
-    ui->leftButton->setIcon(iconThemeManager->getIcon(ICONTYPE::LEFT_BUTTON));
-    ui->rightButton->setIcon(iconThemeManager->getIcon(ICONTYPE::RIGHT_BUTTON));
-    ui->moveBackButton->setIcon(iconThemeManager->getIcon(ICONTYPE::MOVEBACK_BUTTON));
-    ui->moveFrontButton->setIcon(iconThemeManager->getIcon(ICONTYPE::MOVEFRONT_BUTTON));
-    ui->deleteButton->setIcon(iconThemeManager->getIcon(ICONTYPE::DELETE_BUTTON));
+    ui->leftButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::LEFT_BUTTON));
+    ui->rightButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::RIGHT_BUTTON));
+    ui->moveBackButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::MOVEBACK_BUTTON));
+    ui->moveFrontButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::MOVEFRONT_BUTTON));
+    ui->deleteButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::DELETE_BUTTON));
 
     // Set up the list view and graphics view
     ui->imageListView->setModel(&m_model);
@@ -200,7 +201,7 @@ void MainWindow::setupUI()
             if (!image.isNull()) {
                 QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz");
                 QString fileName =  QString("clipboard_image_%1.png").arg(timestamp);
-                QString filePath = tempDir->filePath(fileName);
+                QString filePath = mp_tempDir->filePath(fileName);
 
                 if (image.save(filePath, "PNG")) {
                     qDebug() << "Image saved to:" << filePath;
@@ -231,6 +232,31 @@ void MainWindow::setupUI()
             }
             applySettings();
         }
+    });
+
+    // Connect the About  clicked signal
+    connect(aboutButton, &QToolButton::clicked, this, [this](){
+        AboutDialog aDialog;
+        aDialog.setObjectName("aboutDialog");
+        aDialog.exec();
+    });
+
+
+    //icon theme change
+    connect(mp_iconThemeManager, &IconThemeManager::themeChanged, this, [this](){
+
+        newButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::NEW_BUTTON));
+        fileBrowseButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::BROWSE_BUTTON));
+        addFromClipboardButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::CBOARD_BUTTON));
+        exportButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::EXPORT_BUTTON));
+        aboutButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::ABOUT_BUTTON));
+        settingsButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::SETTINGS_BUTTON));
+        //Set icons
+        ui->leftButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::LEFT_BUTTON));
+        ui->rightButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::RIGHT_BUTTON));
+        ui->moveBackButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::MOVEBACK_BUTTON));
+        ui->moveFrontButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::MOVEFRONT_BUTTON));
+        ui->deleteButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::DELETE_BUTTON));
     });
 
     //Show error message.
@@ -305,6 +331,10 @@ void MainWindow::applySettings()
     file.open(QFile::ReadOnly);
     QString styleSheet = QLatin1String(file.readAll());
     qApp->setStyleSheet(styleSheet);
+
+    //icontheme
+    mp_iconThemeManager->setTheme(qApp->property(ICONTHEME.toLocal8Bit().data()).toString());
+
 }
 
 QString MainWindow::currentTheme()

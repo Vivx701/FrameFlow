@@ -47,3 +47,11 @@ QWidget#imageListView{
 #ExportDialog{
     background-color:  #212f3d;
 }
+
+#settingsDialog{
+    background-color:  #212f3d;
+    color: white;
+}
+#settingsDialog QFrame{
+     background-color:  #ecf0f1;
+}

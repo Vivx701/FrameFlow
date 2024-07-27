@@ -1,20 +1,42 @@
 <RCC>
-    <qresource prefix="/Dark/icons">
-        <file>Resources/Icons/dark/arrow-left-bold-box-outline.png</file>
-        <file>Resources/Icons/dark/arrow-right-bold-box-outline.png</file>
-        <file>Resources/Icons/dark/cog.png</file>
-        <file>Resources/Icons/dark/export.png</file>
-        <file>Resources/Icons/dark/image-move-back.png</file>
-        <file>Resources/Icons/dark/image-move.png</file>
-        <file>Resources/Icons/dark/image-remove-outline.png</file>
-        <file>Resources/Icons/dark/information-outline.png</file>
-        <file>Resources/Icons/dark/new-box.png</file>
-        <file>Resources/Icons/dark/plus-box.png</file>
-        <file>Resources/Icons/dark/paste.png</file>
-    </qresource>
     <qresource prefix="/Theme">
         <file>Resources/Theme/Default.qss</file>
         <file>Resources/Theme/Light.qss</file>
         <file>Resources/Theme/Dark.qss</file>
+    </qresource>
+    <qresource prefix="/Icons">
+        <file>Resources/Icons/FrameFlow_500px.png</file>
+        <file>Resources/Icons/FrameFlow_1000px.png</file>
+        <file>Resources/Icons/FrameFlow_2000px.png</file>
+    </qresource>
+    <qresource prefix="/Images">
+        <file>Resources/Images/splashscreen_bg.png</file>
+    </qresource>
+    <qresource prefix="/Icons/Material">
+        <file>Resources/Icons/Material/add_photo.png</file>
+        <file>Resources/Icons/Material/delete.png</file>
+        <file>Resources/Icons/Material/info.png</file>
+        <file>Resources/Icons/Material/left.png</file>
+        <file>Resources/Icons/Material/library_add.png</file>
+        <file>Resources/Icons/Material/paste.png</file>
+        <file>Resources/Icons/Material/right.png</file>
+        <file>Resources/Icons/Material/save.png</file>
+        <file>Resources/Icons/Material/settings.png</file>
+        <file>Resources/Icons/Material/image-move-back.png</file>
+        <file>Resources/Icons/Material/image-move.png</file>
+        <file>Resources/Icons/Material/new.png</file>
+    </qresource>
+    <qresource prefix="/Icons/Default">
+        <file>Resources/Icons/Default/arrow-left-bold-box-outline.png</file>
+        <file>Resources/Icons/Default/arrow-right-bold-box-outline.png</file>
+        <file>Resources/Icons/Default/cog.png</file>
+        <file>Resources/Icons/Default/export.png</file>
+        <file>Resources/Icons/Default/image-move-back.png</file>
+        <file>Resources/Icons/Default/image-move.png</file>
+        <file>Resources/Icons/Default/image-remove-outline.png</file>
+        <file>Resources/Icons/Default/information-outline.png</file>
+        <file>Resources/Icons/Default/new-box.png</file>
+        <file>Resources/Icons/Default/paste.png</file>
+        <file>Resources/Icons/Default/add.png</file>
     </qresource>
 </RCC>

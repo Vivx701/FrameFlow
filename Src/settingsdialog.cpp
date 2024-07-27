@@ -38,7 +38,10 @@ void settingsDialog::fillItems()
     QString themeName = qApp->property(COLORTHEME.toLocal8Bit().data()).toString();
     ui->themeList->setCurrentText(themeName);
 
-
+    //icon list
+    ui->iconThemeList->addItems(QStringList()<<DEFAULTTHEME<<MATERIAL);
+    QString iconTheme =  qApp->property(ICONTHEME.toLocal8Bit().data()).toString();
+    ui->iconThemeList->setCurrentText(iconTheme);
 
 
 }
