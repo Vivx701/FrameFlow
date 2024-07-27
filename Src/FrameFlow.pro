@@ -11,47 +11,47 @@ CONFIG += c++17
 LIBS +=  -lavformat -lavcodec -lavutil -lswscale
 
 SOURCES += \
-    exportdialog.cpp \
-    giffile.cpp \
-    htmlgallery.cpp \
-    iconthememanager.cpp \
-    imagedelegate.cpp \
-    imagemodel.cpp \
-    imagesprite.cpp \
+    Source/exportdialog.cpp \
+    Source/giffile.cpp \
+    Source/htmlgallery.cpp \
+    Source/iconthememanager.cpp \
+    Source/imagedelegate.cpp \
+    Source/imagemodel.cpp \
+    Source/imagesprite.cpp \
     main.cpp \
-    mainwindow.cpp \
-    outputfilefactory.cpp \
-    pdffile.cpp \
-    progressdialog.cpp \
-    settingsdialog.cpp \
-    videofile.cpp
+    Source/mainwindow.cpp \
+    Source/outputfilefactory.cpp \
+    Source/pdffile.cpp \
+    Source/progressdialog.cpp \
+    Source/settingsdialog.cpp \
+    Source/videofile.cpp
 
 HEADERS += \
-    FrameFlowSplashScreen.h \
-    IOutputFile.h \
-    Strings.h \
-    Types.h \
-    aboutDialog.h \
-    exportdialog.h \
-    giffile.h \
-    htmlgallery.h \
-    iconthememanager.h \
-    imagedelegate.h \
-    imagemodel.h \
-    imagesprite.h \
-    mainwindow.h \
-    outputfilefactory.h \
-    pdffile.h \
-    progressdialog.h \
-    settingsdialog.h \
-    videofile.h\
-    gif.h
+    Include/FrameFlowSplashScreen.h \
+    Include/IOutputFile.h \
+    Include/Strings.h \
+    Include/Types.h \
+    Include/aboutDialog.h \
+    Include/exportdialog.h \
+    Include/giffile.h \
+    Include/htmlgallery.h \
+    Include/iconthememanager.h \
+    Include/imagedelegate.h \
+    Include/imagemodel.h \
+    Include/imagesprite.h \
+    Include/mainwindow.h \
+    Include/outputfilefactory.h \
+    Include/pdffile.h \
+    Include/progressdialog.h \
+    Include/settingsdialog.h \
+    Include/videofile.h\
+    Include/gif.h
 
 FORMS += \
-    exportdialog.ui \
-    mainwindow.ui \
-    progressdialog.ui \
-    settingsdialog.ui
+    Forms/exportdialog.ui \
+    Forms/mainwindow.ui \
+    Forms/progressdialog.ui \
+    Forms/settingsdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

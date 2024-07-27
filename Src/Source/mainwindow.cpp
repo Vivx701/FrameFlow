@@ -35,6 +35,12 @@ MainWindow::~MainWindow()
 {
     delete mp_tempDir;
     delete mp_iconThemeManager;
+    delete newButton;
+    delete fileBrowseButton;
+    delete addFromClipboardButton;
+    delete exportButton;
+    delete settingsButton;
+    delete aboutButton;
     delete ui;
 }
 
