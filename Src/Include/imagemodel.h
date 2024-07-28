@@ -9,6 +9,8 @@
 #include <QVector>
 #include <QPair>
 
+
+
 class ImageModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -37,6 +39,37 @@ signals:
 private:
     QList<ImageItem> m_images;
     ImageItem createImageItem(QString path);
+
+
+    // Property names
+    QString FILENAME_PROPERTY = QObject::tr("Filename");
+    QString DIR_PROPERTY = QObject::tr("Dir");
+    QString BYTES_PROPERTY = QObject::tr("Bytes");
+    QString MODIFIED_PROPERTY = QObject::tr("Modified");
+    QString WIDTH_PROPERTY = QObject::tr("Width");
+    QString HEIGHT_PROPERTY = QObject::tr("Height");
+    QString DEPTH_PROPERTY = QObject::tr("Depth");
+    QString FORMAT_PROPERTY = QObject::tr("Format");
+    QString COLOR_COUNT_PROPERTY = QObject::tr("Color Count");
+    QString IS_NULL_PROPERTY = QObject::tr("Is Null");
+    QString BYTES_PER_LINE_PROPERTY = QObject::tr("Bytes Per Line");
+    QString DEVICE_PIXEL_RATIO_PROPERTY = QObject::tr("Device Pixel Ratio");
+    QString DOTS_PER_METER_X_PROPERTY = QObject::tr("DotsPerMeterX");
+    QString DOTS_PER_METER_Y_PROPERTY = QObject::tr("DotsPerMeterY");
+    QString OFFSET_PROPERTY = QObject::tr("Offset");
+    QString IS_GRAYSCALE_PROPERTY = QObject::tr("Is Grayscale");
+    QString HAS_ALPHA_CHANNEL_PROPERTY = QObject::tr("Has Alpha Channel");
+    QString BIT_PLANE_COUNT_PROPERTY = QObject::tr("Bit Plane Count");
+    QString INDEX_PROPERTY = QObject::tr("Index");
+
+    // Unit strings
+     QString PIXELS_UNIT = QObject::tr("px");
+     QString BITS_UNIT = QObject::tr("bits");
+
+     // Yes/No strings
+     QString YES = QObject::tr("Yes");
+     QString NO = QObject::tr("No");
+
 };
 
 #endif // IMAGEMODEL_H

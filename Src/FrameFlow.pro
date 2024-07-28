@@ -30,7 +30,6 @@ SOURCES += \
 HEADERS += \
     Include/FrameFlowSplashScreen.h \
     Include/IOutputFile.h \
-    Include/Strings.h \
     Include/Types.h \
     Include/aboutDialog.h \
     Include/exportdialog.h \

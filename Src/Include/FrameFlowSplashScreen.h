@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QApplication>
+#include <Types.h>
 
 class FrameFlowSplashScreen : public QSplashScreen
 {
@@ -14,7 +15,7 @@ public:
         QVBoxLayout *layout = new QVBoxLayout(this);
 
         // Add app name label
-        QLabel *nameLabel = new QLabel("FrameFlow", this);
+        QLabel *nameLabel = new QLabel(QObject::tr(SOFTWARENAME), this);
         nameLabel->setStyleSheet("font-size: 24pt; font-weight: bold; color: white;");
         nameLabel->setAlignment(Qt::AlignCenter);
 

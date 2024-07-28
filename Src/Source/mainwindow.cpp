@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "Strings.h"
 #include <QToolButton>
 #include <QFileDialog>
 #include <QDir>
@@ -51,44 +50,44 @@ void MainWindow::setupUI()
 {
     // Create and set up the New button
     newButton = new QToolButton(this);
-    newButton->setText(Strings::NEW_BUTTON_TEXT);
+    newButton->setText(NEW_BUTTON_TEXT);
     newButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::NEW_BUTTON));
-    newButton->setToolTip(Strings::NEW_BUTTON_TOOLTIP);
+    newButton->setToolTip(NEW_BUTTON_TOOLTIP);
     newButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Browse button
     fileBrowseButton = new QToolButton(this);
-    fileBrowseButton->setText(Strings::BROWSE_BUTTON_TEXT);
+    fileBrowseButton->setText(BROWSE_BUTTON_TEXT);
     fileBrowseButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::BROWSE_BUTTON));
-    fileBrowseButton->setToolTip(Strings::BROWSE_BUTTON_TOOLTIP);
+    fileBrowseButton->setToolTip(BROWSE_BUTTON_TOOLTIP);
     fileBrowseButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Browse button
     addFromClipboardButton = new QToolButton(this);
-    addFromClipboardButton->setText(Strings::CBOARD_BUTTON_TEXT);
+    addFromClipboardButton->setText(CBOARD_BUTTON_TEXT);
     addFromClipboardButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::CBOARD_BUTTON));
-    addFromClipboardButton->setToolTip(Strings::CLIPBRD_BUTTON_TOOLTIP);
+    addFromClipboardButton->setToolTip(CLIPBRD_BUTTON_TOOLTIP);
     addFromClipboardButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Export button
     exportButton = new QToolButton(this);
-    exportButton->setText(Strings::EXPORT_BUTTON_TEXT);
+    exportButton->setText(EXPORT_BUTTON_TEXT);
     exportButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::EXPORT_BUTTON));
-    exportButton->setToolTip(Strings::EXPORT_BUTTON_TOOLTIP);
+    exportButton->setToolTip(EXPORT_BUTTON_TOOLTIP);
     exportButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the Settings button
     settingsButton = new QToolButton(this);
-    settingsButton->setText(Strings::SETTINGS_BUTTON_TEXT);
+    settingsButton->setText(SETTINGS_BUTTON_TEXT);
     settingsButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::SETTINGS_BUTTON));
-    settingsButton->setToolTip(Strings::SETTINGS_BUTTON_TOOLTIP);
+    settingsButton->setToolTip(SETTINGS_BUTTON_TOOLTIP);
     settingsButton->setFixedSize(QSize(75, 50));
 
     // Create and set up the About button
     aboutButton = new QToolButton(this);
-    aboutButton->setText(Strings::ABOUT_BUTTON_TEXT);
+    aboutButton->setText(ABOUT_BUTTON_TEXT);
     aboutButton->setIcon(mp_iconThemeManager->getIcon(ICONTYPE::ABOUT_BUTTON));
-    aboutButton->setToolTip(Strings::ABOUT_BUTTON_TOOLTIP);
+    aboutButton->setToolTip(ABOUT_BUTTON_TOOLTIP);
     aboutButton->setFixedSize(QSize(75, 50));
 
     // Add the buttons to the toolbar
@@ -141,18 +140,14 @@ void MainWindow::setupUI()
             secondText->setReadOnly(true);
             ui->propertiesLayout->addRow(property.first, secondText);
 
-            if(property.first == Strings::MODIFIED_PROPERTY)
-            {
-                ui->propertiesLayout->addItem(new QSpacerItem(50, 30, QSizePolicy::Expanding, QSizePolicy::Fixed));
-            }
         }
     });
 
     // Connect the New button clicked signal
     connect(newButton, &QToolButton::clicked, this, [this](){
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(this, Strings::CONFIRM_NEW_TITLE,
-                                      Strings::CONFIRM_NEW_MESSAGE,
+        reply = QMessageBox::question(this, CONFIRM_NEW_TITLE,
+                                      CONFIRM_NEW_MESSAGE,
                                       QMessageBox::Yes|QMessageBox::No);
 
         if (reply == QMessageBox::Yes) {
@@ -162,8 +157,8 @@ void MainWindow::setupUI()
 
     // Connect the Browse button clicked signal
     connect(fileBrowseButton, &QToolButton::clicked, this, [this](){
-        QStringList fileNames = QFileDialog::getOpenFileNames(this, Strings::OPEN_IMAGE_DIALOG_TITLE, QDir::homePath(),
-                                                              Strings::IMAGE_FILES_FILTER);
+        QStringList fileNames = QFileDialog::getOpenFileNames(this, OPEN_IMAGE_DIALOG_TITLE, QDir::homePath(),
+                                                              IMAGE_FILES_FILTER);
 
         for(QString name: fileNames)
         {
@@ -176,7 +171,7 @@ void MainWindow::setupUI()
 
         if(m_model.rowCount() < 1)
         {
-            emit showErrorMessage(Strings::NO_IMAGES_TITLE, Strings::NO_IMAGES_MSG, QMessageBox::Information);
+            emit showErrorMessage(NO_IMAGES_TITLE, NO_IMAGES_MSG, QMessageBox::Information);
             return;
         }
 
@@ -214,13 +209,13 @@ void MainWindow::setupUI()
                      m_model.addImage(filePath);
 
                 } else {
-                    emit showErrorMessage(Strings::FAILED_CBOARD_TITLE, Strings::FAILED_CBOARD_MSG, QMessageBox::Critical);
+                    emit showErrorMessage(FAILED_CBOARD_TITLE, FAILED_CBOARD_MSG, QMessageBox::Critical);
                 }
             }
         }
         else
         {
-            emit showErrorMessage(Strings::NO_CBOARD_TITLE, Strings::NO_CBOARD_MSG, QMessageBox::Information);
+            emit showErrorMessage(NO_CBOARD_TITLE, NO_CBOARD_MSG, QMessageBox::Information);
         }
 
     });
@@ -319,12 +314,17 @@ void MainWindow::applySettings()
 {
     QSettings settings;
     // Read a value
-    QString lang = settings.value(LANGUAGE, "English").toString();
+    QString lang = settings.value(LANGUAGE, "en_US").toString();
     QString icontheme = settings.value(ICONTHEME, "Default").toString();
     QString colortheme = settings.value(COLORTHEME, "Default").toString();
     QString fontfamily = settings.value(FONT, "Monospace").toString();
 
-    qApp->setProperty(LANGUAGE.toLocal8Bit().data(), lang);
+    if(qApp->property(LANGUAGE.toLocal8Bit().data()).toString() != lang)
+    {
+        qApp->setProperty(LANGUAGE.toLocal8Bit().data(), lang);
+        emit showErrorMessage("", RESTART_MESSAGE, QMessageBox::Warning);
+    }
+
     qApp->setProperty(ICONTHEME.toLocal8Bit().data(), icontheme);
     qApp->setProperty(COLORTHEME.toLocal8Bit().data(), colortheme);
     qApp->setProperty(FONT.toLocal8Bit().data(), fontfamily);
@@ -341,12 +341,37 @@ void MainWindow::applySettings()
     //icontheme
     mp_iconThemeManager->setTheme(qApp->property(ICONTHEME.toLocal8Bit().data()).toString());
 
+    //change language
+    QLocale locale(qApp->property(LANGUAGE.toLocal8Bit().data()).toString());
+    setLanguage(locale.language());
+
 }
 
 QString MainWindow::currentTheme()
 {
     QString themeName = qApp->property(COLORTHEME.toLocal8Bit().data()).toString();
     return ThemeMap[themeName];
+}
+
+void MainWindow::setLanguage(const QLocale::Language language)
+{
+
+    QString langFile = langMap[QLocale::English].first;
+    if(!langMap.contains(language))
+    {
+        qDebug()<<"Translation not found for this language";
+    }
+    else
+    {
+        langFile = langMap[language].first;
+    }
+    // Load the translation file
+    if (m_translator.load(langFile))
+    {
+        qApp->installTranslator(&m_translator);
+    }
+    ui->retranslateUi(this);
+
 }
 
 

@@ -6,45 +6,45 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
-#include "Strings.h"
+#include <Types.h>
 
 class AboutDialog : public QDialog
 {
 public:
     AboutDialog(QWidget *parent = nullptr) : QDialog(parent)
     {
-        setWindowTitle(Strings::ABOUT_DIALOG_TITLE);
+        setWindowTitle(ABOUT_DIALOG_TITLE);
 
         QVBoxLayout *layout = new QVBoxLayout(this);
 
-        QLabel *titleLabel = new QLabel(Strings::APP_NAME);
+        QLabel *titleLabel = new QLabel(APP_NAME);
         titleLabel->setAlignment(Qt::AlignCenter);
         titleLabel->setStyleSheet("font-size: 18pt; font-weight: bold;");
 
-        QLabel *versionLabel = new QLabel(Strings::APP_VERSION);
+        QLabel *versionLabel = new QLabel(APP_VERSION);
         versionLabel->setAlignment(Qt::AlignCenter);
 
-        QLabel *descriptionLabel = new QLabel(Strings::APP_DESCRIPTION);
+        QLabel *descriptionLabel = new QLabel(APP_DESCRIPTION);
         descriptionLabel->setWordWrap(true);
         descriptionLabel->setAlignment(Qt::AlignCenter);
 
-        QLabel *copyrightLabel = new QLabel(Strings::APP_COPYRIGHT);
+        QLabel *copyrightLabel = new QLabel(APP_COPYRIGHT);
         copyrightLabel->setAlignment(Qt::AlignCenter);
 
-        QLabel *ffmpegLabel = new QLabel(Strings::FFMPEG_REFERENCE);
+        QLabel *ffmpegLabel = new QLabel(FFMPEG_REFERENCE);
         ffmpegLabel->setAlignment(Qt::AlignCenter);
 
-        QLabel *gifhLabel = new QLabel(Strings::GIFH_REFERENCE);
+        QLabel *gifhLabel = new QLabel(GIFH_REFERENCE);
         gifhLabel->setAlignment(Qt::AlignCenter);
 
-        QLabel *gifhLinkLabel = new QLabel(QString("<a href='%1'>%1</a>").arg(Strings::GIFH_LINK));
+        QLabel *gifhLinkLabel = new QLabel(QString("<a href='%1'>%1</a>").arg(GIFH_LINK));
         gifhLinkLabel->setAlignment(Qt::AlignCenter);
         gifhLinkLabel->setOpenExternalLinks(true);
 
-        QPushButton *qtVersionButton = new QPushButton(Strings::QT_VERSION_BUTTON_TEXT);
+        QPushButton *qtVersionButton = new QPushButton(QT_VERSION_BUTTON_TEXT);
         connect(qtVersionButton, &QPushButton::clicked, this, &AboutDialog::showQtVersion);
 
-        QPushButton *closeButton = new QPushButton(Strings::CLOSE_BUTTON_TEXT);
+        QPushButton *closeButton = new QPushButton(CLOSE_BUTTON_TEXT);
         connect(closeButton, &QPushButton::clicked, this, &QDialog::accept);
 
         layout->addWidget(titleLabel);
@@ -68,8 +68,21 @@ private:
     void showQtVersion()
     {
         QString qtVersion = qVersion();
-        QMessageBox::aboutQt(this, Strings::QT_VERSION_DIALOG_TITLE);
+        QMessageBox::aboutQt(this, QT_VERSION_DIALOG_TITLE);
     }
+
+    QString ABOUT_DIALOG_TITLE = QObject::tr("About FrameFlow");
+    QString APP_NAME = QObject::tr(SOFTWARENAME);
+    QString APP_VERSION = QObject::tr("Version 1.0");
+    QString APP_DESCRIPTION = QObject::tr("FrameFlow is a versatile application designed to transform series of images into various multimedia formats. With FrameFlow, you can easily create videos, PDFs, sprite images, GIFs, and HTML presentations from your image sequences. Whether you're a designer, animator, or content creator, FrameFlow streamlines your workflow for efficient and creative visual storytelling.");
+    QString APP_COPYRIGHT = QObject::tr("Copyright © 2024 vivx_developer (https://github.com/Vivx701/FrameFlow)");
+    QString FFMPEG_REFERENCE = QObject::tr("This application uses FFmpeg for video processing.");
+    QString GIFH_REFERENCE = QObject::tr("GIF encoding powered by gif-h");
+    QString GIFH_LINK = QObject::tr("https://github.com/charlietangora/gif-h");
+    QString QT_VERSION_BUTTON_TEXT = QObject::tr("Show Qt Version");
+    QString CLOSE_BUTTON_TEXT = QObject::tr("Close");
+    QString QT_VERSION_DIALOG_TITLE = QObject::tr("Qt Version");
+    QString QT_VERSION_MESSAGE = QObject::tr("This application is using Qt version %1");
 
 };
 #endif // ABOUTDIALOG_H

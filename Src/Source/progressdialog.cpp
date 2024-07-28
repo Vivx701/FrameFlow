@@ -13,7 +13,7 @@ ProgressDialog::ProgressDialog(ImageList& images, QWidget *parent) :
 
 void ProgressDialog::setFilename(QString path)
 {
-    ui->filename->setText(Strings::SAVING_MESSAGE+": "+path);
+    ui->filename->setText(SAVING_MESSAGE+": "+path);
 }
 
 void ProgressDialog::setAttributes(Attributes &attrib, OutputType type)

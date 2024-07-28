@@ -21,15 +21,21 @@ void settingsDialog::fillItems()
 
 
     //Add Languages
-    ui->languageComboBox->addItem("English", QFontDatabase::Any);
-    ui->languageComboBox->addItem("Malayalam", QFontDatabase::Malayalam);
+    for(QLocale::Language lang: langMap.keys())
+    {
+        QLocale locale(lang);
+        ui->languageComboBox->addItem(QLocale::languageToString(lang), locale);
+    }
     auto langSelector = [this](){
         ui->fontList->clear();
-        ui->fontList->addItems(QFontDatabase::families(ui->languageComboBox->currentData().value<QFontDatabase::WritingSystem>()));
+        QLocale locale = ui->languageComboBox->currentData().value<QLocale>();
+        ui->fontList->addItems(QFontDatabase::families(langMap[locale.language()].second));
     };
     connect(ui->languageComboBox, &QComboBox::currentTextChanged, this, langSelector);
     langSelector();
-    ui->languageComboBox->setCurrentText(qApp->property(LANGUAGE.toLocal8Bit().data()).toString());
+
+    QLocale locale(qApp->property(LANGUAGE.toLocal8Bit().data()).toString());
+    ui->languageComboBox->setCurrentText(QLocale::languageToString(locale.language()));
     ui->fontList->setCurrentText(qApp->property(FONT.toLocal8Bit().data()).toString());
 
 
@@ -49,7 +55,7 @@ void settingsDialog::fillItems()
 const QMap<QString, QString> settingsDialog::Settings() const
 {
     QMap<QString, QString> settings;
-    settings[LANGUAGE]  = ui->languageComboBox->currentText();
+    settings[LANGUAGE]  = ui->languageComboBox->currentData().value<QLocale>().name();
     settings[ICONTHEME] = ui->iconThemeList->currentText();
     settings[COLORTHEME] = ui->themeList->currentText();
     settings[FONT] = ui->fontList->currentText();

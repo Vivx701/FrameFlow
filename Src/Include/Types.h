@@ -17,7 +17,8 @@
 #include <QPagedPaintDevice>
 #include <QImage>
 #include <QFileInfo>
-
+#include <QLocale>
+#include <QFontDatabase>
 
 /// @brief Name of the software
 #define SOFTWARENAME "FrameFlow"
@@ -209,4 +210,8 @@ const QMap<QString, QString> ThemeMap = {
                                     {"Dark", ":/Theme/Resources/Theme/Dark.qss"}
                                };
 
+const QMap<QLocale::Language, QPair<QString, QFontDatabase::WritingSystem>> langMap = {
+                                    {QLocale::English, {":/Translations/Resources/Translations/frameflow_en.qm", QFontDatabase::Any}},
+                                    {QLocale::Malayalam,{":/Translations/Resources/Translations/frameflow_ml.qm", QFontDatabase::Malayalam}},
+                                };
 #endif // TYPES_H

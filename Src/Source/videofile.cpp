@@ -203,6 +203,7 @@ void VideoFile::save()
     avio_closep(&formatContext->pb);
     avformat_free_context(formatContext);
     emit progressChanged(m_Images.count()+1, m_Images.count()+1);
+    qDebug()<<"video saved";
 }
 
 

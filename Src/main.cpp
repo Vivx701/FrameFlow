@@ -4,8 +4,12 @@
 #include <QSettings>
 #include <QFont>
 #include <QTimer>
+#include <QTranslator>
+#include <QLocale>
+#include <Types.h>
 #include <FrameFlowSplashScreen.h>
 #include "mainwindow.h"
+
 
 
 int main(int argc, char *argv[])
@@ -16,13 +20,17 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(SOFTWARENAME);
     QCoreApplication::setApplicationVersion("1.0");
 
-    // Load and apply the style sheet
-    QFile file("");
-    if (file.open(QFile::ReadOnly | QFile::Text)) {
-        QTextStream stream(&file);
-        a.setStyleSheet(stream.readAll());
+    QSettings settings;
+    QString lang = settings.value(LANGUAGE, "en_US").toString();
+    QLocale locale(lang);
+    QString langFile = langMap[locale.language()].first;
+    QTranslator  translator;
+    // Load the translation file
+    if (translator.load(langFile))
+    {
+        qApp->setProperty(LANGUAGE.toLocal8Bit().data(), lang);
+        qApp->installTranslator(&translator);
     }
-
     // Create a pixmap for the splash screen background
     QPixmap backgroundPixmap(":/Images/Resources/Images/splashscreen_bg.png");
 
@@ -31,11 +39,11 @@ int main(int argc, char *argv[])
     splash.show();
 
     // Simulate some loading time
-    QTimer::singleShot(5000, &splash, &QSplashScreen::close);
+    QTimer::singleShot(3000, &splash, &QSplashScreen::close);
 
     MainWindow w;
     w.applySettings();
-    w.setWindowTitle(SOFTWARENAME);
+    w.setWindowTitle(QObject::tr(SOFTWARENAME));
     w.showMaximized();
     return a.exec();
 }

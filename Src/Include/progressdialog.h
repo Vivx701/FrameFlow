@@ -2,7 +2,6 @@
 #define PROGRESSDIALOG_H
 
 #include <QDialog>
-#include <Strings.h>
 #include <Types.h>
 #include <QThread>
 #include "outputfilefactory.h"
@@ -60,7 +59,8 @@ private:
     Ui::ProgressDialog *ui;
     ImageList &m_images;
     RenderingThread *rThread=nullptr;
-
+    //Strings
+    QString SAVING_MESSAGE = QObject::tr("Saving");
 };
 
 #endif // PROGRESSDIALOG_H
