@@ -113,6 +113,7 @@ else()
     install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/Resources/Theme/Dark.qss
         ${CMAKE_CURRENT_BINARY_DIR}/Resources/Theme/Light.qss
+        ${CMAKE_CURRENT_BINARY_DIR}/Resources/Theme/Default.qss
         DESTINATION share/FrameFlow/Resources/Theme
     )
 endif()

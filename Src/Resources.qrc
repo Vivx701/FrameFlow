@@ -39,4 +39,8 @@
         <file>Resources/Icons/Default/paste.png</file>
         <file>Resources/Icons/Default/add.png</file>
     </qresource>
+    <qresource prefix="/Translations">
+        <file>Resources/Translations/frameflow_en.qm</file>
+        <file>Resources/Translations/frameflow_ml.qm</file>
+    </qresource>
 </RCC>

@@ -8,6 +8,7 @@ CONFIG += c++17
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += Include
 LIBS +=  -lavformat -lavcodec -lavutil -lswscale
 
 SOURCES += \
@@ -61,6 +62,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     Resources.qrc
 
+TRANSLATIONS = \
+    Translations/frameflow_en.ts \
+    Translations/frameflow_ml.ts \
+
 DISTFILES += \
     Resources/Theme/Dark.qss \
-    Resources/Theme/Light.qss
+    Resources/Theme/Light.qss \
+    Resources/Theme/Default.qss
