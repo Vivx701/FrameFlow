@@ -46,6 +46,9 @@ void ProgressDialog::onProgressChanged(int max, int value)
     if(max == value)
     {
         ui->closeButton->setEnabled(true);
+#ifdef UNIT_TESTING
+        this->accept();
+#endif
     }
 
 }

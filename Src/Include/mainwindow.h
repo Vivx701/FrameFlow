@@ -13,7 +13,9 @@
 #include <QTranslator>
 #include <iconthememanager.h>
 
-
+#ifdef UNIT_TESTING
+class TestFrameFlow;
+#endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -93,6 +95,10 @@ private:
 
     QString NO_IMAGES_TITLE = QObject::tr("No Images Added");
     QString NO_IMAGES_MSG = QObject::tr("Please add at least one image before proceeding");
+
+    #ifdef UNIT_TESTING
+    friend class TestFrameFlow;
+    #endif
 
 };
 #endif // MAINWINDOW_H

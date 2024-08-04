@@ -11,7 +11,7 @@
 #include "mainwindow.h"
 
 
-
+#ifndef UNIT_TESTING
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -47,3 +47,4 @@ int main(int argc, char *argv[])
     w.showMaximized();
     return a.exec();
 }
+#endif
