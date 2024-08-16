@@ -4,18 +4,21 @@
 
 FrameFlow is a versatile Qt C++ application designed to transform series of images into various multimedia formats. With FrameFlow, you can easily create videos, PDFs, sprite images, GIFs, and HTML presentations from your image sequences. Whether you're a designer, animator, or content creator, FrameFlow streamlines your workflow for efficient and creative visual storytelling.
 
-![](https://github.com/Vivx701/FrameFlow/blob/Development/Screenshots/mainwindow.png =1280x720)
 
+<img src="https://github.com/Vivx701/FrameFlow/blob/Development/Screenshots/mainwindow.png" width="1280" height="720" alt="FrameFlow mainwindow">
 
 ## Features
 
-![FrameFlow Features](path/to/features-screenshot.png)
+![FrameFlow Features](Screenshots/export.png)
 
 - **Multiple Output Formats**: Convert image sequences to videos, PDFs, sprite images, GIFs, and HTML presentations.
 - **Batch Processing**: Handle multiple image series efficiently.
 - **Customizable Settings**: Adjust frame rates, resolutions, and other parameters to suit your needs.
 - **User-Friendly Interface**: Intuitive Qt-based design for easy navigation and operation.
-- **Cross-Platform Compatibility**: Works on Windows, macOS, and Linux.
+- **Cross-Platform Compatibility**: Works on Windows and Linux.
+
+
+![FrameFlow Settings](Screenshots/settings.png)
 
 ## Installation
 
