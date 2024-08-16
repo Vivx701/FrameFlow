@@ -1,0 +1,68 @@
+/* dark.qss */
+#MainWindow {
+    background-color: #31363F;
+}
+
+#SideBar {
+    background-color:  #EEEEEE;
+}
+
+QToolButton {
+    background-color:  #ecf0f1;
+    color: white;
+}
+
+QToolButton:hover {
+    background-color:  #fbfcfc;
+}
+
+#contolFrame {
+    background-color:   #31363F;
+    color: #ffffff;
+}
+
+#leftButton, #rightButton, #deleteButton, #moveBackButton, #moveFrontButton {
+    background-color:   #ecf0f1;
+    color: white;
+    border: 0px solid #2980b9;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+#leftButton:hover, #rightButton:hover, #deleteButton:hover, #moveBackButton:hover, #moveFrontButton:hover {
+    background-color:  #fdfefe;
+}
+
+QWidget#details QLabel{
+    font-size: 15px;
+    color: #E2DFD0;
+}
+
+QWidget#details QLineEdit{
+    font-size: 15px;
+    color: #31363F;
+}
+
+QWidget#imageListView{
+    background-color:  #566573;
+}
+
+#ExportDialog{
+    background-color:  #31363F;
+}
+
+#settingsDialog{
+    background-color:  #31363F;
+    color: white;
+}
+#settingsDialog QLabel{
+    color: white;
+}
+
+#aboutDialog {
+    background-color:  #31363F;
+    color: white;
+}
+#aboutDialog QLabel{
+    color: white;
+}

@@ -3,14 +3,14 @@
 
 #include <QPdfWriter>
 #include <QPainter>
-
+#include <Types.h>
 #include "IOutputFile.h"
 
 class PdfFile : public IOutputFile
 {
 public:
     explicit PdfFile(QObject *parent=nullptr);
-    void save(const QString& filePath) override;
+    void save() override;
 
 
 };
