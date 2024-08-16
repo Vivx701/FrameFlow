@@ -131,6 +131,32 @@ void TestFrameFlow::test_writeFile()
     mainWindow->writeFile(testAttrib, OutputType::PDF);
     // Verify that the file was created
     QVERIFY(QFile::exists("test_output.pdf"));
+
+
+//    //Sprite
+    ImageSpriteAttributes sAttrib;
+    sAttrib.filePath = "test_output.png";
+    mainWindow->writeFile(sAttrib, OutputType::SPRITE);
+    QVERIFY(QFile::exists(sAttrib.filePath));
+
+    //Video
+    VideoAttributes vAttrib;
+    vAttrib.filePath = "test_output.mp4";
+    mainWindow->writeFile(vAttrib, OutputType::VIDEO);
+    QVERIFY(QFile::exists(vAttrib.filePath));
+
+    //Gif
+    GifAttributes gAttrib;
+    gAttrib.filePath = "test_output.gif";
+    mainWindow->writeFile(gAttrib, OutputType::GIF);
+    QVERIFY(QFile::exists(gAttrib.filePath));
+
+
+    //Gif
+    HTMLGalleryAttributes hAttrib;
+    hAttrib.filePath = "test_output";
+    mainWindow->writeFile(hAttrib, OutputType::HTMLGALLERY);
+    QVERIFY(QFile::exists(hAttrib.filePath+"/index.html"));
 }
 
 

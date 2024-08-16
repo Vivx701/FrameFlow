@@ -60,6 +60,7 @@ void ImageSprite::save()
     }else{
         qDebug()<<"Image writing is failed";
     }
+    emit progressChanged(m_Images.count(), m_Images.count());
 }
 
 /**
@@ -101,7 +102,7 @@ QImage ImageSprite::horizontalStitch(QColor bgColor)
             }
         }
         drawingIndex += img.width();
-        emit progressChanged(m_Images.count(), i+1);
+        emit progressChanged(m_Images.count(), i);
     }
 
     return finalImage;
@@ -145,7 +146,7 @@ QImage ImageSprite::verticalStitch(QColor bgColor)
             }
         }
         drawingIndex += img.height();
-        emit progressChanged(m_Images.count(), i+1);
+        emit progressChanged(m_Images.count(), i);
     }
 
     return finalImage;

@@ -19,6 +19,12 @@ void ProgressDialog::setFilename(QString path)
 void ProgressDialog::setAttributes(Attributes &attrib, OutputType type)
 {
     rThread = new RenderingThread(m_images, attrib, type, this);
+    connect(rThread, &QThread::finished, [this](){
+        #ifdef UNIT_TESTING
+                this->accept();
+        #endif
+
+    });
 
 }
 
@@ -46,9 +52,6 @@ void ProgressDialog::onProgressChanged(int max, int value)
     if(max == value)
     {
         ui->closeButton->setEnabled(true);
-#ifdef UNIT_TESTING
-        this->accept();
-#endif
     }
 
 }
