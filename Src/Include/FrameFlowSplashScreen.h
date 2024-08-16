@@ -26,7 +26,7 @@ public:
         iconLabel->setAlignment(Qt::AlignCenter);
 
         // Add version label
-        QLabel *versionLabel = new QLabel("Version 1.0", this);
+        QLabel *versionLabel = new QLabel("Version "+QString::number(VERSION), this);
         versionLabel->setStyleSheet("font-size: 12pt; color: white;");
         versionLabel->setAlignment(Qt::AlignCenter);
 

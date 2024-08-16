@@ -23,7 +23,7 @@
 /// @brief Name of the software
 #define SOFTWARENAME "FrameFlow"
 /// @brief Version number of the software
-#define VERSION 1.0
+#define VERSION 0.8
 
 /**
  * @struct Attributes

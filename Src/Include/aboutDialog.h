@@ -73,7 +73,7 @@ private:
 
     QString ABOUT_DIALOG_TITLE = QObject::tr("About FrameFlow");
     QString APP_NAME = QObject::tr(SOFTWARENAME);
-    QString APP_VERSION = QObject::tr("Version 1.0");
+    QString APP_VERSION = QObject::tr("Version")+" "+QString::number(VERSION);
     QString APP_DESCRIPTION = QObject::tr("FrameFlow is a versatile application designed to transform series of images into various multimedia formats. With FrameFlow, you can easily create videos, PDFs, sprite images, GIFs, and HTML presentations from your image sequences. Whether you're a designer, animator, or content creator, FrameFlow streamlines your workflow for efficient and creative visual storytelling.");
     QString APP_COPYRIGHT = QObject::tr("Copyright © 2024 vivx_developer (https://github.com/Vivx701/FrameFlow)");
     QString FFMPEG_REFERENCE = QObject::tr("This application uses FFmpeg for video processing.");

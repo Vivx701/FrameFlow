@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     qputenv("QT_IMAGEIO_MAXALLOC", "1024");
 
     QCoreApplication::setApplicationName(SOFTWARENAME);
-    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setApplicationVersion(QString::number(VERSION));
 
     QSettings settings;
     QString lang = settings.value(LANGUAGE, "en_US").toString();
