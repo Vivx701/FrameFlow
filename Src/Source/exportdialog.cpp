@@ -52,11 +52,11 @@ QString ExportDialog::currentSavePath()
     QString extension = "";
     if(tabName == "pdf")
     {
-        extension += "pdf";
+        extension += ".pdf";
     }
     else if(tabName == "sprite")
     {
-        extension +=  ui->spriteFormat->currentText().toLower();
+        extension +=  "."+ui->spriteFormat->currentText().toLower();
     }
     else if(tabName == "video")
     {
