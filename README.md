@@ -34,9 +34,10 @@ FrameFlow is a versatile Qt C++ application designed to transform series of imag
 
 Here are some examples of what you can create with FrameFlow:
 
-| Video | PDF | GIF |
-|:-----:|:---:|:---:|
-| ![Video Example](path/to/video-example.png) | ![PDF Example](path/to/pdf-example.png) | ![GIF Example](path/to/gif-example.gif) |
+| Video | PDF | GIF | HTML Photo gallery  |
+|:-----:|:---:|:---:| :-----------------: |
+| ![Video Example](Output/output.mp4) | ![PDF Example](Output/output.pdf) | ![GIF Example](Output/output.gif) | ![HTML Example](Output/html_gallery.zip) |
+
 
 ## Requirements
 
