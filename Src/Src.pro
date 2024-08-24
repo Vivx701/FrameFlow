@@ -70,17 +70,20 @@ DISTFILES += \
     Resources/Theme/Light.qss \
     Resources/Theme/Default.qss
 
+# Specify the target name
+TARGET = FrameFlow
+
 # Specify the output directory
-DESTDIR = $$OUT_PWD/../bin
+DESTDIR = $$OUT_PWD/../Build/bin
 
 # Specify where to put object files
-OBJECTS_DIR = $$OUT_PWD/../build/obj
+OBJECTS_DIR = $$OUT_PWD/../Build/obj
 
 # Specify where to put moc files
-MOC_DIR = $$OUT_PWD/../build/moc
+MOC_DIR = $$OUT_PWD/../Build/moc
 
 # Specify where to put ui files
-UI_DIR = $$OUT_PWD/../build/ui
+UI_DIR = $$OUT_PWD/../Build/ui
 
 # Specify where to put rcc files
-RCC_DIR = $$OUT_PWD/../build/rcc
+RCC_DIR = $$OUT_PWD/../Build/rcc
