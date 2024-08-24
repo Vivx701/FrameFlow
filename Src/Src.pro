@@ -69,3 +69,18 @@ DISTFILES += \
     Resources/Theme/Dark.qss \
     Resources/Theme/Light.qss \
     Resources/Theme/Default.qss
+
+# Specify the output directory
+DESTDIR = $$OUT_PWD/../bin
+
+# Specify where to put object files
+OBJECTS_DIR = $$OUT_PWD/../build/obj
+
+# Specify where to put moc files
+MOC_DIR = $$OUT_PWD/../build/moc
+
+# Specify where to put ui files
+UI_DIR = $$OUT_PWD/../build/ui
+
+# Specify where to put rcc files
+RCC_DIR = $$OUT_PWD/../build/rcc

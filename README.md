@@ -15,7 +15,7 @@ FrameFlow is a versatile Qt C++ application designed to transform series of imag
 - **Batch Processing**: Handle multiple image series efficiently.
 - **Customizable Settings**: Adjust frame rates, resolutions, and other parameters to suit your needs.
 - **User-Friendly Interface**: Intuitive Qt-based design for easy navigation and operation.
-- **Cross-Platform Compatibility**: Works on Windows and Linux.
+
 
 
 ![FrameFlow Settings](Screenshots/settings.png)
@@ -36,18 +36,17 @@ Here are some examples of what you can create with FrameFlow:
 
 | Video | PDF | GIF | HTML Photo gallery  |
 |:-----:|:---:|:---:| :-----------------: |
-| ![Video Example](Output/output.mp4) | ![PDF Example](Output/output.pdf) | ![GIF Example](Output/output.gif) | ![HTML Example](Output/html_gallery.zip) |
+| ![Video Example](https://app.box.com/s/ievm3h1ypzzw8yon4o64fgndh0acliu1) | ![PDF Example](https://app.box.com/s/b89k3hgyyoihg82x9kgjk6vxwn1lqexl)| ![GIF Example](https://app.box.com/s/lefd4na0w5jqwgfo6lp8lnfwy00kq40o) | ![HTML Example](https://app.box.com/s/2bxxzcsb5yh2hn2o7rzzpzd9enm1lxdn) |
 
 
 ## Requirements
 
-- Qt (version X.X or higher)
+- Qt (version 6.0 or higher)
 - FFmpeg (for video processing)
-- (Any other specific requirements for your application)
-
-## Contributing
-
-We welcome contributions to FrameFlow! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+    * libavformat
+    * libavcodec
+    * libavutil
+    * libswscale
 
 ## License
 
