@@ -57,6 +57,7 @@ This project is licensed under the GNU General Public License (GPL). See the [LI
 - This application uses FFmpeg for video processing.
 - GIF encoding powered by [gif-h](https://github.com/charlietangora/gif-h)
 - Thanks to all the contributors who have helped shape FrameFlow.
+- Material Icons by Google (https://fonts.google.com/icons) used under Apache License 2.0.
 - Special thanks to the open-source communities of the libraries we use.
 
 ## Copyright
