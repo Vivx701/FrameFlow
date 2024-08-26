@@ -4,12 +4,13 @@
 
 FrameFlow is a versatile Qt C++ application designed to transform series of images into various multimedia formats. With FrameFlow, you can easily create videos, PDFs, sprite images, GIFs, and HTML presentations from your image sequences. Whether you're a designer, animator, or content creator, FrameFlow streamlines your workflow for efficient and creative visual storytelling.
 
+## Screenshots
 
 <img src="https://github.com/Vivx701/FrameFlow/blob/Development/Screenshots/mainwindow.png" width="640" height="360" alt="FrameFlow mainwindow">
 
-## Features
-
 ![FrameFlow Features](Screenshots/export.png)
+
+![FrameFlow Settings](Screenshots/settings.png)
 
 # What is Image Sequencing?
 
@@ -17,9 +18,6 @@ Image sequencing is the process of arranging multiple images in a specific order
 
 FrameFlow simplify the image sequencing process by providing user-friendly interfaces to import, arrange, and export image sequences. 
 Convert image sequences to videos, PDFs, sprite images, GIFs, and HTML presentations.
-
-
-![FrameFlow Settings](Screenshots/settings.png)
 
 ## Installation
 
