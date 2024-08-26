@@ -7,7 +7,7 @@
     <qresource prefix="/Icons">
         <file>Resources/Icons/FrameFlow_500px.png</file>
         <file>Resources/Icons/FrameFlow_1000px.png</file>
-        <file>Resources/Icons/FrameFlow_2000px.png</file>
+        <file>Resources/Icons/FrameFlow_100px.png</file>
     </qresource>
     <qresource prefix="/Images">
         <file>Resources/Images/splashscreen_bg.png</file>

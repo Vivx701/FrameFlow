@@ -41,6 +41,9 @@ public:
         gifhLinkLabel->setAlignment(Qt::AlignCenter);
         gifhLinkLabel->setOpenExternalLinks(true);
 
+        QLabel *iconLabel = new QLabel(ICON_REFERENCE);
+        iconLabel->setAlignment(Qt::AlignCenter);
+
         QPushButton *qtVersionButton = new QPushButton(QT_VERSION_BUTTON_TEXT);
         connect(qtVersionButton, &QPushButton::clicked, this, &AboutDialog::showQtVersion);
 
@@ -57,6 +60,7 @@ public:
         layout->addWidget(ffmpegLabel);
         layout->addWidget(gifhLabel);
         layout->addWidget(gifhLinkLabel);
+        layout->addWidget(iconLabel);
         layout->addSpacing(20);
         layout->addWidget(qtVersionButton);
         layout->addWidget(closeButton);
@@ -79,6 +83,7 @@ private:
     QString FFMPEG_REFERENCE = QObject::tr("This application uses FFmpeg for video processing.");
     QString GIFH_REFERENCE = QObject::tr("GIF encoding powered by gif-h");
     QString GIFH_LINK = QObject::tr("https://github.com/charlietangora/gif-h");
+    QString ICON_REFERENCE = QObject::tr("Material Icons by Google (https://fonts.google.com/icons) used under Apache License 2.0.");
     QString QT_VERSION_BUTTON_TEXT = QObject::tr("Show Qt Version");
     QString CLOSE_BUTTON_TEXT = QObject::tr("Close");
     QString QT_VERSION_DIALOG_TITLE = QObject::tr("Qt Version");

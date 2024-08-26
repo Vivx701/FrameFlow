@@ -43,7 +43,7 @@ void VideoFile::save()
     AVFormatContext *formatContext = nullptr;
     AVCodecContext *codecContext = nullptr;
     AVStream *videoStream = nullptr;
-    AVCodec *codec = nullptr;
+    const AVCodec *codec = nullptr;
     SwsContext *swsContext = nullptr;
 
     // Initialize format context for MP4

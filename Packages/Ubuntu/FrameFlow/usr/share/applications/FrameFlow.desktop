@@ -1,0 +1,10 @@
+[Desktop Entry]
+   Version=0.8
+   Name=FrameFlow
+   Comment=Transform series of images into various multimedia formats
+   Exec=FrameFlow
+   Icon=/usr/share/icons/hicolor/96x96/apps/frameflow.png
+   Terminal=false
+   Type=Application
+   Categories=AudioVideo;Video;
+   
