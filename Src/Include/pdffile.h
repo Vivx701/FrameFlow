@@ -10,7 +10,7 @@ class PdfFile : public IOutputFile
 {
 public:
     explicit PdfFile(QObject *parent=nullptr);
-    void save() override;
+    bool save() override;
 
 
 };

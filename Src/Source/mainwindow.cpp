@@ -285,7 +285,10 @@ void MainWindow::writeFile(Attributes &attrib, OutputType type)
     pDialog.setFilename(attrib.filePath);
     pDialog.setFixedSize(640, 200);
     pDialog.setAttributes(attrib, type);
-    pDialog.exec();
+    if(pDialog.exec() == QDialog::Rejected)
+    {
+         emit showErrorMessage(QString(), EXPORT_FAILED, QMessageBox::Critical);
+    }
 }
 
 /**

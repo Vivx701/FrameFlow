@@ -20,11 +20,11 @@ VideoFile::VideoFile(QObject *parent): IOutputFile{parent}
  * 4. Applies specified delay between frames
  * 5. Finalizes the video file and cleans up resources
  */
-void VideoFile::save()
+bool VideoFile::save()
 {
-    GifAttributes *attrib = static_cast<GifAttributes*>(&m_Attrib);
+    VideoAttributes *attrib = static_cast<VideoAttributes*>(&m_Attrib);
     if (attrib->filePath.isEmpty()) {
-        return;
+        return false;
     }
 
     QString creator = attrib->specificSettings["Creator"].toString();
@@ -50,21 +50,21 @@ void VideoFile::save()
     avformat_alloc_output_context2(&formatContext, nullptr, "mp4", attrib->filePath.toUtf8().data());
     if (!formatContext) {
         qDebug() << "Could not create output context";
-        return;
+         return false;
     }
 
     // Find H.264 encoder
     codec = avcodec_find_encoder_by_name("libx264");
     if (!codec) {
         qDebug() << "H.264 codec not found";
-        return;
+        return false;
     }
 
     // Create video stream
     videoStream = avformat_new_stream(formatContext, nullptr);
     if (!videoStream) {
         qDebug() << "Could not allocate stream";
-        return;
+        return false;
     }
 
     av_dict_set(&formatContext->metadata, "title", title.toUtf8().data(), 0);
@@ -84,7 +84,7 @@ void VideoFile::save()
     codecContext = avcodec_alloc_context3(codec);
     if (!codecContext) {
         qDebug() << "Could not allocate video codec context";
-        return;
+        return false;
     }
 
     // Set codec parameters
@@ -126,7 +126,7 @@ void VideoFile::save()
     // Open codec
     if (avcodec_open2(codecContext, codec, nullptr) < 0) {
         qDebug() << "Could not open codec";
-        return;
+        return false;
     }
 
     // Copy codec parameters to stream
@@ -136,14 +136,14 @@ void VideoFile::save()
     if (!(formatContext->oformat->flags & AVFMT_NOFILE)) {
         if (avio_open(&formatContext->pb, attrib->filePath.toUtf8().data(), AVIO_FLAG_WRITE) < 0) {
             qDebug() << "Could not open output file";
-            return;
+            return false;
         }
     }
 
     // Write header
     if (avformat_write_header(formatContext, nullptr) < 0) {
         qDebug() << "Error occurred when opening output file";
-        return;
+         return false;
     }
 
     swsContext = sws_getContext(videoSize.width(), videoSize.height(), AV_PIX_FMT_RGBA,
@@ -204,6 +204,7 @@ void VideoFile::save()
     avformat_free_context(formatContext);
     emit progressChanged(m_Images.count()+1, m_Images.count()+1);
     qDebug()<<"video saved";
+     return true;
 }
 
 

@@ -25,12 +25,12 @@ PdfFile::PdfFile(QObject *parent): IOutputFile(parent)
  *
  * The function emits the `progressChanged` signal to indicate the progress of saving the images.
  */
-void PdfFile::save()
+bool PdfFile::save()
 {
     PDFAttributes *attrib = static_cast<PDFAttributes*>(&m_Attrib);
     if(attrib->filePath.isEmpty())
     {
-        return;
+        return false;
     }
 
     QPdfWriter pdfWriter(attrib->filePath);
@@ -99,4 +99,5 @@ void PdfFile::save()
         emit progressChanged(m_Images.count(), count);
     }
     painter.end();
+    return true;
 }

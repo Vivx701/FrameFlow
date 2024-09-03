@@ -15,12 +15,12 @@ GifFile::GifFile(QObject *parent) : IOutputFile{parent} {}
  * This method handles the entire process of creating a GIF file,
  * including initialization, adding frames, finalization, and setting the loop count.
  */
-void GifFile::save()
+bool GifFile::save()
 {
     GifAttributes *attrib = static_cast<GifAttributes*>(&m_Attrib);
     if (attrib->filePath.isEmpty()) {
         qDebug() << "File path is empty";
-        return;
+        return false;
     }
 
     QString filename = attrib->filePath;
@@ -32,13 +32,13 @@ void GifFile::save()
 
     if (width > 65535 || height > 65535) {
         qDebug() << "Image dimensions too large for GIF format";
-        return;
+        return false;
     }
 
     GifWriter writer{};
     if (!GifBegin(&writer, filename.toStdString().c_str(), width, height, delayMs / 10, m_depth, true)) {
         qDebug() << "Failed to initialize GIF writer";
-        return;
+        return false;
     }
     emit progressChanged(m_Images.count(), 0);
     int8_t index = 0;
@@ -60,7 +60,7 @@ void GifFile::save()
         if (!GifWriteFrame(&writer, frameData.data(), width, height, delayMs / 10)) {
             qDebug() << "Failed to write frame";
             GifEnd(&writer);
-            return;
+            return false;
         }
 
         emit progressChanged(m_Images.count(), ++index);
@@ -68,7 +68,9 @@ void GifFile::save()
 
     if (!GifEnd(&writer)) {
         qDebug() << "Failed to finalize GIF";
+        return false;
     } else {
         qDebug() << "GIF saved successfully";
+        return true;
     }
 }

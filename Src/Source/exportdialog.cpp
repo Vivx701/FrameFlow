@@ -46,7 +46,10 @@ QString ExportDialog::currentSavePath()
         return filePath;
     }
 
-
+    if(fileName->text().isEmpty())
+    {
+        return QString();
+    }
     filePath =  QDir(saveLocation->text()).filePath(fileName->text());
 
     QString extension = "";
