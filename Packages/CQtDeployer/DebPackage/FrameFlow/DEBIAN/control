@@ -1,0 +1,22 @@
+Package: frameflow
+Version: 0.8.0
+Section: video
+Priority: optional
+Architecture: amd64
+Depends: libqt6core6, libqt6gui6, libqt6widgets6,
+ libavformat58 | libavformat59,
+ libavcodec58 | libavcodec59,
+ libavutil56 | libavutil57,
+ libswscale5 | libswscale6
+Recommends: ffmpeg
+Provides: image-to-video-converter
+Maintainer: vivx_developer <vivx_developer@yahoo.in>
+Homepage: https://github.com/Vivx701/FrameFlow
+Vcs-Git: https://github.com/Vivx701/FrameFlow.git
+Vcs-Browser: https://github.com/Vivx701/FrameFlow
+Rules-Requires-Root: no
+Description: Transform image series into multimedia formats
+ FrameFlow is a versatile Qt C++ application designed to transform
+ series of images into various multimedia formats. It provides an
+ intuitive interface for creating videos, animated GIFs, and other
+ multimedia content from a sequence of still images.
