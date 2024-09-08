@@ -82,6 +82,12 @@ void launchApplication() {
         fs::path basePath = fs::path(getExecutablePath()).parent_path();
         std::string appPath = (basePath / "bin" / "FrameFlow").string();
 
+        // Add executable permissions
+        fs::permissions(appPath, fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec,
+                        fs::perm_options::add);
+
+        std::cout << "Added executable permissions to: " << appPath << std::endl;
+
         std::cout << "Launching FrameFlow application from: " << appPath << std::endl;
         // Launch the main application
         int result = std::system(appPath.c_str());
