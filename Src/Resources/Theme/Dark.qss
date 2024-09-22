@@ -66,3 +66,8 @@ QWidget#imageListView{
 #aboutDialog QLabel{
     color: white;
 }
+
+#scrollAreaWidgetContents {
+    background-color:   #31363F;
+    color: #ffffff;
+}
