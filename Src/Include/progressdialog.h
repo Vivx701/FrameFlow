@@ -30,11 +30,14 @@ protected:
         });
         output->addImages(m_images);
         output->setAttrib(m_attrib);
-        output->save();
+        bool result = output->save();
+        emit success(result);
+
     }
 
 signals:
     void progressChanged(int maximum, int value);
+    void success(bool success);
 private:
     ImageList &m_images;
     Attributes &m_attrib;
@@ -60,7 +63,9 @@ private:
     ImageList &m_images;
     RenderingThread *rThread=nullptr;
     //Strings
-    QString SAVING_MESSAGE = QObject::tr("Saving");
+    QString SAVING_MESSAGE = QObject::tr("Exporting");
+    QString SAVING_SUCCESS_MESSAGE = QObject::tr("Exporting successfull ");
+    QString SAVING_FAILED_MESSAGE = QObject::tr("Exporting failed ");
 };
 
 #endif // PROGRESSDIALOG_H

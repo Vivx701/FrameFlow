@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "purge" ] || [ "$1" = "remove" ] ; then
+    rm -f /usr/bin/FrameFlow
+fi
+
+#DEBHELPER#
+
+exit 0

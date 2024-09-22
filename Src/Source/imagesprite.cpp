@@ -23,12 +23,12 @@ ImageSprite::ImageSprite(QObject *parent)
  *
  * The function emits the `progressChanged` signal to indicate the progress of generating the sprite sheet.
  */
-void ImageSprite::save()
+bool ImageSprite::save()
 {
     ImageSpriteAttributes *attrib = static_cast<ImageSpriteAttributes*>(&m_Attrib);
     if(attrib->filePath.isEmpty())
     {
-        return;
+        return false;
     }
     Qt::Orientations orientation = attrib->specificSettings["Orientation"].value<Qt::Orientations>();
     QString creator =  attrib->specificSettings["Creator"].toString();
@@ -48,7 +48,7 @@ void ImageSprite::save()
     if(finalImage.isNull())
     {
         qDebug()<<" Final image is NULL";
-        return;
+         return false;
     }
     QImageWriter imageWriter(attrib->filePath);
 
@@ -57,8 +57,10 @@ void ImageSprite::save()
     imageWriter.setText("Creator", creator);
     if(imageWriter.write(finalImage)){
         qDebug()<<"Image writing is success";
+        return true;
     }else{
         qDebug()<<"Image writing is failed";
+        return false;
     }
     emit progressChanged(m_Images.count(), m_Images.count());
 }

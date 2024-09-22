@@ -31,7 +31,7 @@ public:
      *
      * This function overrides the save() method from IOutputFile.
      */
-    void save() override;
+    bool save() override;
 
 
 private:

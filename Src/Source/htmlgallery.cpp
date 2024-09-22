@@ -26,12 +26,12 @@ HTMLGallery::HTMLGallery(QObject *parent) : IOutputFile{parent}
  * 3. Generates the HTML content for the gallery.
  * 4. Writes the final HTML file to the output directory.
  */
-void HTMLGallery::save()
+bool HTMLGallery::save()
 {
     HTMLGalleryAttributes *attrib = static_cast<HTMLGalleryAttributes*>(&m_Attrib);
     if(attrib->filePath.isEmpty())
     {
-        return;
+        return false;
     }
 
     QString title = attrib->specificSettings["Title"].toString();
@@ -85,6 +85,8 @@ void HTMLGallery::save()
         out << htmlContent;
         file.close();
     }
+
+     return true;
 }
 
 /**

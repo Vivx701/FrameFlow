@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+# Create symlink in /usr/bin
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+    ln -sf /opt/FrameFlow/FrameFlowLauncher /usr/bin/FrameFlow
+fi
+
+#DEBHELPER#
+update-icon-caches /usr/share/icons/*
+update-desktop-database
+exit 0

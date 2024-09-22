@@ -34,7 +34,7 @@ public:
      * This method processes the images, generates the HTML content,
      * and saves it to the specified output path.
      */
-    void save() override;
+    bool save() override;
 
 private:
     /**

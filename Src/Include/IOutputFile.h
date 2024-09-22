@@ -26,7 +26,7 @@ public:
         m_Images.clear();
     }
 
-    virtual void save() = 0;
+    virtual bool save() = 0;
 
     void setAttrib(const Attributes &newAttrib)
     {

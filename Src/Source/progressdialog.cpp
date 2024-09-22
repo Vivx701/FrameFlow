@@ -26,6 +26,12 @@ void ProgressDialog::setAttributes(Attributes &attrib, OutputType type)
 
     });
 
+    connect(rThread, &RenderingThread::success, [this](bool result){
+
+        ui->filename->setText(result? SAVING_SUCCESS_MESSAGE: SAVING_FAILED_MESSAGE);
+        ui->closeButton->setEnabled(true);
+    });
+
 }
 
 ProgressDialog::~ProgressDialog()
@@ -49,11 +55,6 @@ void ProgressDialog::onProgressChanged(int max, int value)
     }
 
     ui->progressBar->setValue(value);
-    if(max == value)
-    {
-        ui->closeButton->setEnabled(true);
-    }
-
 }
 
 ImageList &ProgressDialog::images() const
