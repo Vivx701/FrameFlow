@@ -55,3 +55,8 @@ QWidget#imageListView{
 #settingsDialog QFrame{
      background-color:  #ecf0f1;
 }
+
+#scrollAreaWidgetContents {
+    background-color:   #ecf0f1;
+    color: #ffffff;
+}

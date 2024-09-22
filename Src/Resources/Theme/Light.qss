@@ -52,3 +52,7 @@ QWidget#imageListView{
     background-color:  #fbfcfc;
 }
 
+#scrollAreaWidgetContents {
+    background-color:   #f6f6f6;
+    color: #ffffff;
+}
