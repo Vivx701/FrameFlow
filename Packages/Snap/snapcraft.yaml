@@ -1,0 +1,51 @@
+name: frameflow                      # Name of the Snap
+version: '0.8'                       # Version of your application
+summary: Versatile Qt C++ video processing app
+description: |
+  FrameFlow is a Qt C++ application for video frame manipulation and processing using FFmpeg.
+
+base: core22                         # Base Snap (Ubuntu 22.04)
+confinement: strict                  # Confinement level
+grade: stable                        # Can be 'devel' for development or 'stable'
+
+parts:
+  frameflow:
+    plugin: qmake                    # Using qmake for build system
+    source: https://github.com/Vivx701/FrameFlow/archive/refs/tags/0.8.0.tar.gz  # The tarball link to download
+    source-type: tar                  # Specifies that this is a tarball source
+
+    # Add the environment variable for Qt6 selection
+    build-environment:
+      - QT_SELECT: qt6
+
+    build-packages:                  # Dependencies for building
+      - qt6-base-dev
+      - libqt6gui6
+      - libqt6core6
+      - libavformat-dev              # FFmpeg development libraries
+      - libavcodec-dev
+      - libavutil-dev
+      - libswscale-dev
+      - qt6-translations-l10n
+
+    stage-packages:                  # Runtime dependencies for execution
+      - qt6-base-dev
+      - qt6-declarative-dev
+      - libqt6core6
+      - libqt6gui6
+      - libqt6widgets6
+      - qt6-translations-l10n
+      - qt6-gtk-platformtheme
+      - qt6-qpa-plugins
+      - qt6-wayland
+      - ffmpeg                       # FFmpeg binary and shared libraries
+      - libavformat58
+      - libavcodec58
+      - libavutil56
+      - libswscale5
+
+apps:
+  frameflow:
+    command: bin/frameflow           # Command to run your application
+    environment:                     # Set Qt environment variables
+      QT_QPA_PLATFORM: "wayland;xcb" # Adjust for your platform, Wayland or X11
