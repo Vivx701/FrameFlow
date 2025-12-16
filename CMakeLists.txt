@@ -16,10 +16,9 @@ option(BUILD_TESTS "Enable building tests" OFF)
 # List the canonical subfolders and the order in which they should be added.
 # Add new module folders here if you want them considered by default.
 set(FRAMEFLOW_ORDERED_SUBDIRS
-  libs
+  frameflow-writer
   third_party
   translations
-  plugins
   app
   tests
 )
