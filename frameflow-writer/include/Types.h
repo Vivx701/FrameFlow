@@ -37,34 +37,6 @@ struct Attributes
 };
 
 /**
- * @struct PDFAttributes
- * @brief Attributes specific to PDF output.
- */
-struct PDFAttributes: public Attributes
-{
-    /**
-     * @brief Default constructor for PDFAttributes.
-     * Initializes default values for PDF-specific settings.
-     */
-    PDFAttributes()
-    {
-        background = QColor::fromRgb(255, 255, 255);
-        specificSettings = {
-            {"Size", QPageSize::A4},
-            {"Creator", SOFTWARENAME},
-            {"Margin",  QVariant::fromValue(QMarginsF(10, 10, 10, 10))},
-            {"Orientation", QPageLayout::Portrait},
-            {"Version", QVariant::fromValue(QPagedPaintDevice::PdfVersion_1_4)},
-            {"Title", ""},
-            {"Fill", "Center"}
-        };
-    }
-
-    /// @brief Copy constructor
-    PDFAttributes(const PDFAttributes &copy) = default;
-};
-
-/**
  * @struct ImageSpriteAttributes
  * @brief Attributes specific to image sprite generation.
  */
@@ -137,37 +109,6 @@ struct VideoAttributes: public Attributes
 
     /// @brief Copy constructor
     VideoAttributes(const VideoAttributes &copy) = default;
-};
-
-
-/**
- * @struct HTMLGalleryAttributes
- * @brief Attributes specific to HTML gallery generation.
- */
-struct HTMLGalleryAttributes: public Attributes
-{
-    /**
-     * @brief Default constructor for HTMLGalleryAttributes.
-     * Initializes default values for HTML gallery-specific settings.
-     */
-    HTMLGalleryAttributes()
-    {
-        background = QColor::fromRgb(240, 240, 240);  // Light gray background
-        specificSettings = {
-            {"Creator", SOFTWARENAME},
-            {"Author", SOFTWARENAME},
-            {"Title", "Photo Gallery"},
-            {"Description", "Photo gallery created using " + QString(SOFTWARENAME)},
-            {"ThumbnailSize", 200},  // Default thumbnail size in pixels
-            {"ColumnsCount", 4},     // Default number of columns in the gallery grid
-            {"ImageQuality", 100},    // JPEG quality for saved images (0-100)
-            {"Copyright", ""},
-            {"EnableLightbox", true} // Enable lightbox for image viewing
-        };
-    }
-
-    /// @brief Copy constructor
-    HTMLGalleryAttributes(const HTMLGalleryAttributes &copy) = default;
 };
 
 /**

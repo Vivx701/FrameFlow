@@ -6,6 +6,9 @@ BUILD_DIR="build"
 QT_PATH="/opt/Qt/6.9.2/gcc_64"
 JOBS=$(nproc 2>/dev/null || echo 2)
 
+BUILD_DIR=build
+BUILD_TESTS=OFF
+
 show_help() {
   echo "Usage: ./build.sh [--configure] [--build] [--clean]"
   echo ""
@@ -28,6 +31,7 @@ while [[ $# -gt 0 ]]; do
     --build)     DO_BUILD=1 ;;
     --clean)     DO_CLEAN=1 ;;
     -h|--help)   show_help ;;
+    --tests)    BUILD_TESTS=ON ;;
     *)
       echo "Unknown option: $1"
       show_help
@@ -55,7 +59,7 @@ if [[ $DO_CONFIGURE -eq 1 ]]; then
   mkdir -p "$BUILD_DIR"
   cd "$BUILD_DIR"
 
-  cmake -DCMAKE_PREFIX_PATH="$QT_PATH" ..
+  cmake -DCMAKE_PREFIX_PATH="$QT_PATH" -DBUILD_TESTS=${BUILD_TESTS} ..
 
   cd ..
   echo "✔️ Configure complete."

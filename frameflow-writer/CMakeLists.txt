@@ -15,6 +15,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui)
 
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(FFMPEG REQUIRED
+    libavcodec
+    libavformat
+    libavutil
+    libswscale
+)
+
 # 🔥 Automatically collect sources & headers
 file(GLOB_RECURSE FRAMEFLOW_WRITER_SOURCES
     CONFIGURE_DEPENDS
@@ -37,6 +46,7 @@ target_include_directories(frameflow-writer
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
+        ${FFMPEG_INCLUDE_DIRS}
 )
 
 # Qt link
@@ -44,9 +54,14 @@ target_link_libraries(frameflow-writer
     PRIVATE
         Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Gui
+        ${FFMPEG_LIBRARIES}
 )
 
 # Export macro
 target_compile_definitions(frameflow-writer
     PRIVATE FRAMEFLOW_WRITER_LIBRARY
 )
+
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
