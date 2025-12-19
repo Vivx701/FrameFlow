@@ -1,12 +1,21 @@
 #include "frameflow.h"
-
+#include "frameflowstrings.h"
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QSettings>
+#include <QLocale>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QCoreApplication::setApplicationName(SOFTWARENAME);
+    QCoreApplication::setApplicationVersion(VERSION);
+    QCoreApplication::setOrganizationName(OWNERNAME);
+
+
+    QSettings settings;
+    QString lang = settings.value(SETTINGS_LANG, "en_US").toString();
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
@@ -18,6 +27,9 @@ int main(int argc, char *argv[])
         }
     }
     FrameFlow w;
-    w.show();
+    w.setWindowIconText(SOFTWARE_TITLE);
+    w.setWindowTitle(SOFTWARE_TITLE);
+    w.setWindowIcon(QIcon(":/Resources/Icons/FrameFlow.svg"));
+    w.showMaximized();
     return a.exec();
 }

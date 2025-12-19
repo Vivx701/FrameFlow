@@ -10,14 +10,16 @@ project(FrameFlow LANGUAGES CXX)
 #  - This file only orders and adds subdirectories.
 # -------------------------------------------------------
 
+option(FLATPAK_BUILD "Build for Flatpak packaging" OFF)
+
 # Option to enable tests
 option(BUILD_TESTS "Enable building tests" OFF)
 
 # List the canonical subfolders and the order in which they should be added.
 # Add new module folders here if you want them considered by default.
 set(FRAMEFLOW_ORDERED_SUBDIRS
-  frameflow-writer
   third_party
+  frameflow-writer
   translations
   app
   tests

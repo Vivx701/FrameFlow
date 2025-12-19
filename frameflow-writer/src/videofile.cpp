@@ -20,11 +20,12 @@ VideoFile::VideoFile(QObject *parent): IOutputFile{parent}
  * 4. Applies specified delay between frames
  * 5. Finalizes the video file and cleans up resources
  */
-bool VideoFile::save()
+void VideoFile::save()
 {
     VideoAttributes *attrib = static_cast<VideoAttributes*>(&m_Attrib);
     if (attrib->filePath.isEmpty()) {
-        return false;
+        qDebug() << "File path is empty";
+        throw FrameFlowException(ERR_EMPTY_OUTPUT_PATH);
     }
 
     QString creator = attrib->specificSettings["Creator"].toString();
@@ -50,21 +51,21 @@ bool VideoFile::save()
     avformat_alloc_output_context2(&formatContext, nullptr, "mp4", attrib->filePath.toUtf8().data());
     if (!formatContext) {
         qDebug() << "Could not create output context";
-         return false;
+        throw FrameFlowException(ERR_FRAME_WRITE_FAILED);
     }
 
     // Find H.264 encoder
     codec = avcodec_find_encoder_by_name("libx264");
     if (!codec) {
         qDebug() << "H.264 codec not found";
-        return false;
+        throw FrameFlowException(ERR_CODEC_H264_NOT_FOUND);
     }
 
     // Create video stream
     videoStream = avformat_new_stream(formatContext, nullptr);
     if (!videoStream) {
         qDebug() << "Could not allocate stream";
-        return false;
+        throw FrameFlowException(ERR_STREAM_ALLOC_FAILED);
     }
 
     av_dict_set(&formatContext->metadata, "title", title.toUtf8().data(), 0);
@@ -84,7 +85,7 @@ bool VideoFile::save()
     codecContext = avcodec_alloc_context3(codec);
     if (!codecContext) {
         qDebug() << "Could not allocate video codec context";
-        return false;
+        throw FrameFlowException(ERR_CODEC_CONTEXT_ALLOC_FAILED);
     }
 
     // Set codec parameters
@@ -126,7 +127,7 @@ bool VideoFile::save()
     // Open codec
     if (avcodec_open2(codecContext, codec, nullptr) < 0) {
         qDebug() << "Could not open codec";
-        return false;
+        throw FrameFlowException(ERR_CODEC_OPEN_FAILED);
     }
 
     // Copy codec parameters to stream
@@ -136,14 +137,14 @@ bool VideoFile::save()
     if (!(formatContext->oformat->flags & AVFMT_NOFILE)) {
         if (avio_open(&formatContext->pb, attrib->filePath.toUtf8().data(), AVIO_FLAG_WRITE) < 0) {
             qDebug() << "Could not open output file";
-            return false;
+            throw FrameFlowException(ERR_CODEC_OPEN_FAILED);
         }
     }
 
     // Write header
     if (avformat_write_header(formatContext, nullptr) < 0) {
         qDebug() << "Error occurred when opening output file";
-         return false;
+        throw FrameFlowException(ERR_FILE_OPEN_FAILED);
     }
 
     swsContext = sws_getContext(videoSize.width(), videoSize.height(), AV_PIX_FMT_RGBA,
@@ -160,7 +161,7 @@ bool VideoFile::save()
     int64_t current_pts = 0;
 
     // Encode frames
-
+    emit saveStarted(attrib->filePath);
     emit progressChanged(m_Images.count()+1, 0);
     for (int i = 0; i < m_Images.size(); ++i) {
         const QImage& img = m_Images[i].convertToFormat(QImage::Format_RGBA8888).scaled(frame->width, frame->height);;
@@ -204,7 +205,7 @@ bool VideoFile::save()
     avformat_free_context(formatContext);
     emit progressChanged(m_Images.count()+1, m_Images.count()+1);
     qDebug()<<"video saved";
-     return true;
+    emit saveFinished(true, attrib->filePath);
 }
 
 
@@ -232,7 +233,7 @@ void VideoFile::encodeFrame(AVFormatContext *formatContext, AVCodecContext *code
     int ret = avcodec_send_frame(codecContext, frame);
     if (ret < 0) {
         qDebug() << "Error sending frame for encoding";
-        return;
+        throw FrameFlowException(ERR_FRAME_WRITE_FAILED);
     }
 
     while (ret >= 0) {

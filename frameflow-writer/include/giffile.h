@@ -29,7 +29,7 @@ public:
      * This method handles the entire process of creating a GIF file,
      * including initialization, adding frames, and finalization.
      */
-    bool save() override;
+    void save() override;
 private:
     int8_t m_depth=8;
 };

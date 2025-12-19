@@ -24,7 +24,7 @@ std::unique_ptr<IOutputFile> FrameFlowWriter::createOutputFile(const OutputType 
             return std::make_unique<VideoFile>();
             break;
         default:
-            break;
+              throw FrameFlowException(ERR_INVALID_FILE_TYPE);
     }
     return nullptr;
 }

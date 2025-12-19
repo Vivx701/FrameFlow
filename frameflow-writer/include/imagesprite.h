@@ -8,7 +8,7 @@ class ImageSprite : public IOutputFile
 {
 public:
     explicit ImageSprite(QObject *parent = nullptr);
-    bool save() override;
+    void save() override;
     QImage horizontalStitch(QColor bgColor=Qt::white);
     QImage verticalStitch(QColor bgColor=Qt::white);
 };

@@ -3,7 +3,7 @@
 #include <QString>
 #include <QList>
 #include <QObject>
-
+#include <frameflowexception.h>
 #include <Types.h>
 #include <QDebug>
 
@@ -26,7 +26,7 @@ public:
         m_Images.clear();
     }
 
-    virtual bool save() = 0;
+    virtual void save() = 0;
 
     void setAttrib(const Attributes &newAttrib)
     {
@@ -51,7 +51,8 @@ public:
 
 signals:
     void progressChanged(int maximum, int value);
-
+    void saveStarted(QString name);
+    void saveFinished(bool, QString name);
 protected:
     ImageList m_Images;
     Attributes m_Attrib;

@@ -1,0 +1,86 @@
+id: io.github.vivx701.FrameFlow
+
+runtime: org.kde.Platform
+runtime-version: '6.8'
+sdk: org.kde.Sdk
+
+command: FrameFlow
+tags:
+  - graphics
+  - video
+  - multimedia
+#######################################
+# Sandbox permissions
+#######################################
+finish-args:
+  # Display
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+
+  # User file access
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-pictures
+  - --filesystem=xdg-videos
+
+  # Qt desktop integration
+  - --env=QT_QPA_PLATFORMTHEME=xdgdesktopportal
+
+#######################################
+# Build modules
+#######################################
+modules:
+
+  #####################################
+  # FFmpeg (bundled)
+  #####################################
+  - name: ffmpeg
+    buildsystem: simple
+    build-commands:
+      - ./configure
+        --prefix=/app
+        --disable-debug
+        --disable-doc
+        --disable-static
+        --enable-shared
+        --enable-gpl
+        --enable-pthreads
+        --disable-network
+        --disable-avdevice
+        --disable-postproc
+        --disable-vulkan
+        --disable-hwaccels
+        --disable-vaapi
+        --disable-vdpau
+        --disable-avdevice
+        --disable-postproc
+        --disable-network
+      - make -j$FLATPAK_BUILDER_N_JOBS
+      - make install
+    cleanup:
+      - /app/include
+      - /app/lib/pkgconfig
+      - /app/share
+    sources:
+      - type: archive
+        url: https://ffmpeg.org/releases/ffmpeg-6.1.tar.xz
+        sha256: 488c76e57dd9b3bee901f71d5c95eaf1db4a5a31fe46a28654e837144207c270
+
+  #####################################
+  # FrameFlow (CMake)
+  #####################################
+  - name: frameflow
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/app
+      - -DFLATPAK_BUILD=ON
+    # sources:
+    #   - type: git
+    #     url: https://github.com/Vivx701/FrameFlow.git
+    #     tag: v1.0.0
+    sources:
+      - type: git
+        url: https://github.com/Vivx701/FrameFlow.git
+        branch: develop

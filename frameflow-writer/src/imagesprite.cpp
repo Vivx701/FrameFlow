@@ -23,20 +23,21 @@ ImageSprite::ImageSprite(QObject *parent)
  *
  * The function emits the `progressChanged` signal to indicate the progress of generating the sprite sheet.
  */
-bool ImageSprite::save()
+void ImageSprite::save()
 {
     ImageSpriteAttributes *attrib = static_cast<ImageSpriteAttributes*>(&m_Attrib);
     if(attrib->filePath.isEmpty())
     {
-        return false;
+        throw FrameFlowException(ERR_EMPTY_OUTPUT_PATH);
+        return;
     }
     Qt::Orientations orientation = attrib->specificSettings["Orientation"].value<Qt::Orientations>();
     QString creator =  attrib->specificSettings["Creator"].toString();
     QString format  =  attrib->specificSettings["Format"].toString();
     QString author  =  attrib->specificSettings["Author"].toString();
 
+    emit saveStarted(attrib->filePath);
     QImage finalImage;
-
     switch (orientation) {
     case Qt::Horizontal:
         finalImage = horizontalStitch(attrib->background);
@@ -48,21 +49,24 @@ bool ImageSprite::save()
     if(finalImage.isNull())
     {
         qDebug()<<" Final image is NULL";
-         return false;
+        throw FrameFlowException(ERR_UNKNOWN_SAVE);
+        return;
     }
     QImageWriter imageWriter(attrib->filePath);
-
+    emit saveStarted(attrib->filePath);
     imageWriter.setFormat(format.toUtf8());
     imageWriter.setText("Author", author);
     imageWriter.setText("Creator", creator);
     if(imageWriter.write(finalImage)){
         qDebug()<<"Image writing is success";
-        return true;
     }else{
         qDebug()<<"Image writing is failed";
-        return false;
+        emit saveFinished(false, attrib->filePath);
+        throw FrameFlowException(ERR_FRAME_WRITE_FAILED);
+        return;
     }
     emit progressChanged(m_Images.count(), m_Images.count());
+    emit saveFinished(true, attrib->filePath);
 }
 
 /**
@@ -91,6 +95,7 @@ QImage ImageSprite::horizontalStitch(QColor bgColor)
     QImage finalImage(imgwidth, imgheight, QImage::Format_ARGB32);
     finalImage.fill(bgColor);
     int drawingIndex = 0;
+
     emit progressChanged(m_Images.count(), 0);
     for(int i= 0; i<m_Images.count(); i++){
         QImage img = m_Images.at(i);
