@@ -7,7 +7,17 @@
 #include <Types.h>
 #include <QDebug>
 
-class IOutputFile: public QObject {
+#if defined(_WIN32) || defined(_WIN64)
+#  ifdef FRAMEFLOW_WRITER_LIBRARY
+#    define FRAMEFLOW_WRITER_EXPORT __declspec(dllexport)
+#  else
+#    define FRAMEFLOW_WRITER_EXPORT __declspec(dllimport)
+#  endif
+#else
+#  define FRAMEFLOW_WRITER_EXPORT
+#endif
+
+class FRAMEFLOW_WRITER_EXPORT IOutputFile: public QObject {
 
     Q_OBJECT
 

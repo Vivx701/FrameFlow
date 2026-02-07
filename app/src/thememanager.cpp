@@ -1,6 +1,8 @@
 #include "thememanager.h"
 
-ThemeManager::ThemeManager(QObject *parent) : QObject(parent)
+ThemeManager::ThemeManager(QObject *parent) : QObject(parent),
+    m_currentIconTheme(DEFAULTTHEMEICON),
+    m_currentStyle(DEFAULTSTYLE)
 {
     loadStyles();
     loadIcons();
@@ -43,8 +45,16 @@ void ThemeManager::loadIcons()
 
 QIcon ThemeManager::getIcon(ICONTYPE iconType)
 {
-    QString iconPath = m_themeIcons[m_currentIconTheme][iconType];
-    return QIcon(iconPath);
+    if (!m_themeIcons.contains(m_currentIconTheme))
+    {
+        return QIcon();
+    }
+    const auto &themeMap = m_themeIcons.value(m_currentIconTheme);
+    if (!themeMap.contains(iconType))
+    {
+        return QIcon();
+    }
+    return QIcon(themeMap.value(iconType));
 }
 
 void ThemeManager::setIconTheme(const QString &themeName)
@@ -93,4 +103,3 @@ QStringList ThemeManager::getStyleThemeList()
 {
     return m_themeStyles.keys();
 }
-

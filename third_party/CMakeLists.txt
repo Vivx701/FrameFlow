@@ -1,156 +1,200 @@
 cmake_minimum_required(VERSION 3.18)
 
 # -------------------------------------------------
-# third_party: FFmpeg (Windows only)
+# third_party: FFmpeg (Windows only) - PREBUILT
 # -------------------------------------------------
 if (NOT WIN32)
   message(STATUS "third_party: FFmpeg skipped (non-Windows)")
   return()
 endif()
 
-include(ExternalProject)
+include(FetchContent)
 
 # -------------------------------------------------
-# Layout (ALL under third_party/ffmpeg)
+# Configuration
 # -------------------------------------------------
-set(FFMPEG_ROOT        ${CMAKE_CURRENT_LIST_DIR}/ffmpeg)
-set(FFMPEG_SRC_DIR     ${FFMPEG_ROOT}/src)
-set(FFMPEG_BUILD_DIR   ${FFMPEG_ROOT}/build)
-set(FFMPEG_INSTALL_DIR ${FFMPEG_ROOT}/install)
+set(FFMPEG_VERSION "6.0")
+set(FFMPEG_URL "https://github.com/GyanD/codexffmpeg/releases/download/6.0/ffmpeg-6.0-full_build-shared.zip")
 
 # -------------------------------------------------
-# FFmpeg source (LTS) - Download as ZIP from GitHub
+# Paths
 # -------------------------------------------------
-set(FFMPEG_TAG "n6.0")
-set(FFMPEG_ZIP_URL "https://github.com/FFmpeg/FFmpeg/archive/refs/tags/${FFMPEG_TAG}.zip")
+set(FFMPEG_ROOT ${CMAKE_CURRENT_LIST_DIR}/ffmpeg)
 
 # -------------------------------------------------
-# Toolchain detection
+# Check if FFmpeg is already downloaded
 # -------------------------------------------------
-if (MSVC)
-  set(FFMPEG_TOOLCHAIN msvc)
-  set(FFMPEG_LIB_SUFFIX lib)
-else()
-  set(FFMPEG_TOOLCHAIN mingw)
-  set(FFMPEG_LIB_SUFFIX dll.a)
-endif()
+set(FFMPEG_MARKER_FILE "${FFMPEG_ROOT}/.ffmpeg_ready")
 
-message(STATUS "third_party: FFmpeg toolchain = ${FFMPEG_TOOLCHAIN}")
-message(STATUS "third_party: FFmpeg tag       = ${FFMPEG_TAG}")
-message(STATUS "third_party: FFmpeg root      = ${FFMPEG_ROOT}")
-message(STATUS "third_party: Download URL     = ${FFMPEG_ZIP_URL}")
+if(NOT EXISTS ${FFMPEG_MARKER_FILE})
+  message(STATUS "FFmpeg: Not found, downloading...")
 
-# -------------------------------------------------
-# Pre-create all required directories
-# -------------------------------------------------
-file(MAKE_DIRECTORY ${FFMPEG_ROOT})
-file(MAKE_DIRECTORY ${FFMPEG_SRC_DIR})
-file(MAKE_DIRECTORY ${FFMPEG_BUILD_DIR})
-file(MAKE_DIRECTORY ${FFMPEG_INSTALL_DIR})
+  # Clean up any partial downloads
+  if(EXISTS ${FFMPEG_ROOT})
+    message(STATUS "FFmpeg: Cleaning up existing folder")
+    file(REMOVE_RECURSE ${FFMPEG_ROOT})
+  endif()
 
-message(STATUS "third_party: FFmpeg directories created")
+  # Create directory
+  file(MAKE_DIRECTORY ${FFMPEG_ROOT})
 
-# -------------------------------------------------
-# FFmpeg configure flags (shared build)
-# -------------------------------------------------
-set(FFMPEG_CONFIGURE_COMMON
-  --prefix=${FFMPEG_INSTALL_DIR}
-  --disable-programs
-  --disable-doc
-  --disable-debug
-  --enable-shared
-  --disable-static
-  --enable-avcodec
-  --enable-avformat
-  --enable-avutil
-  --enable-swscale
-)
+  # Download and extract
+  message(STATUS "FFmpeg: Downloading from ${FFMPEG_URL}")
+  message(STATUS "FFmpeg: This may take a few minutes...")
 
-if (FFMPEG_TOOLCHAIN STREQUAL "mingw")
-  set(FFMPEG_CONFIGURE_CMD
-    ${FFMPEG_SRC_DIR}/configure
-    --target-os=mingw32
-    --arch=x86_64
-    ${FFMPEG_CONFIGURE_COMMON}
+  FetchContent_Declare(
+    ffmpeg_prebuilt
+    URL ${FFMPEG_URL}
+    SOURCE_DIR ${FFMPEG_ROOT}
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   )
-  set(FFMPEG_BUILD_CMD   make -j)
-  set(FFMPEG_INSTALL_CMD make install)
+
+  FetchContent_MakeAvailable(ffmpeg_prebuilt)
+
+  # Create marker file to indicate successful download
+  file(WRITE ${FFMPEG_MARKER_FILE} "FFmpeg ${FFMPEG_VERSION} downloaded successfully")
+  message(STATUS "FFmpeg: Download and extraction complete!")
 else()
-  set(FFMPEG_CONFIGURE_CMD
-    cmd /c configure
-    --toolchain=msvc
-    --arch=x86_64
-    ${FFMPEG_CONFIGURE_COMMON}
-  )
-  set(FFMPEG_BUILD_CMD   nmake)
-  set(FFMPEG_INSTALL_CMD nmake install)
+  message(STATUS "FFmpeg: Using cached binaries from ${FFMPEG_ROOT}")
 endif()
 
 # -------------------------------------------------
-# ExternalProject - Download ZIP (NO GIT!)
+# Locate FFmpeg directories
 # -------------------------------------------------
-# Use custom stamp directory to avoid permission issues
-set(FFMPEG_STAMP_DIR ${CMAKE_CURRENT_BINARY_DIR}/ffmpeg-stamps)
-file(MAKE_DIRECTORY ${FFMPEG_STAMP_DIR})
+set(FFMPEG_BASE "")
 
-# GitHub extracts to FFmpeg-n6.0/ but we want files directly in src/
-set(FFMPEG_DOWNLOAD_DIR ${FFMPEG_ROOT}/download)
+# Check if files are directly in root
+if(EXISTS "${FFMPEG_ROOT}/bin" AND EXISTS "${FFMPEG_ROOT}/lib" AND EXISTS "${FFMPEG_ROOT}/include")
+  set(FFMPEG_BASE ${FFMPEG_ROOT})
+else()
+  # Look for subdirectory containing the files
+  file(GLOB FFMPEG_SUBDIRS "${FFMPEG_ROOT}/*")
+  foreach(subdir ${FFMPEG_SUBDIRS})
+    if(IS_DIRECTORY ${subdir})
+      if(EXISTS "${subdir}/bin" AND EXISTS "${subdir}/lib" AND EXISTS "${subdir}/include")
+        set(FFMPEG_BASE ${subdir})
+        break()
+      endif()
+    endif()
+  endforeach()
+endif()
 
-ExternalProject_Add(ffmpeg_ep
-  PREFIX        ${FFMPEG_ROOT}
-  SOURCE_DIR    ${FFMPEG_SRC_DIR}
-  INSTALL_DIR   ${FFMPEG_INSTALL_DIR}
-  STAMP_DIR     ${FFMPEG_STAMP_DIR}
+# If still not found, error out with helpful message
+if(NOT FFMPEG_BASE)
+  message(FATAL_ERROR
+    "FFmpeg: Could not locate bin/lib/include directories in ${FFMPEG_ROOT}\n"
+    "Try deleting ${FFMPEG_ROOT} and running configure again."
+  )
+endif()
 
-  # Download ZIP from GitHub
-  URL               ${FFMPEG_ZIP_URL}
-  DOWNLOAD_DIR      ${FFMPEG_DOWNLOAD_DIR}
-  DOWNLOAD_NO_EXTRACT TRUE
-  DOWNLOAD_NO_PROGRESS OFF
-  
-  # Custom patch step to extract and move files to correct location
-  # Run from FFMPEG_ROOT (parent directory) to avoid deleting current directory
-  PATCH_COMMAND ${CMAKE_COMMAND} -E chdir ${FFMPEG_ROOT}
-                    ${CMAKE_COMMAND} -E remove_directory src
-        COMMAND ${CMAKE_COMMAND} -E chdir ${FFMPEG_ROOT}
-                    ${CMAKE_COMMAND} -E tar xzf download/${FFMPEG_TAG}.zip
-        COMMAND ${CMAKE_COMMAND} -E chdir ${FFMPEG_ROOT}
-                    ${CMAKE_COMMAND} -E rename FFmpeg-${FFMPEG_TAG} src
-  
-  CONFIGURE_COMMAND ${FFMPEG_CONFIGURE_CMD}
-  BUILD_COMMAND     ${FFMPEG_BUILD_CMD}
-  INSTALL_COMMAND   ${FFMPEG_INSTALL_CMD}
-
-  BUILD_IN_SOURCE 1
-  
-  # No update step needed
-  UPDATE_COMMAND ""
-)
+message(STATUS "FFmpeg: Located at ${FFMPEG_BASE}")
 
 # -------------------------------------------------
-# Imported FFmpeg libraries
+# Set FFmpeg paths
 # -------------------------------------------------
-foreach(lib avcodec avformat avutil swscale)
-  add_library(ffmpeg::${lib} SHARED IMPORTED)
-  add_dependencies(ffmpeg::${lib} ffmpeg_ep)
+set(FFMPEG_BIN_DIR "${FFMPEG_BASE}/bin")
+set(FFMPEG_LIB_DIR "${FFMPEG_BASE}/lib")
+set(FFMPEG_INCLUDE_DIR "${FFMPEG_BASE}/include")
+
+message(STATUS "FFmpeg: bin = ${FFMPEG_BIN_DIR}")
+message(STATUS "FFmpeg: lib = ${FFMPEG_LIB_DIR}")
+message(STATUS "FFmpeg: include = ${FFMPEG_INCLUDE_DIR}")
+
+# -------------------------------------------------
+# Set cache variables (accessible to other CMakeLists)
+# -------------------------------------------------
+set(FFMPEG_BIN_DIR "${FFMPEG_BIN_DIR}" CACHE PATH "FFmpeg bin directory" FORCE)
+set(FFMPEG_LIB_DIR "${FFMPEG_LIB_DIR}" CACHE PATH "FFmpeg lib directory" FORCE)
+set(FFMPEG_INCLUDE_DIR "${FFMPEG_INCLUDE_DIR}" CACHE PATH "FFmpeg include directory" FORCE)
+
+# -------------------------------------------------
+# Detect library extension
+# -------------------------------------------------
+if(MSVC)
+  set(FFMPEG_LIB_EXT "lib")
+else()
+  # MinGW - check what's available
+  file(GLOB MINGW_DLL_A "${FFMPEG_LIB_DIR}/*.dll.a")
+  if(MINGW_DLL_A)
+    set(FFMPEG_LIB_EXT "dll.a")
+  else()
+    set(FFMPEG_LIB_EXT "lib")
+  endif()
+endif()
+
+message(STATUS "FFmpeg: Library extension = ${FFMPEG_LIB_EXT}")
+
+# -------------------------------------------------
+# Create imported targets for each FFmpeg library
+# -------------------------------------------------
+set(FFMPEG_LIBRARIES avcodec avformat avutil swscale)
+
+foreach(lib ${FFMPEG_LIBRARIES})
+  # Find library file
+  file(GLOB LIB_FILES
+    "${FFMPEG_LIB_DIR}/${lib}.${FFMPEG_LIB_EXT}"
+    "${FFMPEG_LIB_DIR}/lib${lib}.${FFMPEG_LIB_EXT}"
+  )
+
+  # Find DLL file
+  file(GLOB DLL_FILES
+    "${FFMPEG_BIN_DIR}/${lib}-*.dll"
+    "${FFMPEG_BIN_DIR}/lib${lib}-*.dll"
+    "${FFMPEG_BIN_DIR}/${lib}.dll"
+  )
+
+  if(LIB_FILES)
+    list(GET LIB_FILES 0 LIB_FILE)
+  else()
+    message(WARNING "FFmpeg: Could not find import library for ${lib}")
+    continue()
+  endif()
+
+  if(DLL_FILES)
+    list(GET DLL_FILES 0 DLL_FILE)
+  else()
+    message(WARNING "FFmpeg: Could not find DLL for ${lib}")
+    continue()
+  endif()
+
+  # Create imported library target
+  add_library(ffmpeg::${lib} SHARED IMPORTED GLOBAL)
 
   set_target_properties(ffmpeg::${lib} PROPERTIES
-    IMPORTED_IMPLIB
-      ${FFMPEG_INSTALL_DIR}/lib/${lib}.${FFMPEG_LIB_SUFFIX}
-    IMPORTED_LOCATION
-      ${FFMPEG_INSTALL_DIR}/bin/${lib}-*.dll
-    INTERFACE_INCLUDE_DIRECTORIES
-      ${FFMPEG_INSTALL_DIR}/include
+    IMPORTED_IMPLIB "${LIB_FILE}"
+    IMPORTED_LOCATION "${DLL_FILE}"
+    INTERFACE_INCLUDE_DIRECTORIES "${FFMPEG_INCLUDE_DIR}"
   )
+
+  message(STATUS "FFmpeg: ✓ ${lib}")
+  message(STATUS "  → LIB: ${LIB_FILE}")
+  message(STATUS "  → DLL: ${DLL_FILE}")
 endforeach()
 
 # -------------------------------------------------
-# Single public target exposed to the rest of the project
+# Create unified interface target
 # -------------------------------------------------
-add_library(ffmpeg_iface INTERFACE)
-target_link_libraries(ffmpeg_iface INTERFACE
+add_library(ffmpeg INTERFACE)
+
+target_link_libraries(ffmpeg INTERFACE
   ffmpeg::avcodec
   ffmpeg::avformat
   ffmpeg::avutil
   ffmpeg::swscale
 )
+
+target_include_directories(ffmpeg INTERFACE
+  ${FFMPEG_INCLUDE_DIR}
+)
+
+# -------------------------------------------------
+# Create compatibility aliases
+# -------------------------------------------------
+# Alias for existing code that uses ffmpeg_iface
+add_library(ffmpeg_iface ALIAS ffmpeg)
+
+# Dummy target for existing code that depends on ffmpeg_ep
+add_custom_target(ffmpeg_ep)
+
+message(STATUS "FFmpeg: Configuration complete!")
+message(STATUS "FFmpeg: Link your target with 'ffmpeg_iface'")

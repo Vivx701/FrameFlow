@@ -52,7 +52,7 @@ if (WIN32)
     # From third_party/CMakeLists.txt
     # Ensure FFmpeg is built before this target
     add_dependencies(frameflow-writer ffmpeg_ep)
-    target_link_libraries(frameflow-writer PRIVATE ffmpeg_iface)
+    target_link_libraries(frameflow-writer PUBLIC ffmpeg_iface)
 else()
     find_package(PkgConfig REQUIRED)
 
