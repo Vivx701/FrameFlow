@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>FrameFlow</Name>
+    <Version>0.1.0</Version>
+    <Title>FrameFlow Installer</Title>
+    <Publisher>Vivek P</Publisher>
+    <StartMenuDir>FrameFlow</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/FrameFlow</TargetDir>
+
+    <WizardStyle>Modern</WizardStyle>
+    <InstallerApplicationIcon>icon</InstallerApplicationIcon>
+
+    <Logo>frameflow_logo.png</Logo>
+    <Banner>frameflow_banner.png</Banner>
+</Installer>

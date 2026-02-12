@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>FrameFlow</DisplayName>
+    <Description>Multimedia creator from image sequences</Description>
+    <Version>v0.1.0-alpha</Version>
+    <ReleaseDate>2026-02-13</ReleaseDate>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+</Package>

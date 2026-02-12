@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.vivx701.FrameFlow</id>
+
+  <!-- REQUIRED -->
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>FrameFlow</name>
+  <summary>Image sequence to video and GIF creator</summary>
+
+  <description>
+    <p>
+      FrameFlow is a Qt-based desktop application that converts image sequences
+      into videos and GIFs using FFmpeg.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">
+    io.github.vivx701.FrameFlow.desktop
+  </launchable>
+
+  <categories>
+    <category>Graphics</category>
+    <category>Video</category>
+  </categories>
+
+  <releases>
+    <release version="0.0.0" date="2026-01-25"/>
+  </releases>
+</component>

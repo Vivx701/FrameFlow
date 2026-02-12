@@ -1,0 +1,155 @@
+
+
+/* =========================
+   Main Application Window
+   ========================= */
+#FrameFlow {
+    background-color: #3F9AAE;
+}
+
+
+/* =========================
+   Menu Bar
+   ========================= */
+QMenuBar#mainMenuBar {
+    background-color: #FFFFFF;
+    color: #2A2A2A;
+    border-bottom: 1px solid #D3D6D2;
+}
+
+QMenuBar#mainMenuBar::item:selected {
+    background-color: #E6EBF2;
+}
+
+QMenuBar#mainMenuBar::item:pressed {
+    background-color: #D9E2EF;
+}
+
+
+/* =========================
+   Status Bar
+   ========================= */
+QStatusBar {
+    background-color: #FFFFFF;
+    color: #5A5A5A;
+    border-top: 1px solid #D3D6D2;
+}
+
+
+
+#contolFrame {
+    background-color: #79C9C5;
+    color: #1E1E1E;
+}
+
+#contolFrame QLabel {
+    background-color: #FDFEFE;   
+    color: #1F1F1F;            
+    padding: 2px;
+    border-radius: 4px;
+}
+
+
+#imageListView{
+    background-color: #FFE2AF;
+    color: #2A2A2A;
+}
+
+#graphicsView{
+    background-color: #FFFFFF;  
+    border: 1px solid #CCCCCC;    
+    outline: 0;
+}
+
+#moveBackButton,
+#moveFrontButton {
+    background-color: #FDFEFE;
+    color: #2A2A2A;
+    border: 1px solid #C12310;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#leftButton,
+#rightButton
+{
+    background-color: #FDFEFE;
+    color: #2A2A2A;
+    border: 1px solid #C12310;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#deleteButton
+{
+    background-color: #FDFEFE;
+    color: #2A2A2A;
+    border: 1px solid #C12310;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#leftButton:hover,
+#rightButton:hover,
+#moveBackButton:hover,
+#moveFrontButton:hover {
+    border-color: #45556C;
+    background-color: #FEF2F2;
+}
+
+#deleteButton:hover
+{
+    border-color: #FF637E;
+    background-color: #F2F4F7;   
+}
+
+#leftButton:pressed,
+#rightButton:pressed,
+#deleteButton:pressed,
+#moveBackButton:pressed,
+#moveFrontButton:pressed {
+    background-color: #FAFAFA;
+}
+
+
+/* =========================
+   Appearance Dialog
+   ========================= */
+#AppearanceDialog {
+    background-color: #F7F7F5;
+    color: #2A2A2A;
+}
+
+#AppearanceDialog QLabel {
+    color: #2A2A2A;
+}
+
+
+/* =========================
+   Language Dialog
+   ========================= */
+#LanguageDialog, #VideoAttributesDialog, #ImageSpriteAttributesDialog, #GifAttributesDialog, #SaveProgressDialog {
+    background-color: #F7F7F5;
+    color: #2A2A2A;
+}
+
+#LanguageDialog QLabel,
+#VideoAttributesDialog QLabel,
+#ImageSpriteAttributesDialog QLabel,
+#GifAttributesDialog QLabel {
+    color: #2A2A2A;
+    background-color: #F7F7F5;
+}
+
+
+/* =========================
+   About Dialog
+   ========================= */
+#aboutDialog {
+    background-color: #F7F7F5;
+    color: #2A2A2A;
+}
+
+#aboutDialog QLabel {
+    color: #2A2A2A;
+}

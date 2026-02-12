@@ -1,0 +1,125 @@
+/* dark.qss */
+#FrameFlow {
+    background-color: #31363F;
+}
+
+QToolButton {
+    background-color:  #ecf0f1;
+    color: white;
+}
+
+QToolButton:hover {
+    background-color:  #fbfcfc;
+}
+
+#contolFrame {
+    background-color:   #31363F;
+    color: #ffffff;
+}
+
+#contolFrame QLabel {
+    background-color: #FDFEFE;   
+    color: #010711;           
+    padding: 2px;
+    border-radius: 4px;
+}
+
+
+#leftButton, #rightButton, #deleteButton, #moveBackButton, #moveFrontButton {
+    background-color:   #ecf0f1;
+    color: white;
+    border: 0px solid #2980b9;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+#leftButton:hover, #rightButton:hover, #deleteButton:hover, #moveBackButton:hover, #moveFrontButton:hover {
+    background-color:  #fdfefe;
+}
+
+
+QWidget#imageListView{
+    background-color:  #566573;
+}
+
+
+#AppearanceDialog{
+    background-color:  #31363F;
+    color: white;
+}
+#AppearanceDialog QLabel{
+    color: white;
+}
+
+#LanguageDialog{
+    background-color:  #31363F;
+    color: white;
+}
+
+#LanguageDialog QLabel {
+    color: #E2DFD0;
+    background-color:   #31363F;
+}
+
+#aboutDialog {
+    background-color:  #31363F;
+    color: white;
+}
+#aboutDialog QWidget{
+    background-color:  #31363F;
+    color: white;
+}
+
+#aboutDialog QLabel{
+    background-color:  #31363F;
+    color: white;
+}
+
+#ImageSpriteAttributesDialog, #GifAttributesDialog, #VideoAttributesDialog {
+    background-color:  #31363F;
+    color: white;
+}
+
+#ImageSpriteAttributesDialog QLabel{
+    background-color:  #31363F;
+    color: white;
+}
+
+#GifAttributesDialog QLabel{
+    background-color:  #31363F;
+    color: white;   
+}
+
+#VideoAttributesDialog QLabel{
+    background-color:  #31363F;
+    color: white;   
+}
+
+#scrollAreaWidgetContents {
+    background-color:   #31363F;
+    color: #ffffff;
+}
+
+QMenuBar#mainMenuBar {
+    background-color:  #31363F;
+    color: #ffffff;
+}
+
+QMenuBar#mainMenuBar::item {
+    background: transparent;
+    padding: 6px 12px;
+}
+
+QMenuBar#mainMenuBar::item:selected {
+    background-color: #566573;
+}
+
+QMenuBar#mainMenuBar::item:pressed {
+    background-color:#566573;
+}
+
+QStatusBar {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border-top: 1px solid #333;
+}

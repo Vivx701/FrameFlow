@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=FrameFlow
+Comment=Create videos and animations from image sequences
+Exec=FrameFlow
+Icon=io.github.vivx701.FrameFlow
+Terminal=false
+Categories=Graphics;Video;
+StartupNotify=true
