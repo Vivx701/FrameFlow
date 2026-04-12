@@ -110,8 +110,17 @@ void VideoFile::save()
     codecContext->bit_rate = bitrate;
     codecContext->width = videoSize.width();
     codecContext->height = videoSize.height();
-    codecContext->time_base = (AVRational){1, 1000}; // Use milliseconds as time base
-    codecContext->framerate = (AVRational){fps, 1};
+
+    AVRational tb;
+    tb.num = 1;
+    tb.den = 1000;
+    codecContext->time_base = tb;
+
+    AVRational fr;
+    fr.num = fps;
+    fr.den = 1;
+    codecContext->framerate = fr;
+
     codecContext->gop_size = 10;
     codecContext->max_b_frames = 1;
     codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
